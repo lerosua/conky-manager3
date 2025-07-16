@@ -56,6 +56,9 @@ install:
 	mkdir -p "$(DESTDIR)$(localedir)/de_DE/LC_MESSAGES"
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/de_DE/LC_MESSAGES/${app_name}.mo" ../po/de.po
 	
+	mkdir -p "$(DESTDIR)$(localedir)/es_ES/LC_MESSAGES"
+	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/es_ES/LC_MESSAGES/${app_name}.mo" ../po/es.po
+	
 	mkdir -p "$(DESTDIR)$(localedir)/fr_FR/LC_MESSAGES"
 	msgfmt --check --verbose -o "$(DESTDIR)$(localedir)/fr_FR/LC_MESSAGES/${app_name}.mo" ../po/fr.po
 	
