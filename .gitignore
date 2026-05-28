@@ -5,3 +5,4 @@ installer/*.deb
 installer/*.run
 designs/
 .bzr/
+tmp/

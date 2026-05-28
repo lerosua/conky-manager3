@@ -12,8 +12,26 @@
     <p>
       Conky Manager 3 is a GTK front-end for managing Conky configuration files. It provides options to start, stop, browse and edit Conky widgets installed on the system.
     </p>
+    <p>
+      The application can scan common Conky locations, import theme packs, generate previews and open widget configuration files for manual or guided editing.
+    </p>
   </description>
   <launchable type="desktop-id">org.conkymanager3.ConkyManager.desktop</launchable>
+  <provides>
+    <binary>conky-manager3</binary>
+  </provides>
   <url type="homepage">https://github.com/zcot/conky-manager3</url>
+  <url type="bugtracker">https://github.com/zcot/conky-manager3/issues</url>
+  <requires>
+    <control>keyboard</control>
+    <control>pointing</control>
+  </requires>
   <content_rating type="oars-1.1" />
+  <releases>
+    <release version="3.0" date="2026-05-28">
+      <description>
+        <p>Refresh GTK 4 metadata and packaging integration for software centers.</p>
+      </description>
+    </release>
+  </releases>
 </component>

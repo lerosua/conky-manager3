@@ -1,9 +1,12 @@
-project('conky-manager3', ['c','vala'], version : '3.0')
+project('conky-manager3', ['c','vala'], version : '3.0', default_options : ['prefix=/usr'])
 
 prefix = '/usr'
 bindir = prefix + '/bin'
 sharedir = prefix + '/share'
 launcherdir = sharedir + '/applications'
+metainfodir = sharedir + '/metainfo'
+pixmapsdir = sharedir + '/pixmaps'
+icondir = sharedir + '/icons/hicolor'
 app_name = 'conky-manager3'
 app_id = 'org.conkymanager3.ConkyManager'
 
@@ -32,9 +35,13 @@ dependencies = [
 ]
 
 install_data('src/' + app_id + '.desktop', install_dir : launcherdir)
-install_data('src/share/pixmaps/' + app_name + '.png', install_dir : sharedir + '/pixmaps')
-install_data('src/share/pixmaps/' + app_name + '.png', rename : app_id + '.png', install_dir : sharedir + '/pixmaps')
-install_data('src/' + app_id + '.metainfo.xml', install_dir : sharedir + '/metainfo')
+install_data('src/share/pixmaps/' + app_name + '.png', install_dir : pixmapsdir)
+install_data('src/share/pixmaps/' + app_name + '.png', rename : app_id + '.png', install_dir : pixmapsdir)
+install_data('icons/conky-manager-64.png', rename : app_id + '.png', install_dir : icondir + '/64x64/apps')
+install_data('src/share/pixmaps/' + app_name + '.png', rename : app_id + '.png', install_dir : icondir + '/128x128/apps')
+install_data('icons/conky-manager-192.png', rename : app_id + '.png', install_dir : icondir + '/192x192/apps')
+install_data('icons/conky-manager-256.png', rename : app_id + '.png', install_dir : icondir + '/256x256/apps')
+install_data('src/' + app_id + '.metainfo.xml', install_dir : metainfodir)
 install_data('man/' + app_name + '.1', install_dir : sharedir + '/man/man1')
 install_subdir('src/share/conky-manager3/images', install_dir : sharedir + '/' + app_name)
 install_subdir('src/share/conky-manager3/themepacks', install_dir : sharedir + '/' + app_name)
@@ -50,4 +57,4 @@ subdir('po')
 #    )
 #endif
 
-executable('conky-manager3', sources, install : true, dependencies: dependencies)
+executable('conky-manager3', sources, install : true, install_dir : bindir, dependencies: dependencies)
