@@ -65,7 +65,7 @@ public class EditWidgetWindow : Dialog {
 		gtk_use_adwaita_titlebar(this);
 		set_destroy_with_parent (true);
 		set_modal (true);
-        set_default_size (400, 20);	
+        set_default_size (520, 500);	
 		
 		conkyrc = conkyrc_edit;
 
@@ -95,7 +95,6 @@ public class EditWidgetWindow : Dialog {
         grid_widget_location.set_column_spacing (12);
         grid_widget_location.set_row_spacing (6);
         grid_widget_location.column_homogeneous = false;
-        grid_widget_location.visible = false;
         grid_widget_location.set_margin_top(page_margin);
 		grid_widget_location.set_margin_bottom(page_margin);
 		grid_widget_location.set_margin_start(page_margin);
@@ -174,7 +173,6 @@ public class EditWidgetWindow : Dialog {
         grid_widget_size.set_column_spacing (12);
         grid_widget_size.set_row_spacing (6);
         grid_widget_size.column_homogeneous = false;
-        grid_widget_size.visible = false;
         grid_widget_size.set_margin_top(page_margin);
 		grid_widget_size.set_margin_bottom(page_margin);
 		grid_widget_size.set_margin_start(page_margin);
@@ -263,7 +261,6 @@ public class EditWidgetWindow : Dialog {
         grid_widget_transparency.set_column_spacing (12);
         grid_widget_transparency.set_row_spacing (6);
         grid_widget_transparency.column_homogeneous = false;
-        grid_widget_transparency.visible = false;
         grid_widget_transparency.set_margin_top(page_margin);
 		grid_widget_transparency.set_margin_bottom(page_margin);
 		grid_widget_transparency.set_margin_start(page_margin);
@@ -361,7 +358,6 @@ public class EditWidgetWindow : Dialog {
         grid_widget_time.set_column_spacing (12);
         grid_widget_time.set_row_spacing (6);
         grid_widget_time.column_homogeneous = false;
-        grid_widget_time.visible = false;
         grid_widget_time.set_margin_top(page_margin);
 		grid_widget_time.set_margin_bottom(page_margin);
 		grid_widget_time.set_margin_start(page_margin);
@@ -410,7 +406,6 @@ public class EditWidgetWindow : Dialog {
         grid_widget_network.set_column_spacing (12);
         grid_widget_network.set_row_spacing (6);
         grid_widget_network.column_homogeneous = false;
-        grid_widget_network.visible = false;
         grid_widget_network.set_margin_top(page_margin);
 		grid_widget_network.set_margin_bottom(page_margin);
 		grid_widget_network.set_margin_start(page_margin);
