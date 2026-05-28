@@ -6,7 +6,7 @@ i18n.gettext(meson.project_name(),
         '--directory=' + meson.source_root(),
         '--package-name=' + meson.project_name(),
         '--package-version=3.0',
-        '--o=../' + meson.project_name() + '.pot',
+        '--output=' + meson.project_name() + '.pot',
         '--keyword=_',
         '--escape',
         '--copyright-holder=Tony George (teejee2008@gmail.com)'        

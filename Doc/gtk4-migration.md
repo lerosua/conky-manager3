@@ -51,4 +51,4 @@ These are no longer GTK3 dependencies, but they should be replaced in a follow-u
 
 ## Runtime Notes
 
-Preview generation still depends on Conky/ImageMagick behavior and may remain X11-oriented because it shells out to `import -window`. That is separate from the GTK toolkit migration and should be treated as a Wayland compatibility task.
+Preview generation no longer shells out to `import -window` or reads X11 window ids. It now creates static preview images from conkyrc text via ImageMagick `convert`, which keeps preview generation compatible with Wayland's window-capture permission model. The tradeoff is that generated previews are configuration summaries rather than live Conky window screenshots.

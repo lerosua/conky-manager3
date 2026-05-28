@@ -144,7 +144,7 @@ public class Main : GLib.Object {
 	public bool check_dependencies(out string msg){
 		msg = "";
 
-		string[] dependencies = { "conky", "rsync","killall","cp","rm","touch","7za","import" };
+		string[] dependencies = { "conky", "rsync","killall","cp","rm","touch","7za","convert" };
 
 		string path;
 		foreach(string cmd_tool in dependencies){
@@ -860,17 +860,8 @@ public class ConkyRC : ConkyConfigItem {
 	public string text = "";
 	public bool one_ten_config = false;
 
-	private Regex rex_conky_win;
 	private Regex rex_conky_text;
 	private MatchInfo match;
-
-	private string err_line;
-	private string out_line;
-	private DataInputStream dis_out;
-	private DataInputStream dis_err;
-	private bool thread_is_running = false;
-	private int wait_interval = 1;
-	private uint timer_stop;
 
 	public ConkyRC(string rc_file_path) {
 		init_path(rc_file_path);
@@ -878,7 +869,6 @@ public class ConkyRC : ConkyConfigItem {
 		init_credits();
 
 		try{
-			rex_conky_win = new Regex("""\(0x([0-9a-zA-Z]*)\)""");
 			rex_conky_text = new Regex("""^[[:space:]]*conky[.]text[[:space:]]*=[[:space:]]""");
 		}
 		catch (Error e) {
@@ -1002,39 +992,17 @@ public class ConkyRC : ConkyConfigItem {
 	public bool generate_preview(){
 		stop();
 		read_file();
-		if (App.capture_background){
-			transparency = "pseudo";
+
+		if (App.generate_png){
+			image_path = dir + "/" + base_name + ".png";
 		}
 		else{
-			transparency = "opaque";
-		}
-		delete_file_temp();
-		save_file_temp();
-
-		read_file();
-		wait_interval = 3;
-		foreach(string line in text.split("\n")){
-			if (line.contains("lua_load") && !(line.strip().has_prefix("#")) && !(line.strip().has_prefix("--"))){
-				wait_interval = 4;
-				break;
-			}
-		}
-		
-		try {
-			thread_is_running = true;
-			Thread.create<void> (generate_preview_thread, true);
-		} catch (ThreadError e) {
-			thread_is_running = false;
-			log_error (e.message);
+			image_path = dir + "/" + base_name + ".jpg";
 		}
 
-		while (thread_is_running){
-			Thread.usleep ((ulong) 200000);
-			gtk_do_events();
-		}
+		file_delete(image_path);
 
-		//check if file was generated
-		if ((image_path.length > 0) && (file_exists(image_path))){
+		if (generate_config_preview_image()){
 			log_msg(_("Saved") + ": " + image_path);
 			return true;
 		}
@@ -1044,115 +1012,99 @@ public class ConkyRC : ConkyConfigItem {
 		}
 	}
 
-	public void generate_preview_thread (){
-		string cmd = "cd \"" + dir + "\"\n";
-		cmd += "conky -c \"" + path + "~temp~\" 2>&1 \n";
+	private bool generate_config_preview_image(){
+		string preview_text = build_preview_text().replace("%", "%%");
 
-		string[] argv = new string[1];
-		argv[0] = create_temp_bash_script(cmd);
+		string background = "#20242a";
+		string fill = "#f4f6f8";
 
-		Pid child_pid;
-		int input_fd;
-		int output_fd;
-		int error_fd;
-
-		try {
-			//execute script file
-			Process.spawn_async_with_pipes(
-			    null, //working dir
-			    argv, //argv
-			    null, //environment
-			    SpawnFlags.SEARCH_PATH,
-			    null,   // child_setup
-			    out child_pid,
-			    out input_fd,
-			    out output_fd,
-			    out error_fd);
-
-			thread_is_running = true;
-
-			timer_stop = Timeout.add (10 * 1000, stop_handler);
-
-			//create stream readers
-			UnixInputStream uis_out = new UnixInputStream(output_fd, false);
-			UnixInputStream uis_err = new UnixInputStream(error_fd, false);
-			dis_out = new DataInputStream(uis_out);
-			dis_err = new DataInputStream(uis_err);
-			dis_out.newline_type = DataStreamNewlineType.ANY;
-			dis_err.newline_type = DataStreamNewlineType.ANY;
-
-        	try {
-				//start thread for reading output stream
-			    Thread.create<void> (conky_read_output_line, true);
-		    } catch (Error e) {
-		        log_error (e.message);
-		    }
-
-		    try {
-				//start thread for reading error stream
-			    Thread.create<void> (conky_read_error_line, true);
-		    } catch (Error e) {
-		        log_error (e.message);
-		    }
+		if (App.capture_background && App.generate_png){
+			background = "none";
+			fill = "#20242a";
 		}
-		catch (Error e) {
-			log_error (e.message);
-		}
+
+		string cmd = "convert -size 640x360 -background %s -fill %s -gravity northwest -pointsize 16 %s %s".printf(
+			shell_quote(background),
+			shell_quote(fill),
+			shell_quote("caption:" + preview_text),
+			shell_quote(image_path));
+
+		int exit_code = execute_command_sync(cmd);
+
+		return (exit_code == 0) && file_exists(image_path);
 	}
 
-	private void conky_read_error_line(){
-		try{
-			err_line = dis_err.read_line (null);
-		    while (err_line != null) {
-				//do nothing
-		        err_line = dis_err.read_line (null); //read next
-			}
-		}
-		catch (Error e) {
-			log_error (e.message);
-		}
-	}
+	private string build_preview_text(){
+		string preview = base_name + "\n" + path + "\n\n";
+		string body = "";
+		bool in_text = false;
+		int line_count = 0;
 
-	private void conky_read_output_line(){
-		try{
-			out_line = dis_out.read_line (null);
-		    while (out_line != null) {
-				if (rex_conky_win.match (out_line, 0, out match)){
+		foreach(string line in text.split("\n")){
+			string stripped = line.strip();
+			string lowered = stripped.down();
 
-					//wait for one second till window is displayed on screen
-					Thread.usleep ((ulong) wait_interval * 1000000);
-
-					string win_id = match.fetch(1).strip();
-					string cmd = "";
-
-					if (App.generate_png){
-						image_path = dir + "/" + base_name + ".png";
-						cmd = "import -window 0x%s '%s'".printf(win_id,image_path);
+			if (!in_text){
+				if (one_ten_config){
+					if (lowered.has_prefix("conky.text")){
+						in_text = true;
 					}
-					else{
-						image_path = dir + "/" + base_name + ".jpg";
-						cmd = "import -window 0x%s -quality 90 '%s'".printf(win_id,image_path);
-					}
-
-					execute_command_sync(cmd);
-
-					Thread.usleep ((ulong) 100000); //wait 100ms before killing conky
-
-					if (timer_stop > 0){
-						Source.remove(timer_stop);
-						timer_stop = 0;
-					}
-					stop();
 				}
-				out_line = dis_out.read_line (null);  //read next
+				else if (lowered == "text"){
+					in_text = true;
+				}
+				continue;
 			}
 
-			thread_is_running = false;
-			delete_file_temp();
+			if ((stripped == "]]") || (stripped == "]];") || (stripped == "';") || (stripped == "\";")){
+				break;
+			}
+
+			string preview_line = clean_preview_line(stripped);
+			if (preview_line.length == 0){
+				continue;
+			}
+
+			body += preview_line + "\n";
+			line_count++;
+
+			if (line_count >= 14){
+				break;
+			}
 		}
-		catch (Error e) {
-			log_error (e.message);
+
+		if (body.strip().length == 0){
+			body = _("No preview text found in this Conky configuration.");
 		}
+
+		return preview + body;
+	}
+
+	private string clean_preview_line(string line){
+		string preview_line = line.strip();
+
+		if (preview_line.has_prefix("#") || preview_line.has_prefix("--")){
+			return "";
+		}
+
+		preview_line = preview_line
+			.replace("${", "")
+			.replace("}", "")
+			.replace("$", "")
+			.replace("[[", "")
+			.replace("]]", "")
+			.replace("\\n", " ")
+			.strip();
+
+		if (preview_line.length > 78){
+			preview_line = preview_line[0:78] + "...";
+		}
+
+		return preview_line;
+	}
+
+	private string shell_quote(string value){
+		return "'" + value.replace("'", "'\"'\"'") + "'";
 	}
 
 	public string alignment{

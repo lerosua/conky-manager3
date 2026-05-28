@@ -565,29 +565,8 @@ namespace TeeJee.ProcessManagement{
 	public bool execute_command_script_in_terminal_sync (string script){
 				
 		/* Executes a command script in a terminal window */
-		//TODO: Remove this
-		
-		try {
-			
-			string[] argv = new string[3];
-			argv[0] = "x-terminal-emulator";
-			argv[1] = "-e";
-			argv[2] = script;
-		
-			Process.spawn_sync (
-			    TEMP_DIR, //working dir
-			    argv, //argv
-			    null, //environment
-			    SpawnFlags.SEARCH_PATH,
-			    null   // child_setup
-			    );
-			    
-			return true;
-		}
-		catch (Error e){
-	        log_error (e.message);
-	        return false;
-	    }
+
+		return (execute_bash_script_sync(script) == 0);
 	}
 
 	public int execute_bash_script_fullscreen_sync (string script_file){
@@ -607,15 +586,14 @@ namespace TeeJee.ProcessManagement{
 			return execute_command_sync ("gnome-terminal --full-screen -e \"%s\"".printf(script_file));
 		}
 		
-		path = get_cmd_path ("xterm");
+		path = get_cmd_path ("konsole");
 		if ((path != null)&&(path != "")){
-			return execute_command_sync ("xterm --fullscreen -e \"%s\"".printf(script_file));
+			return execute_command_sync ("konsole --fullscreen --nofork -e \"%s\"".printf(script_file));
 		}
 		
-		//default terminal - unknown, normal window
-		path = get_cmd_path ("x-terminal-emulator");
+		path = get_cmd_path ("kgx");
 		if ((path != null)&&(path != "")){
-			return execute_command_sync ("x-terminal-emulator -e \"%s\"".printf(script_file));
+			return execute_command_sync ("kgx --wait -e \"%s\"".printf(script_file));
 		}
 		
 		return -1;
@@ -625,9 +603,26 @@ namespace TeeJee.ProcessManagement{
 			
 		/* Executes a bash script synchronously in the default terminal window */
 		
-		string path = get_cmd_path ("x-terminal-emulator");
+		string path;
+
+		path = get_cmd_path ("gnome-terminal");
 		if ((path != null)&&(path != "")){
-			return execute_command_sync ("x-terminal-emulator -e \"%s\"".printf(script_file));
+			return execute_command_sync ("gnome-terminal --wait -- \"%s\"".printf(script_file));
+		}
+
+		path = get_cmd_path ("kgx");
+		if ((path != null)&&(path != "")){
+			return execute_command_sync ("kgx --wait -e \"%s\"".printf(script_file));
+		}
+
+		path = get_cmd_path ("konsole");
+		if ((path != null)&&(path != "")){
+			return execute_command_sync ("konsole --nofork -e \"%s\"".printf(script_file));
+		}
+
+		path = get_cmd_path ("xfce4-terminal");
+		if ((path != null)&&(path != "")){
+			return execute_command_sync ("xfce4-terminal --disable-server -e \"%s\"".printf(script_file));
 		}
 		
 		return -1;
@@ -1154,112 +1149,39 @@ namespace TeeJee.System{
 	}
 
 	public bool xdg_open (string file){
-		string path;
-		path = get_cmd_path ("xdg-open");
-		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("xdg-open \"" + file + "\"");
+		try{
+			string uri = file;
+			if (!(uri.has_prefix("http://") || uri.has_prefix("https://") || uri.has_prefix("mailto:") || uri.has_prefix("file://"))){
+				uri = File.new_for_path(file).get_uri();
+			}
+			AppInfo.launch_default_for_uri(uri, null);
+			return true;
 		}
-		return false;
+		catch (Error e){
+			log_error(e.message);
+			return false;
+		}
 	}
 	
 	public bool exo_open_folder (string dir_path, bool xdg_open_try_first = true){
 				
-		/* Tries to open the given directory in a file manager */
+		/* Tries to open the given directory in the desktop default file manager */
 
-		/*
-		xdg-open is a desktop-independent tool for configuring the default applications of a user.
-		Inside a desktop environment (e.g. GNOME, KDE, Xfce), xdg-open simply passes the arguments 
-		to that desktop environment's file-opener application (gvfs-open, kde-open, exo-open, respectively).
-		We will first try using xdg-open and then check for specific file managers if it fails. 
-		*/
-		
-		string path;
-		
-		if (xdg_open_try_first){
-			//try using xdg-open
-			path = get_cmd_path ("xdg-open");
-			if ((path != null)&&(path != "")){
-				return execute_command_script_async ("xdg-open \"" + dir_path + "\"");
-			}
-		}
-		
-		path = get_cmd_path ("nemo");
-		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("nemo \"" + dir_path + "\"");
-		}
-		
-		path = get_cmd_path ("nautilus");
-		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("nautilus \"" + dir_path + "\"");
-		}
-		
-		path = get_cmd_path ("thunar");
-		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("thunar \"" + dir_path + "\"");
-		}
-
-		path = get_cmd_path ("pantheon-files");
-		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("pantheon-files \"" + dir_path + "\"");
-		}
-		
-		path = get_cmd_path ("marlin");
-		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("marlin \"" + dir_path + "\"");
-		}
-
-		if (xdg_open_try_first == false){
-			//try using xdg-open
-			path = get_cmd_path ("xdg-open");
-			if ((path != null)&&(path != "")){
-				return execute_command_script_async ("xdg-open \"" + dir_path + "\"");
-			}
-		}
-		
-		return false;
+		return xdg_open(dir_path);
 	}
 
 	public bool exo_open_textfile (string txt){
 				
-		/* Tries to open the given text file in a text editor */
-		
-		string path;
-		
-		path = get_cmd_path ("exo-open");
-		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("exo-open \"" + txt + "\"");
-		}
+		/* Tries to open the given text file in the desktop default editor */
 
-		path = get_cmd_path ("gedit");
-		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("gedit --new-document \"" + txt + "\"");
-		}
-
-		return false;
+		return xdg_open(txt);
 	}
 
 	public bool exo_open_url (string url){
 				
-		/* Tries to open the given text file in a text editor */
-		
-		string path;
-		
-		path = get_cmd_path ("exo-open");
-		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("exo-open \"" + url + "\"");
-		}
+		/* Tries to open the given URL in the desktop default browser */
 
-		path = get_cmd_path ("firefox");
-		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("firefox \"" + url + "\"");
-		}
-
-		path = get_cmd_path ("chromium-browser");
-		if ((path != null)&&(path != "")){
-			return execute_command_script_async ("chromium-browser \"" + url + "\"");
-		}
-		
-		return false;
+		return xdg_open(url);
 	}
 	
 	private DateTime dt_last_notification = null;

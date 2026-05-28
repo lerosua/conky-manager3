@@ -78,15 +78,15 @@ public class GeneratePreviewWindow : Dialog {
 		lbl_header2.margin_top = 12;
 		vbox_main.append(lbl_header2);
 		
-		//capture background
+		//transparent background
 		Box hbox_capture_bg = new Box (Gtk.Orientation.HORIZONTAL, 6);
         vbox_main.append (hbox_capture_bg);
         
-		Label lbl_capture_bg = new Gtk.Label(_("Capture Desktop Background") );
+		Label lbl_capture_bg = new Gtk.Label(_("Transparent Preview Background") );
 		lbl_capture_bg.hexpand = true;
 		lbl_capture_bg.xalign = (float) 0.0;
 		lbl_capture_bg.valign = Align.CENTER;
-		lbl_capture_bg.set_tooltip_text(_("When enabled, the generated image will have the same background as the current desktop wallpaper. When disabled, the background will be a solid color (the widget's background color)."));
+		lbl_capture_bg.set_tooltip_text(_("When enabled, PNG previews are generated with a transparent background. Desktop background capture is not used."));
 		hbox_capture_bg.append(lbl_capture_bg);
 
         switch_capture_bg = new Gtk.Switch();

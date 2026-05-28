@@ -270,7 +270,7 @@ public class AboutWindow : Dialog {
 
 		lbtn_website.activate_link.connect(()=>{
 			try{
-				Gtk.show_uri(null, lbtn_website.uri, Gdk.CURRENT_TIME);
+				AppInfo.launch_default_for_uri(lbtn_website.uri, null);
 				return true; 
 			}
 			catch(Error e){
@@ -291,7 +291,7 @@ public class AboutWindow : Dialog {
 
 		lbtn_website2.activate_link.connect(()=>{
 			try{
-				Gtk.show_uri(null, lbtn_website2.uri, Gdk.CURRENT_TIME);
+				AppInfo.launch_default_for_uri(lbtn_website2.uri, null);
 				return true; 
 			}
 			catch(Error e){
@@ -431,7 +431,7 @@ public class AboutWindow : Dialog {
 
 			link.activate_link.connect(()=>{
 				try{
-					Gtk.show_uri(null, link.uri, Gdk.CURRENT_TIME);
+					AppInfo.launch_default_for_uri(link.uri, null);
 				return true; 
 				}
 				catch(Error e){

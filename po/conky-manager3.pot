@@ -3,85 +3,83 @@
 # This file is distributed under the same license as the conky-manager3 package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager3 3.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-05-28 09:52+0800\n"
-"PO-Revision-Date: 2019-02-21 11:42-0300\n"
-"Last-Translator: tioguda <guda.flavio@gmail.com>\n"
-"Language-Team: \n"
-"Language: pt_BR\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: src/AboutWindow.vala:322 src/AboutWindow.vala:337 src/MainWindow.vala:251
 msgid "Credits"
-msgstr "Créditos"
+msgstr ""
 
 #: src/AboutWindow.vala:334
 msgid "Back"
-msgstr "Voltar"
+msgstr ""
 
 #: src/AboutWindow.vala:342 src/EditWidgetWindow.vala:474
 msgid "Close"
-msgstr "Fechar"
+msgstr ""
 
 #: src/AboutWindow.vala:364
 msgid "Authors"
-msgstr "Autores"
+msgstr ""
 
 #: src/AboutWindow.vala:372
 msgid "Third Party Tools"
-msgstr "Ferramentas de Terceiros"
+msgstr ""
 
 #: src/AboutWindow.vala:380
 msgid "Artists"
-msgstr "Artistas"
+msgstr ""
 
 #: src/AboutWindow.vala:388
 msgid "Translators"
-msgstr "Tradutores"
+msgstr ""
 
 #: src/AboutWindow.vala:396
 msgid "Documenters"
-msgstr "Documentadores"
+msgstr ""
 
 #: src/AboutWindow.vala:404
 msgid "Donations"
-msgstr "Doações"
+msgstr ""
 
 #: src/GeneratePreviewWindow.vala:45 src/MainWindow.vala:347
 msgid "Generate Preview"
-msgstr "Gerar pré-visualização"
+msgstr ""
 
 #: src/GeneratePreviewWindow.vala:57
 msgid "Generate preview images for"
-msgstr "Gerar pré-visualização para imagens"
+msgstr ""
 
 #: src/GeneratePreviewWindow.vala:63
 msgid "Selected Widget"
-msgstr "Widget Selecionado"
+msgstr ""
 
 #: src/GeneratePreviewWindow.vala:66
 msgid "All Widgets with Missing Previews"
-msgstr "Todos os Widgets com Visualizações Ausentes"
+msgstr ""
 
 #: src/GeneratePreviewWindow.vala:70
 msgid "All Widgets (Overwrite Existing Image)"
-msgstr "Todos os Widgets (Substituir Imagem Existente)"
+msgstr ""
 
 #: src/GeneratePreviewWindow.vala:74
 msgid "Options"
-msgstr "Opções"
+msgstr ""
 
 #: src/GeneratePreviewWindow.vala:85
-#, fuzzy
 msgid "Transparent Preview Background"
-msgstr "Capturar o plano de fundo da área de trabalho"
+msgstr ""
 
 #: src/GeneratePreviewWindow.vala:89
 msgid ""
@@ -91,11 +89,11 @@ msgstr ""
 
 #: src/GeneratePreviewWindow.vala:106
 msgid "High quality images (PNG)"
-msgstr "Imagens de alta qualidade (PNG)"
+msgstr ""
 
 #: src/GeneratePreviewWindow.vala:110
 msgid "Generate preview images in PNG format instead of JPEG"
-msgstr "Gerar pré-visualização de imagens no formato PNG em vez de JPEG"
+msgstr ""
 
 #: src/GeneratePreviewWindow.vala:125 src/SettingsWindow.vala:212
 #: src/DonationWindow.vala:108 src/EditThemeWindow.vala:225
@@ -105,68 +103,68 @@ msgstr ""
 #: src/GeneratePreviewWindow.vala:147 src/SettingsWindow.vala:217
 #: src/EditThemeWindow.vala:231
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr ""
 
 #: src/Main.vala:127
 msgid "Missing Dependencies"
-msgstr "Dependências Ausentes"
+msgstr ""
 
 #: src/Main.vala:158
 msgid "Commands listed below are not available"
-msgstr "Comandos listados abaixo não estão disponíveis"
+msgstr ""
 
 #: src/Main.vala:159
 msgid "Please install required packages and try running it again"
-msgstr "Por favor, instale os pacotes necessários e tente executá-lo novamente"
+msgstr ""
 
 #: src/Main.vala:203
 msgid "App config saved"
-msgstr "Configuração do aplicativo salva"
+msgstr ""
 
 #: src/Main.vala:251
 msgid "App config loaded"
-msgstr "Configuração do aplicativo carregada"
+msgstr ""
 
 #: src/Main.vala:260 src/Main.vala:266 src/Main.vala:272
 msgid "Directory Created"
-msgstr "Diretório Criado"
+msgstr ""
 
 #: src/Main.vala:313
 msgid "Found theme pack [installed]"
-msgstr "Pacote de temas encontrado [instalado]"
+msgstr ""
 
 #: src/Main.vala:321
 msgid "Found theme pack [new]"
-msgstr "Pacote de tema encontrado [novo]"
+msgstr ""
 
 #: src/Main.vala:357
 msgid "Importing"
-msgstr "Importando"
+msgstr ""
 
 #: src/Main.vala:368
 msgid "Failed to unzip files from theme pack"
-msgstr "Falha ao descompactar arquivos do pacote de temas"
+msgstr ""
 
 #: src/Main.vala:420
 #, c-format
 msgid "Searching for conkyrc files... %d found"
-msgstr "Procurando por arquivos conkyrc... %d encontrado"
+msgstr ""
 
 #: src/Main.vala:573
 msgid "Font Copied: "
-msgstr "Fonte Copiada:"
+msgstr ""
 
 #: src/Main.vala:909 src/Main.vala:931
 msgid "Started"
-msgstr "Iniciado"
+msgstr ""
 
 #: src/Main.vala:957 src/Utility.vala:767
 msgid "Stopped"
-msgstr "Parado"
+msgstr ""
 
 #: src/Main.vala:1006
 msgid "Saved"
-msgstr "Salvo"
+msgstr ""
 
 #: src/Main.vala:1077
 msgid "No preview text found in this Conky configuration."
@@ -174,15 +172,15 @@ msgstr ""
 
 #: src/Main.vala:1943
 msgid "Current wallpaper source path"
-msgstr "Caminho de origem do papel de parede atual"
+msgstr ""
 
 #: src/Main.vala:1947 src/Main.vala:1955
 msgid "Wallpaper saved"
-msgstr "Papel de parede salvo"
+msgstr ""
 
 #: src/MainWindow.vala:113
 msgid "Browse:"
-msgstr "Navegar:"
+msgstr ""
 
 #: src/MainWindow.vala:117 src/EditThemeWindow.vala:240
 msgid "Widgets"
@@ -190,149 +188,145 @@ msgstr ""
 
 #: src/MainWindow.vala:121
 msgid "Themes"
-msgstr "Temas"
+msgstr ""
 
 #: src/MainWindow.vala:152 src/EditThemeWindow.vala:54
 msgid "Save Theme"
-msgstr "Salvar tema"
+msgstr ""
 
 #: src/MainWindow.vala:154
 msgid "Save running widgets and current desktop wallpaper as new theme"
-msgstr "Salvar widgets em execução e papel de parede atual como novo tema"
+msgstr ""
 
 #: src/MainWindow.vala:164
 msgid "Filter"
-msgstr "Filtro"
+msgstr ""
 
 #: src/MainWindow.vala:174
 msgid ""
 "Enter name or path to filter.\n"
 "Enter '0' to list running widgets"
 msgstr ""
-"Digite o nome ou caminho para filtrar.\n"
-"Digite '0' para listar os widgets em execução"
 
 #: src/MainWindow.vala:184
 msgid "Preview"
-msgstr "Pré-visualização"
+msgstr ""
 
 #: src/MainWindow.vala:186
 msgid "Toggle Preview"
-msgstr "Alternar Pré-visualização"
+msgstr ""
 
 #: src/MainWindow.vala:190
 msgid "List"
-msgstr "Lista"
+msgstr ""
 
 #: src/MainWindow.vala:192
 msgid "Toggle List"
-msgstr "Alternar Lista"
+msgstr ""
 
 #: src/MainWindow.vala:220 src/MainWindow.vala:222 src/MainWindow.vala:304
 msgid "Stop"
-msgstr "Parar"
+msgstr ""
 
 #: src/MainWindow.vala:241
 msgid "Source"
-msgstr "Fonte"
+msgstr ""
 
 #: src/MainWindow.vala:276
 msgid "Previous"
-msgstr "Anterior"
+msgstr ""
 
 #: src/MainWindow.vala:277
 msgid "Previous Widget"
-msgstr "Widget Anterior"
+msgstr ""
 
 #: src/MainWindow.vala:283
 msgid "Next"
-msgstr "Próximo"
+msgstr ""
 
 #: src/MainWindow.vala:284
 msgid "Next Widget"
-msgstr "Próximo Widget"
+msgstr ""
 
 #: src/MainWindow.vala:290
 msgid "Terminal Start"
 msgstr ""
 
 #: src/MainWindow.vala:291
-#, fuzzy
 msgid "Start/Restart Widget in Terminal"
-msgstr "Iniciar/Reiniciar Widget"
+msgstr ""
 
 #: src/MainWindow.vala:297
 msgid "Start"
-msgstr "Iniciar"
+msgstr ""
 
 #: src/MainWindow.vala:298
 msgid "Start/Restart Widget"
-msgstr "Iniciar/Reiniciar Widget"
+msgstr ""
 
 #: src/MainWindow.vala:305
 msgid "Stop Widget"
-msgstr "Parar Widgets"
+msgstr ""
 
 #: src/MainWindow.vala:315
 msgid "Edit"
-msgstr "Editar"
+msgstr ""
 
 #: src/MainWindow.vala:316 src/EditWidgetWindow.vala:64
 msgid "Edit Widget"
-msgstr "Editar Widget"
+msgstr ""
 
 #: src/MainWindow.vala:322
 msgid "Manual Edit"
-msgstr "Edição Manual"
+msgstr ""
 
 #: src/MainWindow.vala:323
 msgid "Edit file manually in a text editor"
-msgstr "Editar arquivo manualmente em um editor de texto"
+msgstr ""
 
 #: src/MainWindow.vala:329
 msgid "Open Folder"
-msgstr "Abrir Pasta"
+msgstr ""
 
 #: src/MainWindow.vala:330
 msgid "Open Theme Folder"
-msgstr "Abrir Pasta do Tema"
+msgstr ""
 
 #: src/MainWindow.vala:340
 msgid "Refresh"
-msgstr "Atualizar"
+msgstr ""
 
 #: src/MainWindow.vala:341
 msgid "Search for new themes"
-msgstr "Pesquisar por novos temas"
+msgstr ""
 
 #: src/MainWindow.vala:348
 msgid "Generate preview images"
-msgstr "Gerar pré-visualização de imagens"
+msgstr ""
 
 #: src/MainWindow.vala:354
 msgid "Stop All Widgets"
-msgstr "Parar Todos os Widgets"
+msgstr ""
 
 #: src/MainWindow.vala:355
 msgid "Stop all running widgets"
-msgstr "Parar todos os widgets em execução"
+msgstr ""
 
 #: src/MainWindow.vala:361 src/MainWindow.vala:925
 msgid "Import"
-msgstr "Importar"
+msgstr ""
 
 #: src/MainWindow.vala:362
-#, fuzzy
 msgid "Import Theme Pack (*.cmtp.7z) or various archive type"
-msgstr "Importar Pacote de Tema (*.cmtp.7z) ou vários tipos de arquivo"
+msgstr ""
 
 #: src/MainWindow.vala:373
 msgid "Settings"
-msgstr "Configurações"
+msgstr ""
 
 #: src/MainWindow.vala:374 src/SettingsWindow.vala:47
 msgid "Application Settings"
-msgstr "Configurações do Aplicativo"
+msgstr ""
 
 #: src/MainWindow.vala:380
 msgid "Funding"
@@ -344,43 +338,41 @@ msgstr ""
 
 #: src/MainWindow.vala:387 src/MainWindow.vala:388
 msgid "About"
-msgstr "Sobre"
+msgstr ""
 
 #: src/MainWindow.vala:415
 msgid "Enable"
-msgstr "Habilitar"
+msgstr ""
 
 #: src/MainWindow.vala:453
 msgid ""
 "Use the keyboard arrow keys to browse.\n"
 "Press ENTER to start and stop."
 msgstr ""
-"Use as teclas de seta do teclado para navegar.\n"
-"Pressione ENTER para iniciar e parar."
 
 #: src/MainWindow.vala:812 src/MainWindow.vala:886
 msgid "Generating Previews"
-msgstr "Gerando pré-visualizações"
+msgstr ""
 
 #: src/MainWindow.vala:979
 msgid "Themes Imported"
-msgstr "Temas Importados"
+msgstr ""
 
 #: src/MainWindow.vala:979
 msgid "Themes imported successfully"
-msgstr "Temas importados com sucesso"
+msgstr ""
 
 #: src/MainWindow.vala:982 src/Utility.vala:107
 msgid "Error"
-msgstr "Erro"
+msgstr ""
 
 #: src/MainWindow.vala:982
 msgid "Failed to import themes"
-msgstr "Falha ao importar temas"
+msgstr ""
 
 #: src/MainWindow.vala:1068
 msgid "Utility for managing Conky configuration files"
-msgstr "Utilitário para gerenciar arquivos de configuração do Conky"
+msgstr ""
 
 #: src/MainWindow.vala:1125
 msgid "N/A"
@@ -388,50 +380,49 @@ msgstr ""
 
 #: src/MainWindow.vala:1137
 msgid "Searching directories..."
-msgstr "Pesquisando diretórios..."
+msgstr ""
 
 #: src/SettingsWindow.vala:80
 msgid "General"
-msgstr "Geral"
+msgstr ""
 
 #: src/SettingsWindow.vala:90
 msgid "Run Conky at system startup"
-msgstr "Executar o Conky na inicialização do sistema"
+msgstr ""
 
 #: src/SettingsWindow.vala:109
 msgid "Startup Delay (seconds)"
-msgstr "Atraso de Inicialização (segundos)"
+msgstr ""
 
 #: src/SettingsWindow.vala:133
 msgid "Locations"
-msgstr "Localizações"
+msgstr ""
 
 #: src/SettingsWindow.vala:144
 msgid "Theme Directory"
-msgstr "Diretório do Tema"
+msgstr ""
 
 #: src/SettingsWindow.vala:156
 msgid "Additional locations to search for Conky themes"
-msgstr "Locais adicionais para procurar temas Conky"
+msgstr ""
 
 #: src/SettingsWindow.vala:176 src/EditWidgetWindow.vala:89
 msgid "Location"
-msgstr "Localização"
+msgstr ""
 
 #: src/SettingsWindow.vala:202
 msgid "Add"
-msgstr "Adicionar"
+msgstr ""
 
 #: src/SettingsWindow.vala:207
 msgid "Remove"
-msgstr "Remover"
+msgstr ""
 
 #: src/SettingsWindow.vala:265
 msgid "Select directory"
-msgstr "Selecione o diretório"
+msgstr ""
 
 #: src/DonationWindow.vala:53
-#, fuzzy
 msgid ""
 "Did you find this software useful?\n"
 "\n"
@@ -454,36 +445,22 @@ msgid ""
 "Caudle\n"
 "                                                                                (zcotcaudle@gmail.com)"
 msgstr ""
-"Você achou este software útil?\n"
-"\n"
-"Você pode me comprar um café ou fazer uma doação via PayPal para mostrar seu "
-"apoio. Ou apenas me mande um e-mail e diga oi. Esta aplicação é totalmente "
-"gratuita e continuará assim. Suas contribuições ajudarão a manter este "
-"projeto vivo e a melhorar ainda mais.\n"
-"\n"
-"Sinta-se livre para me enviar um e-mail se você encontrar algum problema "
-"neste aplicativo ou se você precisar de alguma alteração. Sugestões e "
-"comentários são sempre bem vindos.\n"
-"\n"
-"Obrigado,\n"
-"Tony George\n"
-"(teejeetech@gmail.com)"
 
 #: src/DonationWindow.vala:80
 msgid "Donate with PayPal"
-msgstr "Doe com o PayPal"
+msgstr ""
 
 #: src/DonationWindow.vala:87
 msgid "Donate with Google Wallet"
-msgstr "Doe com o Google Wallet"
+msgstr ""
 
 #: src/DonationWindow.vala:94 src/DonationWindow.vala:130
 msgid "Send Email"
-msgstr "Enviar Email"
+msgstr ""
 
 #: src/DonationWindow.vala:101
 msgid "Visit Website"
-msgstr "Visite o Site"
+msgstr ""
 
 #: src/DonationWindow.vala:116
 msgid "Fund with Credit Card/PayPal"
@@ -499,216 +476,205 @@ msgstr ""
 
 #: src/EditThemeWindow.vala:54
 msgid "Edit Theme"
-msgstr "Editar Tema"
+msgstr ""
 
 #: src/EditThemeWindow.vala:67
 msgid "Theme Name"
-msgstr "Nome do Tema"
+msgstr ""
 
 #: src/EditThemeWindow.vala:80 src/EditThemeWindow.vala:93
 msgid "Wallpaper"
-msgstr "Papel de parede"
+msgstr ""
 
 #: src/EditThemeWindow.vala:80
 msgid "Include desktop wallpaper in theme"
-msgstr "Incluir papel de parede no tema"
+msgstr ""
 
 #: src/EditThemeWindow.vala:113
 msgid "None"
-msgstr "Nenhum"
+msgstr ""
 
 #: src/EditThemeWindow.vala:115
 msgid "Custom Wallpaper"
-msgstr "Papel de Parede Personalizado"
+msgstr ""
 
 #: src/EditThemeWindow.vala:123
 msgid "Current Wallpaper"
-msgstr "Papel de parede atual"
+msgstr ""
 
 #: src/EditThemeWindow.vala:130
 msgid "Choose File"
-msgstr "Escolher Arquivo"
+msgstr ""
 
 #: src/EditThemeWindow.vala:141
-#, fuzzy
 msgid "Browse"
-msgstr "Navegar:"
+msgstr ""
 
 #: src/EditThemeWindow.vala:146
 msgid "Select Wallpaper"
-msgstr "Selecione o papel de parede"
+msgstr ""
 
 #: src/EditThemeWindow.vala:172
 msgid "Scaling"
-msgstr "Escala"
+msgstr ""
 
 #: src/EditThemeWindow.vala:240 src/EditThemeWindow.vala:241
 msgid "Include running widgets in theme"
-msgstr "Incluir widgets em execução no tema"
+msgstr ""
 
 #: src/EditThemeWindow.vala:345
 msgid "Name Required"
-msgstr "Nome Necessário"
+msgstr ""
 
 #: src/EditThemeWindow.vala:346
 msgid "Please enter theme name"
-msgstr "Por favor, insira o nome do tema"
+msgstr ""
 
 #: src/EditThemeWindow.vala:358
 msgid "No Widgets Selected"
-msgstr "Nenhum Widget Selecionado"
+msgstr ""
 
 #: src/EditThemeWindow.vala:359
 msgid "Select the widgets to include in theme"
-msgstr "Selecione os widgets para incluir no tema"
+msgstr ""
 
 #: src/Utility.vala:107
 msgid "Warning"
-msgstr "Aviso"
+msgstr ""
 
 #: src/Utility.vala:1010 src/Utility.vala:1042
 msgid "Missing Icon"
-msgstr "Ícone Ausente"
+msgstr ""
 
 #: src/Utility.vala:1312
 msgid "Failed to set ownership"
-msgstr "Falha ao definir a propriedade"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:108
 msgid "Alignment"
-msgstr "Alinhamento"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:123
 msgid "Top Left"
-msgstr "Esquerda Superior"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:125
 msgid "Top Right"
-msgstr "Direita Superior"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:127
 msgid "Top Middle"
-msgstr "Meio Superior"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:129
 msgid "Bottom Left"
-msgstr "Inferior Esquerdo"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:131
 msgid "Bottom Right"
-msgstr "Inferior Direito"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:133
 msgid "Bottom Middle"
-msgstr "Meio Inferior"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:135
 msgid "Middle Left"
-msgstr "Meio Esquerdo"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:137
 msgid "Middle Right"
-msgstr "Meio Direito"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:139
 msgid "Middle Middle"
-msgstr "Meio Médio"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:143
 msgid "Horizontal Gap"
-msgstr "Folga Horizontal"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:144
 msgid "[GAP_X] Horizontal distance from window border (in pixels)"
-msgstr "[GAP_X] Distância horizontal da borda da janela (em pixels)"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:155
 msgid "Vertical Gap"
-msgstr "Folga Vertical"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:156
 msgid "[GAP_Y] Vertical distance from window border (in pixels)"
-msgstr "[GAP_X] Distância vertical da borda da janela (em pixels)"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:168
 msgid "Size"
-msgstr "Tamanho"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:185
 msgid ""
 "Width should be larger than the size of window contents,\n"
 "otherwise this setting will not have any effect"
 msgstr ""
-"A largura deve ser maior que o tamanho do conteúdo da janela,\n"
-"caso contrário, esta configuração não terá nenhum efeito"
 
 #: src/EditWidgetWindow.vala:188
 msgid "Minimum Width"
-msgstr "Largura Mínima"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:201
 msgid ""
 "Height should be larger than the size of window contents,\n"
 "otherwise this setting will not have any effect"
 msgstr ""
-"Altura deve ser maior que o tamanho do conteúdo da janela,\n"
-"caso contrário, esta configuração não terá nenhum efeito"
 
 #: src/EditWidgetWindow.vala:204
 msgid "Minimum Height"
-msgstr "Altura Mínima"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:216
 msgid ""
 "Increases the window height by adding empty lines at the end of the Conky "
 "config file"
 msgstr ""
-"Aumenta a altura da janela adicionando linhas vazias no final do arquivo de "
-"configuração do Conky"
 
 #: src/EditWidgetWindow.vala:219
 msgid "Height Padding"
-msgstr "Altura de preenchimento"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:236
 msgid ""
 "The minimum width & height must be more than the size of the window "
 "contents, otherwise the setting will not have any effect."
 msgstr ""
-"A largura mínima e a altura devem ser maiores que o tamanho do conteúdo da "
-"janela, caso contrário, a configuração não terá nenhum efeito."
 
 #: src/EditWidgetWindow.vala:246
 msgid ""
 "Setting Type to \"Opaque\" (from the transparency tab) will make it easier "
 "to see the changes"
 msgstr ""
-"Definir o Tipo como \"Opaco\" (na guia Transparência) facilitará a "
-"visualização das alterações"
 
 #: src/EditWidgetWindow.vala:257
 msgid "Transparency"
-msgstr "Transparência"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:277
 msgid "Transparency Type"
-msgstr "Tipo de Transparência"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:295
 msgid "Opaque"
-msgstr "Opaco"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:297
 msgid "Transparent"
-msgstr "Transparente"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:299
 msgid "Pseudo-Transparent"
-msgstr "Pseudo-Transparente"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:301
 msgid "Semi-Transparent"
-msgstr "Semitransparente"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:304
 msgid ""
@@ -716,17 +682,14 @@ msgid ""
 "\n"
 "0 = Fully Transparent, 100 = Fully Opaque"
 msgstr ""
-"Opacidade da janela\n"
-"\n"
-"0 = Totalmente Transparente, 100 = Totalmente Opaco"
 
 #: src/EditWidgetWindow.vala:307
 msgid "Opacity (%)"
-msgstr "Opacidade (%)"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:321
 msgid "Background Color"
-msgstr "Cor de Fundo"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:334
 msgid ""
@@ -734,9 +697,6 @@ msgid ""
 "(including any images). Use \"Pseudo-Transparent\" if you want the images to "
 "be opaque."
 msgstr ""
-"Definir Tipo como \"Transparente\" tornará toda a janela transparente "
-"(incluindo quaisquer imagens). Use \"Pseudo-Transparente\" se quiser que as "
-"imagens sejam opacas."
 
 #: src/EditWidgetWindow.vala:344
 msgid ""
@@ -744,29 +704,26 @@ msgid ""
 "the window will have a shadow. The shadow can be disabled by configuring "
 "your window manager."
 msgstr ""
-"Definir Tipo como \"Pseudo-Transparente\" tornará a janela transparente, mas "
-"a janela terá uma sombra. A sombra pode ser desativada configurando seu "
-"gerenciador de janelas."
 
 #: src/EditWidgetWindow.vala:355
 msgid "Time"
-msgstr "Hora"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:373
 msgid "Time Format"
-msgstr "Formato da Hora"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:398
 msgid "12 Hour"
-msgstr "12 Horas"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:400
 msgid "24 Hour"
-msgstr "24 Horas"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:404
 msgid "Network"
-msgstr "Rede"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:422
 msgid "Interface"
@@ -778,7 +735,7 @@ msgstr ""
 
 #: src/EditWidgetWindow.vala:437
 msgid "WiFi Network"
-msgstr "Rede WiFi"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:441
 msgid "LAN"
@@ -786,55 +743,40 @@ msgstr ""
 
 #: src/EditWidgetWindow.vala:446
 msgid "Wired LAN Network"
-msgstr "Rede LAN com Fios"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:460
 msgid "Apply"
-msgstr "Aplicar"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:462
 msgid "Apply Changes"
-msgstr "Aplicar Mudanças"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:467
 msgid "Reset"
-msgstr "Redefinir"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:469
 msgid "Reset Changes"
-msgstr "Redefinir alterações"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:476
 msgid "Discard Changes"
-msgstr "Descartar Mudanças"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:487
 msgid "Loading"
-msgstr "Carregando"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:535
 msgid "Time format cannot be changed for selected widget"
-msgstr "O formato de hora não pode ser alterado para o widget selecionado"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:551
 msgid "Network interface cannot be changed for selected widget"
-msgstr "A interface de rede não pode ser alterada para o widget selecionado"
+msgstr ""
 
 #: src/EditWidgetWindow.vala:585
 msgid "Updating theme"
-msgstr "Atualizando o tema"
-
-#~ msgid "Donate"
-#~ msgstr "Doar"
-
-#~ msgid "Import Theme Pack"
-#~ msgstr "Importar Pacote de Tema"
-
-#~ msgid ""
-#~ "When enabled, the generated image will have the same background as the "
-#~ "current desktop wallpaper. When disabled, the background will be a solid "
-#~ "color (the widget's background color)."
-#~ msgstr ""
-#~ "Quando ativada, a imagem gerada terá o mesmo plano de fundo do papel de "
-#~ "parede atual da área de trabalho. Quando desativado, o fundo será uma cor "
-#~ "sólida (a cor de fundo do widget)."
+msgstr ""

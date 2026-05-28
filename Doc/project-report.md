@@ -133,7 +133,6 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 当前已经可以按 GTK4 编译，但源码中仍有一批 GTK4 可用但偏传统的 UI 模式，典型包括：
 
 - `Gtk.TreeView` / `TreeViewColumn`，在 GTK4 中仍可编译，但现代 GTK4 更推荐 `ListView` / `ColumnView`；
-- `Gtk.show_uri`，仍可工作，但后续可替换为更现代的 URI 打开 API；
 - 手写工具栏、按钮和表格布局较多，缺少 GtkBuilder、GResource 或 libadwaita 风格分层。
 
 这些不阻止当前 GTK4 编译，但说明 UI 层只是完成了可编译迁移，尚未完成现代 GTK4/libadwaita 体验改造。
@@ -156,13 +155,13 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 - `rm`
 - `touch`
 - `7za`
-- `import`
+- `convert`
 
-其中 `import` 来自 ImageMagick，项目使用它为 Conky 窗口抓图生成预览。ImageMagick 官方文档说明 `import` 是从 X server 屏幕/窗口抓图的工具，这与项目的 X11 依赖一致。
+其中 `convert` 来自 ImageMagick。当前预览生成不再抓取 Conky 窗口，而是根据 conkyrc 内容生成一张静态配置预览图，因此不再需要 X server 窗口截图能力。
 
 参考：
 
-- https://imagemagick.org/script/import.php
+- https://imagemagick.org/script/convert.php
 
 ### 4.2 桌面环境适配方式偏传统
 
@@ -171,26 +170,21 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 - Cinnamon/GNOME：使用 `gsettings` 改壁纸；
 - XFCE：使用 `xfconf-query`；
 - LXDE：使用 `pcmanfm --set-wallpaper`；
-- 终端运行：尝试 `xfce4-terminal`、`gnome-terminal`；
+- 文件/目录/URL 打开：使用 GIO 默认应用启动 API；
+- 终端运行：尝试 `gnome-terminal`、`kgx`、`konsole`、`xfce4-terminal`；
 - 启动项：写入 `~/.config/autostart/conky.desktop`。
 
-这套方式对传统 X11 桌面环境较实用，但对现代桌面系统的门户化、沙箱化、Wayland 权限模型、多显示器和 GNOME/KDE 新版行为并不充分。
+这套方式对传统桌面环境较实用，但对现代桌面系统的门户化、沙箱化、Wayland 权限模型、多显示器和 GNOME/KDE 新版行为并不充分。
 
-### 4.3 预览图生成依赖 X11 窗口 ID
+### 4.3 预览图生成已移除 X11 窗口截图
 
-`src/XidHelper.vala` 直接从 `Gdk.X11.Window` 取 XID，`src/Main.vala` 里再调用：
+早期实现通过 XID 调用 ImageMagick 的窗口截图能力。该路径已经移除。当前实现删除了 `src/XidHelper.vala`，并改为用 `convert caption:...` 从 conkyrc 文本生成静态预览图。这样不会读取其他窗口，也不依赖 X11 window id 或 Wayland 截屏权限。
 
-```bash
-import -window 0x... ...
-```
-
-这意味着预览功能天然偏 X11。Wayland 下应用通常不能任意读取其他窗口内容，也不能稳定依赖 X11 window id。即使主程序已经迁到 GTK4，这部分功能仍会成为现代桌面兼容性的主要风险。
-
-GTK 官方文档中，X11 相关 API 也被单独归入平台专用构建入口，例如 GTK4 下需要使用 `gtk4-x11` / GDK X11 专用接口。
+代价是预览不再是 Conky 实际窗口截图，而是配置内容摘要。后续如果需要真实 Wayland 截图，应通过 XDG Desktop Portal 或桌面环境公开的截图接口重新设计交互，而不能回到硬编码 XID 的方式。
 
 参考：
 
-- https://docs.gtk.org/gdk4/x11.html
+- https://flatpak.github.io/xdg-desktop-portal/docs/doc-org.freedesktop.portal.Screenshot.html
 
 ## 5. 与现代 Linux 桌面系统的距离
 
@@ -231,21 +225,21 @@ GTK 官方文档中，X11 相关 API 也被单独归入平台专用构建入口�
 
 结论：项目已经进入 GTK4 构建路径，但 UI 形态仍是传统手写 GTK 应用，离 libadwaita/HIG 风格应用仍有距离。
 
-### 5.3 Wayland 与安全模型：较大距离
+### 5.3 Wayland 与安全模型：中等距离
 
 优点：
 
 - 常规 GTK 窗口本身不一定阻止在 Wayland 会话中启动；
-- Conky 管理、文件扫描、配置编辑等非截图功能理论上可继续工作。
+- Conky 管理、文件扫描、配置编辑等功能理论上可继续工作；
+- 预览生成已经不再依赖 XID 或 `import -window`。
 
 差距：
 
-- 预览功能依赖 XID 与 ImageMagick `import -window`；
 - 修改壁纸依赖 DE 私有命令；
 - 没有使用 XDG Desktop Portal；
 - 运行时大量 shell 命令拼接，对沙箱/Flatpak 化不友好。
 
-结论：项目更适合 X11 或 XWayland 兼容路径；要成为现代 Wayland 一等公民，需要重做预览、截图和桌面集成方式。
+结论：项目已经移除了最直接的 X11 窗口截图依赖，并且文件/目录/URL 打开已改用 GIO 默认应用启动 API。要成为现代 Wayland 一等公民，还需要继续重做壁纸、文件选择对话框、终端运行和沙箱权限相关的桌面集成方式。
 
 ### 5.4 打包与元数据：中等距离
 
@@ -310,24 +304,23 @@ GTK 官方文档中，X11 相关 API 也被单独归入平台专用构建入口�
 建议：
 
 - 用 `ListView` / `ColumnView` 替换 `TreeView`；
-- 用 GTK4 推荐 API 替换 `Gtk.show_uri`；
 - 梳理工具栏、菜单和对话框结构；
 - 评估是否引入 libadwaita；
 - 将 UI 构造与业务逻辑进一步拆分。
 
 完成后再评估 libadwaita、Flatpak 和 Wayland 适配成本会更真实。
 
-### P2：隔离 X11/Wayland 相关功能
+### P2：继续 Wayland/Portal 化桌面集成
 
-目标：不要让 X11 截图能力成为整个应用的硬依赖。
+目标：不要让桌面集成功能依赖传统会话假设或 DE 私有命令。
 
 建议：
 
-- 把预览生成抽象成独立 backend；
-- X11 backend 继续保留 `import -window`；
-- 新增 Wayland/portal 可行性实验；
-- 在 Wayland 下禁用或降级不可用功能，并给出明确 UI 状态；
-- 避免后续重新引入硬编码 X11 依赖，X11 能力应尽量延迟加载或条件编译。
+- 保持预览生成不依赖 XID/窗口截图；
+- 评估 XDG Desktop Portal 的截图和文件选择能力；
+- 壁纸修改保留 DE 后端，但要将 GNOME/XFCE/LXDE 分支封装到 `DesktopIntegration`；
+- 在 Wayland 下对不可用功能给出明确状态；
+- 避免后续重新引入硬编码 X11 依赖。
 
 ### P3：拆分核心业务逻辑
 
@@ -355,12 +348,12 @@ GTK 官方文档中，X11 相关 API 也被单独归入平台专用构建入口�
 
 ## 7. 总体结论
 
-`conky-manager3` 当前不是不可维护的老项目：它代码量不大，Meson 构建已经存在，且在 2026 年的本机工具链上可以按 GTK4 编译成功。它的问题主要不是“构建不了”，而是 UI 结构与桌面集成方式仍明显带有传统 X11 桌面工具痕迹。
+`conky-manager3` 当前不是不可维护的老项目：它代码量不大，Meson 构建已经存在，且在 2026 年的本机工具链上可以按 GTK4 编译成功。它的问题主要不是“构建不了”，而是 UI 结构与桌面集成方式仍明显带有传统桌面工具痕迹。
 
 最现实的判断是：
 
-- 短期：可以作为传统 GTK4/X11 兼容工具继续维护；
+- 短期：可以作为 GTK4/Wayland 兼容工具继续维护；
 - 中期：应继续统一 Meson/打包文档、清理传统 UI 结构、补 CI 和基础测试；
-- 长期：如果目标是现代 GNOME/Wayland/软件中心体验，需要重做预览截图、桌面集成和 UI 架构。
+- 长期：如果目标是现代 GNOME/Wayland/软件中心体验，需要继续重做桌面集成和 UI 架构。
 
 建议不要继续做纯机械式 API 替换。更稳妥的路线是先把业务分层和测试补起来，再进入 GTK4-native/libadwaita 或 Wayland 适配。

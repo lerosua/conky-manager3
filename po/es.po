@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: conky-manager3 3.0\n"
-"Report-Msgid-Bugs-To: teejee2008@gmail.com\n"
-"POT-Creation-Date: 2023-09-02 22:27-0400\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-28 09:52+0800\n"
 "PO-Revision-Date: 2025-07-16 17:46-0500\n"
 "Last-Translator: chmodmasx <chmodmasx@gmail.com>\n"
 "Language-Team: Spanish\n"
@@ -16,130 +16,419 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: EditWidgetWindow.vala:384
-msgid "12 Hour"
-msgstr "12 Horas"
-
-#: EditWidgetWindow.vala:386
-msgid "24 Hour"
-msgstr "24 Horas"
-
-#: MainWindow.vala:434 MainWindow.vala:435
-msgid "About"
-msgstr "Acerca de"
-
-#: SettingsWindow.vala:199
-msgid "Add"
-msgstr "Agregar"
-
-#: SettingsWindow.vala:152
-msgid "Additional locations to search for Conky themes"
-msgstr "Ubicaciones adicionales para buscar temas de Conky"
-
-#: EditWidgetWindow.vala:104
-msgid "Alignment"
-msgstr "Alineación"
-
-#: GeneratePreviewWindow.vala:69
-msgid "All Widgets (Overwrite Existing Image)"
-msgstr "Todos los Widgets (Sobrescribir Imagen Existente)"
-
-#: GeneratePreviewWindow.vala:66
-msgid "All Widgets with Missing Previews"
-msgstr "Todos los Widgets sin Vista Previa"
-
-#: Main.vala:258
-msgid "App config loaded"
-msgstr "Configuración de la aplicación cargada"
-
-#: Main.vala:210
-msgid "App config saved"
-msgstr "Configuración de la aplicación guardada"
-
-#: MainWindow.vala:416 SettingsWindow.vala:47
-msgid "Application Settings"
-msgstr "Configuraciones de la Aplicación"
-
-#: EditWidgetWindow.vala:445
-msgid "Apply"
-msgstr "Aplicar"
-
-#: EditWidgetWindow.vala:448
-msgid "Apply Changes"
-msgstr "Aplicar Cambios"
-
-#: AboutWindow.vala:386
-#, c-format
-msgid "Artists"
-msgstr "Artistas"
-
-#: AboutWindow.vala:370
-#, c-format
-msgid "Authors"
-msgstr "Autores"
-
-#: AboutWindow.vala:337
-msgid "Back"
-msgstr "Atrás"
-
-#: EditWidgetWindow.vala:312
-msgid "Background Color"
-msgstr "Color de Fondo"
-
-#: EditWidgetWindow.vala:125
-msgid "Bottom Left"
-msgstr "Inferior Izquierda"
-
-#: EditWidgetWindow.vala:129
-msgid "Bottom Middle"
-msgstr "Inferior Centro"
-
-#: EditWidgetWindow.vala:127
-msgid "Bottom Right"
-msgstr "Inferior Derecha"
-
-#: MainWindow.vala:122
-msgid "Browse:"
-msgstr "Explorar:"
-
-#: EditThemeWindow.vala:212 GeneratePreviewWindow.vala:148
-#: SettingsWindow.vala:221
-msgid "Cancel"
-msgstr "Cancelar"
-
-#: GeneratePreviewWindow.vala:83
-msgid "Capture Desktop Background"
-msgstr "Capturar Fondo de Escritorio"
-
-#: EditThemeWindow.vala:130
-msgid "Choose File"
-msgstr "Elegir Archivo"
-
-#: AboutWindow.vala:347 EditWidgetWindow.vala:461
-msgid "Close"
-msgstr "Cerrar"
-
-#: Main.vala:165
-msgid "Commands listed below are not available"
-msgstr "Los comandos listados abajo no están disponibles"
-
-#: AboutWindow.vala:324 AboutWindow.vala:341 MainWindow.vala:258
+#: src/AboutWindow.vala:322 src/AboutWindow.vala:337 src/MainWindow.vala:251
 msgid "Credits"
 msgstr "Créditos"
 
-#: EditThemeWindow.vala:123
-msgid "Current Wallpaper"
-msgstr "Fondo de Pantalla Actual"
+#: src/AboutWindow.vala:334
+msgid "Back"
+msgstr "Atrás"
 
-#: Main.vala:1998
+#: src/AboutWindow.vala:342 src/EditWidgetWindow.vala:474
+msgid "Close"
+msgstr "Cerrar"
+
+#: src/AboutWindow.vala:364
+msgid "Authors"
+msgstr "Autores"
+
+#: src/AboutWindow.vala:372
+msgid "Third Party Tools"
+msgstr "Herramientas de Terceros"
+
+#: src/AboutWindow.vala:380
+msgid "Artists"
+msgstr "Artistas"
+
+#: src/AboutWindow.vala:388
+msgid "Translators"
+msgstr "Traductores"
+
+#: src/AboutWindow.vala:396
+msgid "Documenters"
+msgstr "Documentadores"
+
+#: src/AboutWindow.vala:404
+msgid "Donations"
+msgstr "Donaciones"
+
+#: src/GeneratePreviewWindow.vala:45 src/MainWindow.vala:347
+msgid "Generate Preview"
+msgstr "Generar Vista Previa"
+
+#: src/GeneratePreviewWindow.vala:57
+msgid "Generate preview images for"
+msgstr "Generar imágenes de vista previa para"
+
+#: src/GeneratePreviewWindow.vala:63
+msgid "Selected Widget"
+msgstr "Widget Seleccionado"
+
+#: src/GeneratePreviewWindow.vala:66
+msgid "All Widgets with Missing Previews"
+msgstr "Todos los Widgets sin Vista Previa"
+
+#: src/GeneratePreviewWindow.vala:70
+msgid "All Widgets (Overwrite Existing Image)"
+msgstr "Todos los Widgets (Sobrescribir Imagen Existente)"
+
+#: src/GeneratePreviewWindow.vala:74
+msgid "Options"
+msgstr "Opciones"
+
+#: src/GeneratePreviewWindow.vala:85
+#, fuzzy
+msgid "Transparent Preview Background"
+msgstr "Capturar Fondo de Escritorio"
+
+#: src/GeneratePreviewWindow.vala:89
+msgid ""
+"When enabled, PNG previews are generated with a transparent background. "
+"Desktop background capture is not used."
+msgstr ""
+
+#: src/GeneratePreviewWindow.vala:106
+msgid "High quality images (PNG)"
+msgstr "Imágenes de alta calidad (PNG)"
+
+#: src/GeneratePreviewWindow.vala:110
+msgid "Generate preview images in PNG format instead of JPEG"
+msgstr "Generar imágenes de vista previa en formato PNG en lugar de JPEG"
+
+#: src/GeneratePreviewWindow.vala:125 src/SettingsWindow.vala:212
+#: src/DonationWindow.vala:108 src/EditThemeWindow.vala:225
+msgid "OK"
+msgstr "Aceptar"
+
+#: src/GeneratePreviewWindow.vala:147 src/SettingsWindow.vala:217
+#: src/EditThemeWindow.vala:231
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: src/Main.vala:127
+msgid "Missing Dependencies"
+msgstr "Dependencias Faltantes"
+
+#: src/Main.vala:158
+msgid "Commands listed below are not available"
+msgstr "Los comandos listados abajo no están disponibles"
+
+#: src/Main.vala:159
+msgid "Please install required packages and try running it again"
+msgstr ""
+"Por favor instala los paquetes requeridos e intenta ejecutarlo nuevamente"
+
+#: src/Main.vala:203
+msgid "App config saved"
+msgstr "Configuración de la aplicación guardada"
+
+#: src/Main.vala:251
+msgid "App config loaded"
+msgstr "Configuración de la aplicación cargada"
+
+#: src/Main.vala:260 src/Main.vala:266 src/Main.vala:272
+msgid "Directory Created"
+msgstr "Directorio Creado"
+
+#: src/Main.vala:313
+msgid "Found theme pack [installed]"
+msgstr "Paquete de tema encontrado [instalado]"
+
+#: src/Main.vala:321
+msgid "Found theme pack [new]"
+msgstr "Paquete de tema encontrado [nuevo]"
+
+#: src/Main.vala:357
+msgid "Importing"
+msgstr "Importando"
+
+#: src/Main.vala:368
+msgid "Failed to unzip files from theme pack"
+msgstr "Error al descomprimir archivos del paquete de tema"
+
+#: src/Main.vala:420
+#, c-format
+msgid "Searching for conkyrc files... %d found"
+msgstr "Buscando archivos conkyrc... %d encontrados"
+
+#: src/Main.vala:573
+msgid "Font Copied: "
+msgstr "Fuente Copiada: "
+
+#: src/Main.vala:909 src/Main.vala:931
+msgid "Started"
+msgstr "Iniciado"
+
+#: src/Main.vala:957 src/Utility.vala:767
+msgid "Stopped"
+msgstr "Detenido"
+
+#: src/Main.vala:1006
+msgid "Saved"
+msgstr "Guardado"
+
+#: src/Main.vala:1077
+msgid "No preview text found in this Conky configuration."
+msgstr ""
+
+#: src/Main.vala:1943
 msgid "Current wallpaper source path"
 msgstr "Ruta actual del fondo de pantalla"
 
-#: EditThemeWindow.vala:115
-msgid "Custom Wallpaper"
-msgstr "Fondo de Pantalla Personalizado"
+#: src/Main.vala:1947 src/Main.vala:1955
+msgid "Wallpaper saved"
+msgstr "Fondo de pantalla guardado"
 
-#: DonationWindow.vala:54
+#: src/MainWindow.vala:113
+msgid "Browse:"
+msgstr "Explorar:"
+
+#: src/MainWindow.vala:117 src/EditThemeWindow.vala:240
+msgid "Widgets"
+msgstr "Widgets"
+
+#: src/MainWindow.vala:121
+msgid "Themes"
+msgstr "Temas"
+
+#: src/MainWindow.vala:152 src/EditThemeWindow.vala:54
+msgid "Save Theme"
+msgstr "Guardar Tema"
+
+#: src/MainWindow.vala:154
+msgid "Save running widgets and current desktop wallpaper as new theme"
+msgstr ""
+"Guardar widgets en ejecución y fondo de pantalla actual como nuevo tema"
+
+#: src/MainWindow.vala:164
+msgid "Filter"
+msgstr "Filtro"
+
+#: src/MainWindow.vala:174
+msgid ""
+"Enter name or path to filter.\n"
+"Enter '0' to list running widgets"
+msgstr ""
+"Ingresa nombre o ruta para filtrar.\n"
+"Ingresa '0' para listar widgets en ejecución"
+
+#: src/MainWindow.vala:184
+msgid "Preview"
+msgstr "Vista Previa"
+
+#: src/MainWindow.vala:186
+msgid "Toggle Preview"
+msgstr "Alternar Vista Previa"
+
+#: src/MainWindow.vala:190
+msgid "List"
+msgstr "Lista"
+
+#: src/MainWindow.vala:192
+msgid "Toggle List"
+msgstr "Alternar Lista"
+
+#: src/MainWindow.vala:220 src/MainWindow.vala:222 src/MainWindow.vala:304
+msgid "Stop"
+msgstr "Detener"
+
+#: src/MainWindow.vala:241
+msgid "Source"
+msgstr "Fuente"
+
+#: src/MainWindow.vala:276
+msgid "Previous"
+msgstr "Anterior"
+
+#: src/MainWindow.vala:277
+msgid "Previous Widget"
+msgstr "Widget Anterior"
+
+#: src/MainWindow.vala:283
+msgid "Next"
+msgstr "Siguiente"
+
+#: src/MainWindow.vala:284
+msgid "Next Widget"
+msgstr "Siguiente Widget"
+
+#: src/MainWindow.vala:290
+msgid "Terminal Start"
+msgstr "Inicio en Terminal"
+
+#: src/MainWindow.vala:291
+msgid "Start/Restart Widget in Terminal"
+msgstr "Iniciar/Reiniciar Widget en Terminal"
+
+#: src/MainWindow.vala:297
+msgid "Start"
+msgstr "Iniciar"
+
+#: src/MainWindow.vala:298
+msgid "Start/Restart Widget"
+msgstr "Iniciar/Reiniciar Widget"
+
+#: src/MainWindow.vala:305
+msgid "Stop Widget"
+msgstr "Detener Widget"
+
+#: src/MainWindow.vala:315
+msgid "Edit"
+msgstr "Editar"
+
+#: src/MainWindow.vala:316 src/EditWidgetWindow.vala:64
+msgid "Edit Widget"
+msgstr "Editar Widget"
+
+#: src/MainWindow.vala:322
+msgid "Manual Edit"
+msgstr "Edición Manual"
+
+#: src/MainWindow.vala:323
+msgid "Edit file manually in a text editor"
+msgstr "Editar archivo manualmente en un editor de texto"
+
+#: src/MainWindow.vala:329
+msgid "Open Folder"
+msgstr "Abrir Carpeta"
+
+#: src/MainWindow.vala:330
+msgid "Open Theme Folder"
+msgstr "Abrir Carpeta de Tema"
+
+#: src/MainWindow.vala:340
+msgid "Refresh"
+msgstr "Actualizar"
+
+#: src/MainWindow.vala:341
+msgid "Search for new themes"
+msgstr "Buscar nuevos temas"
+
+#: src/MainWindow.vala:348
+msgid "Generate preview images"
+msgstr "Generar imágenes de vista previa"
+
+#: src/MainWindow.vala:354
+msgid "Stop All Widgets"
+msgstr "Detener Todos los Widgets"
+
+#: src/MainWindow.vala:355
+msgid "Stop all running widgets"
+msgstr "Detener todos los widgets en ejecución"
+
+#: src/MainWindow.vala:361 src/MainWindow.vala:925
+msgid "Import"
+msgstr "Importar"
+
+#: src/MainWindow.vala:362
+msgid "Import Theme Pack (*.cmtp.7z) or various archive type"
+msgstr "Importar Paquete de Tema (*.cmtp.7z) o varios tipos de archivo"
+
+#: src/MainWindow.vala:373
+msgid "Settings"
+msgstr "Configuraciones"
+
+#: src/MainWindow.vala:374 src/SettingsWindow.vala:47
+msgid "Application Settings"
+msgstr "Configuraciones de la Aplicación"
+
+#: src/MainWindow.vala:380
+msgid "Funding"
+msgstr "Financiación"
+
+#: src/MainWindow.vala:381 src/DonationWindow.vala:36
+msgid "Funding Support"
+msgstr "Soporte de Financiación"
+
+#: src/MainWindow.vala:387 src/MainWindow.vala:388
+msgid "About"
+msgstr "Acerca de"
+
+#: src/MainWindow.vala:415
+msgid "Enable"
+msgstr "Habilitar"
+
+#: src/MainWindow.vala:453
+msgid ""
+"Use the keyboard arrow keys to browse.\n"
+"Press ENTER to start and stop."
+msgstr ""
+"Usa las teclas de flecha del teclado para navegar.\n"
+"Presiona ENTER para iniciar y detener."
+
+#: src/MainWindow.vala:812 src/MainWindow.vala:886
+msgid "Generating Previews"
+msgstr "Generando Vistas Previas"
+
+#: src/MainWindow.vala:979
+msgid "Themes Imported"
+msgstr "Temas Importados"
+
+#: src/MainWindow.vala:979
+msgid "Themes imported successfully"
+msgstr "Temas importados exitosamente"
+
+#: src/MainWindow.vala:982 src/Utility.vala:107
+msgid "Error"
+msgstr "Error"
+
+#: src/MainWindow.vala:982
+msgid "Failed to import themes"
+msgstr "Error al importar temas"
+
+#: src/MainWindow.vala:1068
+msgid "Utility for managing Conky configuration files"
+msgstr "Utilidad para gestionar archivos de configuración de Conky"
+
+#: src/MainWindow.vala:1125
+msgid "N/A"
+msgstr "N/D"
+
+#: src/MainWindow.vala:1137
+msgid "Searching directories..."
+msgstr "Buscando directorios..."
+
+#: src/SettingsWindow.vala:80
+msgid "General"
+msgstr "General"
+
+#: src/SettingsWindow.vala:90
+msgid "Run Conky at system startup"
+msgstr "Ejecutar Conky al inicio del sistema"
+
+#: src/SettingsWindow.vala:109
+msgid "Startup Delay (seconds)"
+msgstr "Retraso de Inicio (segundos)"
+
+#: src/SettingsWindow.vala:133
+msgid "Locations"
+msgstr "Ubicaciones"
+
+#: src/SettingsWindow.vala:144
+msgid "Theme Directory"
+msgstr "Directorio de Temas"
+
+#: src/SettingsWindow.vala:156
+msgid "Additional locations to search for Conky themes"
+msgstr "Ubicaciones adicionales para buscar temas de Conky"
+
+#: src/SettingsWindow.vala:176 src/EditWidgetWindow.vala:89
+msgid "Location"
+msgstr "Ubicación"
+
+#: src/SettingsWindow.vala:202
+msgid "Add"
+msgstr "Agregar"
+
+#: src/SettingsWindow.vala:207
+msgid "Remove"
+msgstr "Eliminar"
+
+#: src/SettingsWindow.vala:265
+msgid "Select directory"
+msgstr "Seleccionar directorio"
+
+#: src/DonationWindow.vala:53
 msgid ""
 "Did you find this software useful?\n"
 "\n"
@@ -160,640 +449,196 @@ msgid ""
 "-help finance the efforts with these buttons to the right.\n"
 "                                                                                          Scott "
 "Caudle\n"
-"                                                                                (zcotcaudle@gmail."
-"com)"
+"                                                                                (zcotcaudle@gmail.com)"
 msgstr ""
 "¿Te resultó útil este software?\n"
 "\n"
-"Puedes invitarme un café o hacer una donación vía PayPal para mostrar tu apoyo. "
-"O simplemente envíame un email y salúdame. Esta aplicación es completamente gratuita y "
-"continuará siendo así. Tus contribuciones ayudarán a mantener "
-"este proyecto vivo y mejorarlo aún más.\n"
+"Puedes invitarme un café o hacer una donación vía PayPal para mostrar tu "
+"apoyo. O simplemente envíame un email y salúdame. Esta aplicación es "
+"completamente gratuita y continuará siendo así. Tus contribuciones ayudarán "
+"a mantener este proyecto vivo y mejorarlo aún más.\n"
 "\n"
-"No dudes en enviarme un email si encuentras algún problema en esta aplicación o "
-"si necesitas algún cambio. Las sugerencias y comentarios son siempre bienvenidos.\n"
+"No dudes en enviarme un email si encuentras algún problema en esta "
+"aplicación o si necesitas algún cambio. Las sugerencias y comentarios son "
+"siempre bienvenidos.\n"
 "\n"
 "Gracias,\n"
 "Tony George\n"
 "(teejeetech@gmail.com)\n"
 "\n"
-"Soporte de Bionic a Focal a Jammy, soporte de configuración 1.10+, importación mágica de archivos, "
-"función de depuración por terminal, y más\n"
+"Soporte de Bionic a Focal a Jammy, soporte de configuración 1.10+, "
+"importación mágica de archivos, función de depuración por terminal, y más\n"
 "-ayuda a financiar los esfuerzos con estos botones a la derecha.\n"
 "                                                                                          Scott "
 "Caudle\n"
-"                                                                                (zcotcaudle@gmail."
-"com)"
+"                                                                                (zcotcaudle@gmail.com)"
 
-#: Main.vala:267 Main.vala:273 Main.vala:279
-msgid "Directory Created"
-msgstr "Directorio Creado"
-
-#: EditWidgetWindow.vala:464
-msgid "Discard Changes"
-msgstr "Descartar Cambios"
-
-#: AboutWindow.vala:402
-#, c-format
-msgid "Documenters"
-msgstr "Documentadores"
-
-#: DonationWindow.vala:88
-msgid "Donate with Google Wallet"
-msgstr "Donar con Google Wallet"
-
-#: DonationWindow.vala:81
+#: src/DonationWindow.vala:80
 msgid "Donate with PayPal"
 msgstr "Donar con PayPal"
 
-#: AboutWindow.vala:410
-#, c-format
-msgid "Donations"
-msgstr "Donaciones"
-
-#: MainWindow.vala:339
-msgid "Edit"
-msgstr "Editar"
-
-#: EditThemeWindow.vala:57
-msgid "Edit Theme"
-msgstr "Editar Tema"
-
-#: EditWidgetWindow.vala:64 MainWindow.vala:340
-msgid "Edit Widget"
-msgstr "Editar Widget"
-
-#: MainWindow.vala:349
-msgid "Edit file manually in a text editor"
-msgstr "Editar archivo manualmente en un editor de texto"
-
-#: MainWindow.vala:455
-msgid "Enable"
-msgstr "Habilitar"
-
-#: MainWindow.vala:185
-msgid ""
-"Enter name or path to filter.\n"
-"Enter '0' to list running widgets"
-msgstr ""
-"Ingresa nombre o ruta para filtrar.\n"
-"Ingresa '0' para listar widgets en ejecución"
-
-#: MainWindow.vala:1016 Utility.vala:107
-msgid "Error"
-msgstr "Error"
-
-#: MainWindow.vala:1016
-msgid "Failed to import themes"
-msgstr "Error al importar temas"
-
-#: Utility.vala:1309
-msgid "Failed to set ownership"
-msgstr "Error al establecer propietario"
-
-#: Main.vala:375
-msgid "Failed to unzip files from theme pack"
-msgstr "Error al descomprimir archivos del paquete de tema"
-
-#: MainWindow.vala:175
-msgid "Filter"
-msgstr "Filtro"
-
-#: DonationWindow.vala:124
-msgid "Financial support Stripe"
-msgstr "Soporte financiero Stripe"
-
-#: Main.vala:580
-msgid "Font Copied: "
-msgstr "Fuente Copiada: "
-
-#: Main.vala:320
-msgid "Found theme pack [installed]"
-msgstr "Paquete de tema encontrado [instalado]"
-
-#: Main.vala:328
-msgid "Found theme pack [new]"
-msgstr "Paquete de tema encontrado [nuevo]"
-
-#: DonationWindow.vala:117
-msgid "Fund with Credit Card/PayPal"
-msgstr "Financiar con Tarjeta de Crédito/PayPal"
-
-#: MainWindow.vala:425
-msgid "Funding"
-msgstr "Financiación"
-
-#: DonationWindow.vala:36 MainWindow.vala:426
-msgid "Funding Support"
-msgstr "Soporte de Financiación"
-
-#: SettingsWindow.vala:76
-msgid "General"
-msgstr "General"
-
-#: GeneratePreviewWindow.vala:45 MainWindow.vala:380
-msgid "Generate Preview"
-msgstr "Generar Vista Previa"
-
-#: MainWindow.vala:381
-msgid "Generate preview images"
-msgstr "Generar imágenes de vista previa"
-
-#: GeneratePreviewWindow.vala:57
-msgid "Generate preview images for"
-msgstr "Generar imágenes de vista previa para"
-
-#: GeneratePreviewWindow.vala:108
-msgid "Generate preview images in PNG format instead of JPEG"
-msgstr "Generar imágenes de vista previa en formato PNG en lugar de JPEG"
-
-#: MainWindow.vala:845 MainWindow.vala:919
-msgid "Generating Previews"
-msgstr "Generando Vistas Previas"
-
-#: EditWidgetWindow.vala:213
-msgid "Height Padding"
-msgstr "Relleno de Altura"
-
-#: EditWidgetWindow.vala:195
-msgid ""
-"Height should be larger than the size of window contents,\n"
-"otherwise this setting will not have any effect"
-msgstr ""
-"La altura debe ser mayor que el tamaño del contenido de la ventana,\n"
-"de lo contrario esta configuración no tendrá efecto"
-
-#: GeneratePreviewWindow.vala:104
-msgid "High quality images (PNG)"
-msgstr "Imágenes de alta calidad (PNG)"
-
-#: EditWidgetWindow.vala:139
-msgid "Horizontal Gap"
-msgstr "Espacio Horizontal"
-
-#: MainWindow.vala:400 MainWindow.vala:958
-msgid "Import"
-msgstr "Importar"
-
-#: MainWindow.vala:401
-msgid "Import Theme Pack (*.cmtp.7z) or various archive type"
-msgstr "Importar Paquete de Tema (*.cmtp.7z) o varios tipos de archivo"
-
-#: Main.vala:364
-msgid "Importing"
-msgstr "Importando"
-
-#: EditThemeWindow.vala:80
-msgid "Include desktop wallpaper in theme"
-msgstr "Incluir fondo de pantalla del escritorio en el tema"
-
-#: EditThemeWindow.vala:222 EditThemeWindow.vala:223
-msgid "Include running widgets in theme"
-msgstr "Incluir widgets en ejecución en el tema"
-
-#: EditWidgetWindow.vala:210
-msgid ""
-"Increases the window height by adding empty lines at the end of the Conky "
-"config file"
-msgstr ""
-"Aumenta la altura de la ventana agregando líneas vacías al final del "
-"archivo de configuración de Conky"
-
-#: EditWidgetWindow.vala:406
-msgid "Interface"
-msgstr "Interfaz"
-
-#: EditWidgetWindow.vala:425
-msgid "LAN"
-msgstr "LAN"
-
-#: MainWindow.vala:201
-msgid "List"
-msgstr "Lista"
-
-#: EditWidgetWindow.vala:475
-msgid "Loading"
-msgstr "Cargando"
-
-#: EditWidgetWindow.vala:88 SettingsWindow.vala:173
-msgid "Location"
-msgstr "Ubicación"
-
-#: SettingsWindow.vala:126
-msgid "Locations"
-msgstr "Ubicaciones"
-
-#: MainWindow.vala:348
-msgid "Manual Edit"
-msgstr "Edición Manual"
-
-#: EditWidgetWindow.vala:131
-msgid "Middle Left"
-msgstr "Centro Izquierda"
-
-#: EditWidgetWindow.vala:135
-msgid "Middle Middle"
-msgstr "Centro Centro"
-
-#: EditWidgetWindow.vala:133
-msgid "Middle Right"
-msgstr "Centro Derecha"
-
-#: EditWidgetWindow.vala:198
-msgid "Minimum Height"
-msgstr "Altura Mínima"
-
-#: EditWidgetWindow.vala:182
-msgid "Minimum Width"
-msgstr "Ancho Mínimo"
-
-#: Main.vala:134
-msgid "Missing Dependencies"
-msgstr "Dependencias Faltantes"
-
-#: Utility.vala:1039
-msgid "Missing Icon"
-msgstr "Icono Faltante"
-
-#: MainWindow.vala:1146
-msgid "N/A"
-msgstr "N/D"
-
-#: EditThemeWindow.vala:328
-msgid "Name Required"
-msgstr "Nombre Requerido"
-
-#: EditWidgetWindow.vala:390
-msgid "Network"
-msgstr "Red"
-
-#: EditWidgetWindow.vala:539
-msgid "Network interface cannot be changed for selected widget"
-msgstr "La interfaz de red no se puede cambiar para el widget seleccionado"
-
-#: MainWindow.vala:297
-msgid "Next"
-msgstr "Siguiente"
-
-#: MainWindow.vala:298
-msgid "Next Widget"
-msgstr "Siguiente Widget"
-
-#: EditThemeWindow.vala:341
-msgid "No Widgets Selected"
-msgstr "No hay Widgets Seleccionados"
-
-#: EditThemeWindow.vala:113
-msgid "None"
-msgstr "Ninguno"
-
-#: DonationWindow.vala:109 EditThemeWindow.vala:205
-#: GeneratePreviewWindow.vala:125 SettingsWindow.vala:215
-msgid "OK"
-msgstr "Aceptar"
-
-#: EditWidgetWindow.vala:298
-msgid "Opacity (%)"
-msgstr "Opacidad (%)"
-
-#: EditWidgetWindow.vala:286
-msgid "Opaque"
-msgstr "Opaco"
-
-#: MainWindow.vala:357
-msgid "Open Folder"
-msgstr "Abrir Carpeta"
-
-#: MainWindow.vala:358
-msgid "Open Theme Folder"
-msgstr "Abrir Carpeta de Tema"
-
-#: GeneratePreviewWindow.vala:72
-msgid "Options"
-msgstr "Opciones"
-
-#: EditThemeWindow.vala:329
-msgid "Please enter theme name"
-msgstr "Por favor ingresa el nombre del tema"
-
-#: Main.vala:166
-msgid "Please install required packages and try running it again"
-msgstr "Por favor instala los paquetes requeridos e intenta ejecutarlo nuevamente"
-
-#: MainWindow.vala:195
-msgid "Preview"
-msgstr "Vista Previa"
-
-#: MainWindow.vala:288
-msgid "Previous"
-msgstr "Anterior"
-
-#: MainWindow.vala:289
-msgid "Previous Widget"
-msgstr "Widget Anterior"
-
-#: EditWidgetWindow.vala:290
-msgid "Pseudo-Transparent"
-msgstr "Pseudo-Transparente"
-
-#: MainWindow.vala:371
-msgid "Refresh"
-msgstr "Actualizar"
-
-#: SettingsWindow.vala:205
-msgid "Remove"
-msgstr "Eliminar"
-
-#: EditWidgetWindow.vala:453
-msgid "Reset"
-msgstr "Restablecer"
-
-#: EditWidgetWindow.vala:456
-msgid "Reset Changes"
-msgstr "Restablecer Cambios"
-
-#: SettingsWindow.vala:86
-msgid "Run Conky at system startup"
-msgstr "Ejecutar Conky al inicio del sistema"
-
-#: EditThemeWindow.vala:57 MainWindow.vala:161
-msgid "Save Theme"
-msgstr "Guardar Tema"
-
-#: MainWindow.vala:165
-msgid "Save running widgets and current desktop wallpaper as new theme"
-msgstr "Guardar widgets en ejecución y fondo de pantalla actual como nuevo tema"
-
-#: Main.vala:1045
-msgid "Saved"
-msgstr "Guardado"
-
-#: EditThemeWindow.vala:152
-msgid "Scaling"
-msgstr "Escalado"
-
-#: MainWindow.vala:372
-msgid "Search for new themes"
-msgstr "Buscar nuevos temas"
-
-#: MainWindow.vala:1158
-msgid "Searching directories..."
-msgstr "Buscando directorios..."
-
-#: Main.vala:427
-#, c-format
-msgid "Searching for conkyrc files... %d found"
-msgstr "Buscando archivos conkyrc... %d encontrados"
-
-#: EditThemeWindow.vala:135
-msgid "Select Wallpaper"
-msgstr "Seleccionar Fondo de Pantalla"
-
-#: SettingsWindow.vala:270
-msgid "Select directory"
-msgstr "Seleccionar directorio"
-
-#: EditThemeWindow.vala:342
-msgid "Select the widgets to include in theme"
-msgstr "Selecciona los widgets a incluir en el tema"
-
-#: GeneratePreviewWindow.vala:63
-msgid "Selected Widget"
-msgstr "Widget Seleccionado"
-
-#: EditWidgetWindow.vala:292
-msgid "Semi-Transparent"
-msgstr "Semi-Transparente"
-
-#: DonationWindow.vala:95 DonationWindow.vala:131
+#: src/DonationWindow.vala:87
+msgid "Donate with Google Wallet"
+msgstr "Donar con Google Wallet"
+
+#: src/DonationWindow.vala:94 src/DonationWindow.vala:130
 msgid "Send Email"
 msgstr "Enviar Email"
 
-#: EditWidgetWindow.vala:240
-msgid ""
-"Setting Type to \"Opaque\" (from the transparency tab) will make it easier "
-"to see the changes"
-msgstr ""
-"Configurar el Tipo como \"Opaco\" (desde la pestaña de transparencia) hará más fácil "
-"ver los cambios"
-
-#: EditWidgetWindow.vala:335
-msgid ""
-"Setting Type to \"Pseudo-Transparent\" will make the window transparent but "
-"the window will have a shadow. The shadow can be disabled by configuring "
-"your window manager."
-msgstr ""
-"Configurar el Tipo como \"Pseudo-Transparente\" hará la ventana transparente pero "
-"la ventana tendrá una sombra. La sombra se puede deshabilitar configurando "
-"tu gestor de ventanas."
-
-#: EditWidgetWindow.vala:325
-msgid ""
-"Setting Type to \"Transparent\" will make the whole window transparent "
-"(including any images). Use \"Pseudo-Transparent\" if you want the images to "
-"be opaque."
-msgstr ""
-"Configurar el Tipo como \"Transparente\" hará toda la ventana transparente "
-"(incluyendo cualquier imagen). Usa \"Pseudo-Transparente\" si quieres que las imágenes "
-"sean opacas."
-
-#: MainWindow.vala:415
-msgid "Settings"
-msgstr "Configuraciones"
-
-#: EditWidgetWindow.vala:164
-msgid "Size"
-msgstr "Tamaño"
-
-#: MainWindow.vala:248
-msgid "Source"
-msgstr "Fuente"
-
-#: MainWindow.vala:316 MainWindow.vala:325
-msgid "Start"
-msgstr "Iniciar"
-
-#: MainWindow.vala:317
-msgid "Start/Restart Widget"
-msgstr "Iniciar/Reiniciar Widget"
-
-#: MainWindow.vala:308
-msgid "Start/Restart Widget in Terminal"
-msgstr "Iniciar/Reiniciar Widget en Terminal"
-
-#: Main.vala:926 Main.vala:948
-msgid "Started"
-msgstr "Iniciado"
-
-#: SettingsWindow.vala:105
-msgid "Startup Delay (seconds)"
-msgstr "Retraso de Inicio (segundos)"
-
-#: MainWindow.vala:230 MainWindow.vala:232
-msgid "Stop"
-msgstr "Detener"
-
-#: MainWindow.vala:391
-msgid "Stop All Widgets"
-msgstr "Detener Todos los Widgets"
-
-#: MainWindow.vala:326
-msgid "Stop Widget"
-msgstr "Detener Widget"
-
-#: MainWindow.vala:392
-msgid "Stop all running widgets"
-msgstr "Detener todos los widgets en ejecución"
-
-#: Main.vala:974 Utility.vala:767
-msgid "Stopped"
-msgstr "Detenido"
-
-#: MainWindow.vala:307
-msgid "Terminal Start"
-msgstr "Inicio en Terminal"
-
-#: EditWidgetWindow.vala:230
-msgid ""
-"The minimum width & height must be more than the size of the window "
-"contents, otherwise the setting will not have any effect."
-msgstr ""
-"El ancho y altura mínimos deben ser mayores que el tamaño del contenido de la ventana, "
-"de lo contrario la configuración no tendrá efecto."
-
-#: SettingsWindow.vala:137
-msgid "Theme Directory"
-msgstr "Directorio de Temas"
-
-#: EditThemeWindow.vala:67
-msgid "Theme Name"
-msgstr "Nombre del Tema"
-
-#: MainWindow.vala:130
-msgid "Themes"
-msgstr "Temas"
-
-#: MainWindow.vala:1013
-msgid "Themes Imported"
-msgstr "Temas Importados"
-
-#: MainWindow.vala:1013
-msgid "Themes imported successfully"
-msgstr "Temas importados exitosamente"
-
-#: AboutWindow.vala:378
-#, c-format
-msgid "Third Party Tools"
-msgstr "Herramientas de Terceros"
-
-#: EditWidgetWindow.vala:346
-msgid "Time"
-msgstr "Hora"
-
-#: EditWidgetWindow.vala:362
-msgid "Time Format"
-msgstr "Formato de Hora"
-
-#: EditWidgetWindow.vala:523
-msgid "Time format cannot be changed for selected widget"
-msgstr "El formato de hora no se puede cambiar para el widget seleccionado"
-
-#: MainWindow.vala:203
-msgid "Toggle List"
-msgstr "Alternar Lista"
-
-#: MainWindow.vala:197
-msgid "Toggle Preview"
-msgstr "Alternar Vista Previa"
-
-#: EditWidgetWindow.vala:119
-msgid "Top Left"
-msgstr "Superior Izquierda"
-
-#: EditWidgetWindow.vala:123
-msgid "Top Middle"
-msgstr "Superior Centro"
-
-#: EditWidgetWindow.vala:121
-msgid "Top Right"
-msgstr "Superior Derecha"
-
-#: AboutWindow.vala:394
-#, c-format
-msgid "Translators"
-msgstr "Traductores"
-
-#: EditWidgetWindow.vala:251
-msgid "Transparency"
-msgstr "Transparencia"
-
-#: EditWidgetWindow.vala:268
-msgid "Transparency Type"
-msgstr "Tipo de Transparencia"
-
-#: EditWidgetWindow.vala:288
-msgid "Transparent"
-msgstr "Transparente"
-
-#: EditWidgetWindow.vala:573
-msgid "Updating theme"
-msgstr "Actualizando tema"
-
-#: MainWindow.vala:491
-msgid ""
-"Use the keyboard arrow keys to browse.\n"
-"Press ENTER to start and stop."
-msgstr ""
-"Usa las teclas de flecha del teclado para navegar.\n"
-"Presiona ENTER para iniciar y detener."
-
-#: MainWindow.vala:1089
-msgid "Utility for managing Conky configuration files"
-msgstr "Utilidad para gestionar archivos de configuración de Conky"
-
-#: EditWidgetWindow.vala:151
-msgid "Vertical Gap"
-msgstr "Espacio Vertical"
-
-#: DonationWindow.vala:102
+#: src/DonationWindow.vala:101
 msgid "Visit Website"
 msgstr "Visitar Sitio Web"
 
-#: EditThemeWindow.vala:80 EditThemeWindow.vala:93
+#: src/DonationWindow.vala:116
+msgid "Fund with Credit Card/PayPal"
+msgstr "Financiar con Tarjeta de Crédito/PayPal"
+
+#: src/DonationWindow.vala:123
+msgid "Financial support Stripe"
+msgstr "Soporte financiero Stripe"
+
+#: src/DonationWindow.vala:137
+msgid "github site"
+msgstr "sitio de github"
+
+#: src/EditThemeWindow.vala:54
+msgid "Edit Theme"
+msgstr "Editar Tema"
+
+#: src/EditThemeWindow.vala:67
+msgid "Theme Name"
+msgstr "Nombre del Tema"
+
+#: src/EditThemeWindow.vala:80 src/EditThemeWindow.vala:93
 msgid "Wallpaper"
 msgstr "Fondo de Pantalla"
 
-#: Main.vala:2002 Main.vala:2010
-msgid "Wallpaper saved"
-msgstr "Fondo de pantalla guardado"
+#: src/EditThemeWindow.vala:80
+msgid "Include desktop wallpaper in theme"
+msgstr "Incluir fondo de pantalla del escritorio en el tema"
 
-#: Utility.vala:107
+#: src/EditThemeWindow.vala:113
+msgid "None"
+msgstr "Ninguno"
+
+#: src/EditThemeWindow.vala:115
+msgid "Custom Wallpaper"
+msgstr "Fondo de Pantalla Personalizado"
+
+#: src/EditThemeWindow.vala:123
+msgid "Current Wallpaper"
+msgstr "Fondo de Pantalla Actual"
+
+#: src/EditThemeWindow.vala:130
+msgid "Choose File"
+msgstr "Elegir Archivo"
+
+#: src/EditThemeWindow.vala:141
+#, fuzzy
+msgid "Browse"
+msgstr "Explorar:"
+
+#: src/EditThemeWindow.vala:146
+msgid "Select Wallpaper"
+msgstr "Seleccionar Fondo de Pantalla"
+
+#: src/EditThemeWindow.vala:172
+msgid "Scaling"
+msgstr "Escalado"
+
+#: src/EditThemeWindow.vala:240 src/EditThemeWindow.vala:241
+msgid "Include running widgets in theme"
+msgstr "Incluir widgets en ejecución en el tema"
+
+#: src/EditThemeWindow.vala:345
+msgid "Name Required"
+msgstr "Nombre Requerido"
+
+#: src/EditThemeWindow.vala:346
+msgid "Please enter theme name"
+msgstr "Por favor ingresa el nombre del tema"
+
+#: src/EditThemeWindow.vala:358
+msgid "No Widgets Selected"
+msgstr "No hay Widgets Seleccionados"
+
+#: src/EditThemeWindow.vala:359
+msgid "Select the widgets to include in theme"
+msgstr "Selecciona los widgets a incluir en el tema"
+
+#: src/Utility.vala:107
 msgid "Warning"
 msgstr "Advertencia"
 
-#: GeneratePreviewWindow.vala:87
-msgid ""
-"When enabled, the generated image will have the same background as the "
-"current desktop wallpaper. When disabled, the background will be a solid "
-"color (the widget's background color)."
-msgstr ""
-"Cuando está habilitado, la imagen generada tendrá el mismo fondo que el "
-"fondo de pantalla actual del escritorio. Cuando está deshabilitado, el fondo será un color "
-"sólido (el color de fondo del widget)."
+#: src/Utility.vala:1010 src/Utility.vala:1042
+msgid "Missing Icon"
+msgstr "Icono Faltante"
 
-#: EditWidgetWindow.vala:416
-msgid "WiFi"
-msgstr "WiFi"
+#: src/Utility.vala:1312
+msgid "Failed to set ownership"
+msgstr "Error al establecer propietario"
 
-#: EditWidgetWindow.vala:421
-msgid "WiFi Network"
-msgstr "Red WiFi"
+#: src/EditWidgetWindow.vala:108
+msgid "Alignment"
+msgstr "Alineación"
 
-#: EditThemeWindow.vala:222 MainWindow.vala:126
-msgid "Widgets"
-msgstr "Widgets"
+#: src/EditWidgetWindow.vala:123
+msgid "Top Left"
+msgstr "Superior Izquierda"
 
-#: EditWidgetWindow.vala:179
+#: src/EditWidgetWindow.vala:125
+msgid "Top Right"
+msgstr "Superior Derecha"
+
+#: src/EditWidgetWindow.vala:127
+msgid "Top Middle"
+msgstr "Superior Centro"
+
+#: src/EditWidgetWindow.vala:129
+msgid "Bottom Left"
+msgstr "Inferior Izquierda"
+
+#: src/EditWidgetWindow.vala:131
+msgid "Bottom Right"
+msgstr "Inferior Derecha"
+
+#: src/EditWidgetWindow.vala:133
+msgid "Bottom Middle"
+msgstr "Inferior Centro"
+
+#: src/EditWidgetWindow.vala:135
+msgid "Middle Left"
+msgstr "Centro Izquierda"
+
+#: src/EditWidgetWindow.vala:137
+msgid "Middle Right"
+msgstr "Centro Derecha"
+
+#: src/EditWidgetWindow.vala:139
+msgid "Middle Middle"
+msgstr "Centro Centro"
+
+#: src/EditWidgetWindow.vala:143
+msgid "Horizontal Gap"
+msgstr "Espacio Horizontal"
+
+#: src/EditWidgetWindow.vala:144
+msgid "[GAP_X] Horizontal distance from window border (in pixels)"
+msgstr "[GAP_X] Distancia horizontal desde el borde de la ventana (en píxeles)"
+
+#: src/EditWidgetWindow.vala:155
+msgid "Vertical Gap"
+msgstr "Espacio Vertical"
+
+#: src/EditWidgetWindow.vala:156
+msgid "[GAP_Y] Vertical distance from window border (in pixels)"
+msgstr "[GAP_Y] Distancia vertical desde el borde de la ventana (en píxeles)"
+
+#: src/EditWidgetWindow.vala:168
+msgid "Size"
+msgstr "Tamaño"
+
+#: src/EditWidgetWindow.vala:185
 msgid ""
 "Width should be larger than the size of window contents,\n"
 "otherwise this setting will not have any effect"
@@ -801,7 +646,75 @@ msgstr ""
 "El ancho debe ser mayor que el tamaño del contenido de la ventana,\n"
 "de lo contrario esta configuración no tendrá efecto"
 
-#: EditWidgetWindow.vala:295
+#: src/EditWidgetWindow.vala:188
+msgid "Minimum Width"
+msgstr "Ancho Mínimo"
+
+#: src/EditWidgetWindow.vala:201
+msgid ""
+"Height should be larger than the size of window contents,\n"
+"otherwise this setting will not have any effect"
+msgstr ""
+"La altura debe ser mayor que el tamaño del contenido de la ventana,\n"
+"de lo contrario esta configuración no tendrá efecto"
+
+#: src/EditWidgetWindow.vala:204
+msgid "Minimum Height"
+msgstr "Altura Mínima"
+
+#: src/EditWidgetWindow.vala:216
+msgid ""
+"Increases the window height by adding empty lines at the end of the Conky "
+"config file"
+msgstr ""
+"Aumenta la altura de la ventana agregando líneas vacías al final del archivo "
+"de configuración de Conky"
+
+#: src/EditWidgetWindow.vala:219
+msgid "Height Padding"
+msgstr "Relleno de Altura"
+
+#: src/EditWidgetWindow.vala:236
+msgid ""
+"The minimum width & height must be more than the size of the window "
+"contents, otherwise the setting will not have any effect."
+msgstr ""
+"El ancho y altura mínimos deben ser mayores que el tamaño del contenido de "
+"la ventana, de lo contrario la configuración no tendrá efecto."
+
+#: src/EditWidgetWindow.vala:246
+msgid ""
+"Setting Type to \"Opaque\" (from the transparency tab) will make it easier "
+"to see the changes"
+msgstr ""
+"Configurar el Tipo como \"Opaco\" (desde la pestaña de transparencia) hará "
+"más fácil ver los cambios"
+
+#: src/EditWidgetWindow.vala:257
+msgid "Transparency"
+msgstr "Transparencia"
+
+#: src/EditWidgetWindow.vala:277
+msgid "Transparency Type"
+msgstr "Tipo de Transparencia"
+
+#: src/EditWidgetWindow.vala:295
+msgid "Opaque"
+msgstr "Opaco"
+
+#: src/EditWidgetWindow.vala:297
+msgid "Transparent"
+msgstr "Transparente"
+
+#: src/EditWidgetWindow.vala:299
+msgid "Pseudo-Transparent"
+msgstr "Pseudo-Transparente"
+
+#: src/EditWidgetWindow.vala:301
+msgid "Semi-Transparent"
+msgstr "Semi-Transparente"
+
+#: src/EditWidgetWindow.vala:304
 msgid ""
 "Window Opacity\n"
 "\n"
@@ -811,18 +724,115 @@ msgstr ""
 "\n"
 "0 = Completamente Transparente, 100 = Completamente Opaco"
 
-#: EditWidgetWindow.vala:430
+#: src/EditWidgetWindow.vala:307
+msgid "Opacity (%)"
+msgstr "Opacidad (%)"
+
+#: src/EditWidgetWindow.vala:321
+msgid "Background Color"
+msgstr "Color de Fondo"
+
+#: src/EditWidgetWindow.vala:334
+msgid ""
+"Setting Type to \"Transparent\" will make the whole window transparent "
+"(including any images). Use \"Pseudo-Transparent\" if you want the images to "
+"be opaque."
+msgstr ""
+"Configurar el Tipo como \"Transparente\" hará toda la ventana transparente "
+"(incluyendo cualquier imagen). Usa \"Pseudo-Transparente\" si quieres que "
+"las imágenes sean opacas."
+
+#: src/EditWidgetWindow.vala:344
+msgid ""
+"Setting Type to \"Pseudo-Transparent\" will make the window transparent but "
+"the window will have a shadow. The shadow can be disabled by configuring "
+"your window manager."
+msgstr ""
+"Configurar el Tipo como \"Pseudo-Transparente\" hará la ventana transparente "
+"pero la ventana tendrá una sombra. La sombra se puede deshabilitar "
+"configurando tu gestor de ventanas."
+
+#: src/EditWidgetWindow.vala:355
+msgid "Time"
+msgstr "Hora"
+
+#: src/EditWidgetWindow.vala:373
+msgid "Time Format"
+msgstr "Formato de Hora"
+
+#: src/EditWidgetWindow.vala:398
+msgid "12 Hour"
+msgstr "12 Horas"
+
+#: src/EditWidgetWindow.vala:400
+msgid "24 Hour"
+msgstr "24 Horas"
+
+#: src/EditWidgetWindow.vala:404
+msgid "Network"
+msgstr "Red"
+
+#: src/EditWidgetWindow.vala:422
+msgid "Interface"
+msgstr "Interfaz"
+
+#: src/EditWidgetWindow.vala:432
+msgid "WiFi"
+msgstr "WiFi"
+
+#: src/EditWidgetWindow.vala:437
+msgid "WiFi Network"
+msgstr "Red WiFi"
+
+#: src/EditWidgetWindow.vala:441
+msgid "LAN"
+msgstr "LAN"
+
+#: src/EditWidgetWindow.vala:446
 msgid "Wired LAN Network"
 msgstr "Red LAN por Cable"
 
-#: EditWidgetWindow.vala:140
-msgid "[GAP_X] Horizontal distance from window border (in pixels)"
-msgstr "[GAP_X] Distancia horizontal desde el borde de la ventana (en píxeles)"
+#: src/EditWidgetWindow.vala:460
+msgid "Apply"
+msgstr "Aplicar"
 
-#: EditWidgetWindow.vala:152
-msgid "[GAP_Y] Vertical distance from window border (in pixels)"
-msgstr "[GAP_Y] Distancia vertical desde el borde de la ventana (en píxeles)"
+#: src/EditWidgetWindow.vala:462
+msgid "Apply Changes"
+msgstr "Aplicar Cambios"
 
-#: DonationWindow.vala:138
-msgid "github site"
-msgstr "sitio de github"
+#: src/EditWidgetWindow.vala:467
+msgid "Reset"
+msgstr "Restablecer"
+
+#: src/EditWidgetWindow.vala:469
+msgid "Reset Changes"
+msgstr "Restablecer Cambios"
+
+#: src/EditWidgetWindow.vala:476
+msgid "Discard Changes"
+msgstr "Descartar Cambios"
+
+#: src/EditWidgetWindow.vala:487
+msgid "Loading"
+msgstr "Cargando"
+
+#: src/EditWidgetWindow.vala:535
+msgid "Time format cannot be changed for selected widget"
+msgstr "El formato de hora no se puede cambiar para el widget seleccionado"
+
+#: src/EditWidgetWindow.vala:551
+msgid "Network interface cannot be changed for selected widget"
+msgstr "La interfaz de red no se puede cambiar para el widget seleccionado"
+
+#: src/EditWidgetWindow.vala:585
+msgid "Updating theme"
+msgstr "Actualizando tema"
+
+#~ msgid ""
+#~ "When enabled, the generated image will have the same background as the "
+#~ "current desktop wallpaper. When disabled, the background will be a solid "
+#~ "color (the widget's background color)."
+#~ msgstr ""
+#~ "Cuando está habilitado, la imagen generada tendrá el mismo fondo que el "
+#~ "fondo de pantalla actual del escritorio. Cuando está deshabilitado, el "
+#~ "fondo será un color sólido (el color de fondo del widget)."
