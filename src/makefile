@@ -7,7 +7,8 @@ mandir=$(sharedir)/man
 man1dir=$(mandir)/man1
 CFLAGS=--std=c99
 app_name=conky-manager3
-app_fullname="Conky Manager"
+app_id=org.conkymanager3.ConkyManager
+app_fullname="Conky Manager 3"
 
 all:
 	#build binaries
@@ -26,14 +27,14 @@ install:
 	mkdir -p $(DESTDIR)$(man1dir)
 	mkdir -p $(DESTDIR)$(sharedir)/${app_name}
 	mkdir -p $(DESTDIR)$(sharedir)/pixmaps
-	mkdir -p $(DESTDIR)$(sharedir)/appdata
+	mkdir -p $(DESTDIR)$(sharedir)/metainfo
 	
 	#binary
 	install -m 0755 ${app_name} "$(DESTDIR)$(bindir)"
 	install -m 0755 ${app_name}-uninstall "$(DESTDIR)$(bindir)"
 	
 	#launcher
-	install -m 0755 ${app_name}.desktop "$(DESTDIR)$(launcherdir)"
+	install -m 0755 ${app_id}.desktop "$(DESTDIR)$(launcherdir)"
 	
 	#manual
 	install -m 0755 ../man/${app_name}.1 "$(DESTDIR)$(man1dir)"
@@ -41,9 +42,10 @@ install:
 	
 	#app icon
 	install -m 0755 share/pixmaps/${app_name}.png "$(DESTDIR)$(sharedir)/pixmaps"
+	install -m 0755 share/pixmaps/${app_name}.png "$(DESTDIR)$(sharedir)/pixmaps/${app_id}.png"
 	
-	#appdata.xml
-	install -m 0755 ${app_name}.appdata.xml "$(DESTDIR)$(sharedir)/appdata"
+	#metainfo
+	install -m 0755 ${app_id}.metainfo.xml "$(DESTDIR)$(sharedir)/metainfo"
 	
 	#shared files
 	cp -dpr --no-preserve=ownership -t "$(DESTDIR)$(sharedir)/${app_name}" ./share/${app_name}/*
@@ -81,15 +83,18 @@ uninstall:
 	
 	#launcher
 	rm -f "$(DESTDIR)$(launcherdir)/${app_name}.desktop"
+	rm -f "$(DESTDIR)$(launcherdir)/${app_id}.desktop"
 	
 	#manual
 	rm -f "$(DESTDIR)$(man1dir)/${app_name}.1"
 	
 	#app icon
 	rm -f "$(DESTDIR)$(sharedir)/pixmaps/${app_name}.png"
+	rm -f "$(DESTDIR)$(sharedir)/pixmaps/${app_id}.png"
 	
-	#appdata.xml
+	#metainfo
 	rm -f "$(DESTDIR)$(sharedir)/appdata/${app_name}.appdata.xml"
+	rm -f "$(DESTDIR)$(sharedir)/metainfo/${app_id}.metainfo.xml"
 	
 	#shared files
 	rm -rf "$(DESTDIR)$(sharedir)/${app_name}"

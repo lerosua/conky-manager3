@@ -5,6 +5,7 @@ bindir = prefix + '/bin'
 sharedir = prefix + '/share'
 launcherdir = sharedir + '/applications'
 app_name = 'conky-manager3'
+app_id = 'org.conkymanager3.ConkyManager'
 
 sources = [
         'src/AboutWindow.vala',
@@ -30,9 +31,10 @@ dependencies = [
     meson.get_compiler('c').find_library('m', required : false)
 ]
 
-install_data('src/' + app_name + '.desktop', install_dir : launcherdir)
+install_data('src/' + app_id + '.desktop', install_dir : launcherdir)
 install_data('src/share/pixmaps/' + app_name + '.png', install_dir : sharedir + '/pixmaps')
-install_data('src/' + app_name + '.appdata.xml', install_dir : sharedir + '/metainfo')
+install_data('src/share/pixmaps/' + app_name + '.png', rename : app_id + '.png', install_dir : sharedir + '/pixmaps')
+install_data('src/' + app_id + '.metainfo.xml', install_dir : sharedir + '/metainfo')
 install_data('man/' + app_name + '.1', install_dir : sharedir + '/man/man1')
 install_subdir('src/share/conky-manager3/images', install_dir : sharedir + '/' + app_name)
 install_subdir('src/share/conky-manager3/themepacks', install_dir : sharedir + '/' + app_name)

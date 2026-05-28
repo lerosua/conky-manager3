@@ -35,8 +35,9 @@ using TeeJee.System;
 using TeeJee.Misc;
 
 public Main App;
-public const string AppName = "Conky Manager";
+public const string AppName = "Conky Manager 3";
 public const string AppShortName = "conky-manager3";
+public const string AppId = "org.conkymanager3.ConkyManager";
 public const string AppVersion = "3.0";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
@@ -90,7 +91,9 @@ public class Main : GLib.Object {
 		//init TMP
 		init_tmp();
 
-		var gtk_app = new Adw.Application("org.conkymanager3.ConkyManager", ApplicationFlags.DEFAULT_FLAGS);
+		Environment.set_application_name(AppName);
+
+		var gtk_app = new Adw.Application(AppId, ApplicationFlags.DEFAULT_FLAGS);
 		gtk_app.activate.connect(() => {
 			if (App == null){
 				App = new Main(args);

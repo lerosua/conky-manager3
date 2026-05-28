@@ -256,17 +256,17 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 
 差距：
 
-- `src/conky-manager3.appdata.xml` 使用旧 `<application>` 根元素和旧 screenshot 链接；
-- Meson 安装到 `/usr/share/metainfo`，旧 Makefile 安装到 `/usr/share/appdata`，路径不一致；
-- AppStream 官方文档已把 metainfo 作为现代应用元数据格式，`/usr/share/appdata/` 更多是遗留兼容；
+- `.desktop` 文件名、AppStream id 与 GTK application id 已统一为 `org.conkymanager3.ConkyManager`；
+- AppStream 元数据已使用 `component type="desktop-application"` 并安装到 `/usr/share/metainfo`；
+- 仍保留 `/usr/share/appdata` 旧路径清理逻辑，方便清理旧安装残留；
 - 没有 Flatpak manifest；
-- 没有截图资源、release 元数据、content rating 等现代软件中心常见字段。
+- 没有截图资源、release 元数据等现代软件中心常见字段。
 
 参考：
 
 - https://freedesktop.org/software/appstream/docs/chap-Metadata.html
 
-结论：已有基础元数据，但需要更新格式与安装路径，并补充现代软件中心需要的内容。
+结论：桌面文件、AppStream 元数据与 GTK application id 已经对齐，Dock 识别和软件中心展示基础条件更完整；后续还需要补充截图与 release 元数据。
 
 ### 5.5 代码结构：中等到较大距离
 
