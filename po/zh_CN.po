@@ -1,0 +1,630 @@
+# Simplified Chinese translation for conky-manager3.
+# This file is distributed under the same license as the conky-manager3 package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: conky-manager3 3.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-05-28 09:52+0800\n"
+"PO-Revision-Date: 2026-05-28 00:00+0800\n"
+"Last-Translator: lerosua\n"
+"Language-Team: Simplified Chinese\n"
+"Language: zh_CN\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+msgid "Credits"
+msgstr "致谢"
+
+msgid "Back"
+msgstr "返回"
+
+msgid "Close"
+msgstr "关闭"
+
+msgid "Authors"
+msgstr "作者"
+
+msgid "Third Party Tools"
+msgstr "第三方工具"
+
+msgid "Artists"
+msgstr "美术"
+
+msgid "Translators"
+msgstr "翻译者"
+
+msgid "Documenters"
+msgstr "文档编写者"
+
+msgid "Donations"
+msgstr "捐赠"
+
+msgid "Generate Preview"
+msgstr "生成预览"
+
+msgid "Generate preview images for"
+msgstr "生成预览图范围"
+
+msgid "Selected Widget"
+msgstr "选中的小组件"
+
+msgid "All Widgets with Missing Previews"
+msgstr "所有缺少预览的小组件"
+
+msgid "All Widgets (Overwrite Existing Image)"
+msgstr "所有小组件（覆盖现有图片）"
+
+msgid "Options"
+msgstr "选项"
+
+msgid "Transparent Preview Background"
+msgstr "透明预览背景"
+
+msgid ""
+"When enabled, PNG previews are generated with a transparent background. "
+"Desktop background capture is not used."
+msgstr ""
+"启用后，PNG 预览图会使用透明背景生成，不会捕获桌面背景。"
+
+msgid "High quality images (PNG)"
+msgstr "高质量图片（PNG）"
+
+msgid "Generate preview images in PNG format instead of JPEG"
+msgstr "使用 PNG 格式而不是 JPEG 格式生成预览图"
+
+msgid "OK"
+msgstr "确定"
+
+msgid "Cancel"
+msgstr "取消"
+
+msgid "Missing Dependencies"
+msgstr "缺少依赖"
+
+msgid "Commands listed below are not available"
+msgstr "以下命令不可用"
+
+msgid "Please install required packages and try running it again"
+msgstr "请安装所需软件包后重试"
+
+msgid "App config saved"
+msgstr "应用配置已保存"
+
+msgid "App config loaded"
+msgstr "应用配置已加载"
+
+msgid "Directory Created"
+msgstr "目录已创建"
+
+msgid "Found theme pack [installed]"
+msgstr "发现主题包 [已安装]"
+
+msgid "Found theme pack [new]"
+msgstr "发现主题包 [新]"
+
+msgid "Importing"
+msgstr "正在导入"
+
+msgid "Failed to unzip files from theme pack"
+msgstr "无法从主题包解压文件"
+
+#, c-format
+msgid "Searching for conkyrc files... %d found"
+msgstr "正在搜索 conkyrc 文件... 已找到 %d 个"
+
+msgid "Font Copied: "
+msgstr "字体已复制："
+
+msgid "Started"
+msgstr "已启动"
+
+msgid "Stopped"
+msgstr "已停止"
+
+msgid "Saved"
+msgstr "已保存"
+
+msgid "No preview text found in this Conky configuration."
+msgstr "此 Conky 配置中没有找到可用于预览的文本。"
+
+msgid "Current wallpaper source path"
+msgstr "当前壁纸源路径"
+
+msgid "Wallpaper saved"
+msgstr "壁纸已保存"
+
+msgid "Browse:"
+msgstr "浏览："
+
+msgid "Widgets"
+msgstr "小组件"
+
+msgid "Themes"
+msgstr "主题"
+
+msgid "Save Theme"
+msgstr "保存主题"
+
+msgid "Save running widgets and current desktop wallpaper as new theme"
+msgstr "将正在运行的小组件和当前桌面壁纸保存为新主题"
+
+msgid "Filter"
+msgstr "过滤"
+
+msgid ""
+"Enter name or path to filter.\n"
+"Enter '0' to list running widgets"
+msgstr ""
+"输入名称或路径进行过滤。\n"
+"输入“0”列出正在运行的小组件"
+
+msgid "Preview"
+msgstr "预览"
+
+msgid "Toggle Preview"
+msgstr "切换预览"
+
+msgid "List"
+msgstr "列表"
+
+msgid "Toggle List"
+msgstr "切换列表"
+
+msgid "Stop"
+msgstr "停止"
+
+msgid "Source"
+msgstr "来源"
+
+msgid "Previous"
+msgstr "上一个"
+
+msgid "Previous Widget"
+msgstr "上一个小组件"
+
+msgid "Next"
+msgstr "下一个"
+
+msgid "Next Widget"
+msgstr "下一个小组件"
+
+msgid "Terminal Start"
+msgstr "终端启动"
+
+msgid "Start/Restart Widget in Terminal"
+msgstr "在终端中启动/重启小组件"
+
+msgid "Start"
+msgstr "启动"
+
+msgid "Start/Restart Widget"
+msgstr "启动/重启小组件"
+
+msgid "Stop Widget"
+msgstr "停止小组件"
+
+msgid "Edit"
+msgstr "编辑"
+
+msgid "Edit Widget"
+msgstr "编辑小组件"
+
+msgid "Manual Edit"
+msgstr "手动编辑"
+
+msgid "Edit file manually in a text editor"
+msgstr "在文本编辑器中手动编辑文件"
+
+msgid "Open Folder"
+msgstr "打开文件夹"
+
+msgid "Open Theme Folder"
+msgstr "打开主题文件夹"
+
+msgid "Refresh"
+msgstr "刷新"
+
+msgid "Search for new themes"
+msgstr "搜索新主题"
+
+msgid "Generate preview images"
+msgstr "生成预览图"
+
+msgid "Stop All Widgets"
+msgstr "停止所有小组件"
+
+msgid "Stop all running widgets"
+msgstr "停止所有正在运行的小组件"
+
+msgid "Import"
+msgstr "导入"
+
+msgid "Import Theme Pack (*.cmtp.7z) or various archive type"
+msgstr "导入主题包 (*.cmtp.7z) 或各种归档文件"
+
+msgid "Settings"
+msgstr "设置"
+
+msgid "Application Settings"
+msgstr "应用设置"
+
+msgid "Funding"
+msgstr "资助"
+
+msgid "Funding Support"
+msgstr "资助支持"
+
+msgid "About"
+msgstr "关于"
+
+msgid "Enable"
+msgstr "启用"
+
+msgid ""
+"Use the keyboard arrow keys to browse.\n"
+"Press ENTER to start and stop."
+msgstr ""
+"使用键盘方向键浏览。\n"
+"按 ENTER 启动或停止。"
+
+msgid "Generating Previews"
+msgstr "正在生成预览"
+
+msgid "Themes Imported"
+msgstr "主题已导入"
+
+msgid "Themes imported successfully"
+msgstr "主题导入成功"
+
+msgid "Error"
+msgstr "错误"
+
+msgid "Failed to import themes"
+msgstr "导入主题失败"
+
+msgid "Utility for managing Conky configuration files"
+msgstr "用于管理 Conky 配置文件的工具"
+
+msgid "N/A"
+msgstr "不可用"
+
+msgid "Searching directories..."
+msgstr "正在搜索目录..."
+
+msgid "General"
+msgstr "常规"
+
+msgid "Run Conky at system startup"
+msgstr "系统启动时运行 Conky"
+
+msgid "Startup Delay (seconds)"
+msgstr "启动延迟（秒）"
+
+msgid "Locations"
+msgstr "位置"
+
+msgid "Theme Directory"
+msgstr "主题目录"
+
+msgid "Additional locations to search for Conky themes"
+msgstr "用于搜索 Conky 主题的附加位置"
+
+msgid "Location"
+msgstr "位置"
+
+msgid "Add"
+msgstr "添加"
+
+msgid "Remove"
+msgstr "移除"
+
+msgid "Select directory"
+msgstr "选择目录"
+
+msgid ""
+"Did you find this software useful?\n"
+"\n"
+"You can buy me a coffee or make a donation via PayPal to show your support. "
+"Or just drop me an email and say Hi. This application is completely free and "
+"will continue to remain that way. Your contributions will help in keeping "
+"this project alive and improving it further.\n"
+"\n"
+"Feel free to send me an email if you find any issues in this application or "
+"if you need any changes. Suggestions and feedback are always welcome.\n"
+"\n"
+"Thanks,\n"
+"Tony George\n"
+"(teejeetech@gmail.com)\n"
+"\n"
+"Bionic to Focal to Jammy support, 1.10+ config support, magic archive "
+"import, terminal debug function, and more\n"
+"-help finance the efforts with these buttons to the right.\n"
+"                                                                                          Scott "
+"Caudle\n"
+"                                                                                (zcotcaudle@gmail.com)"
+msgstr ""
+"你觉得这个软件有用吗？\n"
+"\n"
+"你可以通过 PayPal 请我喝杯咖啡或捐赠，以表达支持；也可以给我发一封邮件打个招呼。"
+"这个应用完全免费，并会继续保持免费。你的贡献将帮助这个项目持续维护并进一步改进。\n"
+"\n"
+"如果你在此应用中发现问题，或需要任何改动，欢迎随时给我发送邮件。建议和反馈始终欢迎。\n"
+"\n"
+"谢谢，\n"
+"Tony George\n"
+"(teejeetech@gmail.com)\n"
+"\n"
+"从 Bionic 到 Focal 再到 Jammy 的支持、1.10+ 配置支持、灵活的归档导入、终端调试功能等。\n"
+"请使用右侧这些按钮帮助资助相关工作。\n"
+"Scott Caudle\n"
+"(zcotcaudle@gmail.com)"
+
+msgid "Donate with PayPal"
+msgstr "通过 PayPal 捐赠"
+
+msgid "Donate with Google Wallet"
+msgstr "通过 Google Wallet 捐赠"
+
+msgid "Send Email"
+msgstr "发送邮件"
+
+msgid "Visit Website"
+msgstr "访问网站"
+
+msgid "Fund with Credit Card/PayPal"
+msgstr "使用信用卡/PayPal 资助"
+
+msgid "Financial support Stripe"
+msgstr "通过 Stripe 提供资金支持"
+
+msgid "github site"
+msgstr "GitHub 网站"
+
+msgid "Edit Theme"
+msgstr "编辑主题"
+
+msgid "Theme Name"
+msgstr "主题名称"
+
+msgid "Wallpaper"
+msgstr "壁纸"
+
+msgid "Include desktop wallpaper in theme"
+msgstr "在主题中包含桌面壁纸"
+
+msgid "None"
+msgstr "无"
+
+msgid "Custom Wallpaper"
+msgstr "自定义壁纸"
+
+msgid "Current Wallpaper"
+msgstr "当前壁纸"
+
+msgid "Choose File"
+msgstr "选择文件"
+
+msgid "Browse"
+msgstr "浏览"
+
+msgid "Select Wallpaper"
+msgstr "选择壁纸"
+
+msgid "Scaling"
+msgstr "缩放"
+
+msgid "Include running widgets in theme"
+msgstr "在主题中包含正在运行的小组件"
+
+msgid "Name Required"
+msgstr "需要名称"
+
+msgid "Please enter theme name"
+msgstr "请输入主题名称"
+
+msgid "No Widgets Selected"
+msgstr "未选择小组件"
+
+msgid "Select the widgets to include in theme"
+msgstr "请选择要包含在主题中的小组件"
+
+msgid "Warning"
+msgstr "警告"
+
+msgid "Missing Icon"
+msgstr "缺少图标"
+
+msgid "Failed to set ownership"
+msgstr "设置所有权失败"
+
+msgid "Alignment"
+msgstr "对齐"
+
+msgid "Top Left"
+msgstr "左上"
+
+msgid "Top Right"
+msgstr "右上"
+
+msgid "Top Middle"
+msgstr "顶部居中"
+
+msgid "Bottom Left"
+msgstr "左下"
+
+msgid "Bottom Right"
+msgstr "右下"
+
+msgid "Bottom Middle"
+msgstr "底部居中"
+
+msgid "Middle Left"
+msgstr "中部靠左"
+
+msgid "Middle Right"
+msgstr "中部靠右"
+
+msgid "Middle Middle"
+msgstr "正中"
+
+msgid "Horizontal Gap"
+msgstr "水平间距"
+
+msgid "[GAP_X] Horizontal distance from window border (in pixels)"
+msgstr "[GAP_X] 距窗口边缘的水平距离（像素）"
+
+msgid "Vertical Gap"
+msgstr "垂直间距"
+
+msgid "[GAP_Y] Vertical distance from window border (in pixels)"
+msgstr "[GAP_Y] 距窗口边缘的垂直距离（像素）"
+
+msgid "Size"
+msgstr "大小"
+
+msgid ""
+"Width should be larger than the size of window contents,\n"
+"otherwise this setting will not have any effect"
+msgstr ""
+"宽度应大于窗口内容的大小，\n"
+"否则此设置不会生效"
+
+msgid "Minimum Width"
+msgstr "最小宽度"
+
+msgid ""
+"Height should be larger than the size of window contents,\n"
+"otherwise this setting will not have any effect"
+msgstr ""
+"高度应大于窗口内容的大小，\n"
+"否则此设置不会生效"
+
+msgid "Minimum Height"
+msgstr "最小高度"
+
+msgid ""
+"Increases the window height by adding empty lines at the end of the Conky "
+"config file"
+msgstr "通过在 Conky 配置文件末尾添加空行来增加窗口高度"
+
+msgid "Height Padding"
+msgstr "高度填充"
+
+msgid ""
+"The minimum width & height must be more than the size of the window "
+"contents, otherwise the setting will not have any effect."
+msgstr "最小宽度和高度必须大于窗口内容大小，否则此设置不会生效。"
+
+msgid ""
+"Setting Type to \"Opaque\" (from the transparency tab) will make it easier "
+"to see the changes"
+msgstr "将类型（在透明度标签页中）设为“Opaque”会更容易看到变化"
+
+msgid "Transparency"
+msgstr "透明度"
+
+msgid "Transparency Type"
+msgstr "透明类型"
+
+msgid "Opaque"
+msgstr "不透明"
+
+msgid "Transparent"
+msgstr "透明"
+
+msgid "Pseudo-Transparent"
+msgstr "伪透明"
+
+msgid "Semi-Transparent"
+msgstr "半透明"
+
+msgid ""
+"Window Opacity\n"
+"\n"
+"0 = Fully Transparent, 100 = Fully Opaque"
+msgstr ""
+"窗口不透明度\n"
+"\n"
+"0 = 完全透明，100 = 完全不透明"
+
+msgid "Opacity (%)"
+msgstr "不透明度（%）"
+
+msgid "Background Color"
+msgstr "背景颜色"
+
+msgid ""
+"Setting Type to \"Transparent\" will make the whole window transparent "
+"(including any images). Use \"Pseudo-Transparent\" if you want the images to "
+"be opaque."
+msgstr ""
+"将类型设为“Transparent”会使整个窗口透明（包括所有图片）。如果希望图片保持不透明，"
+"请使用“Pseudo-Transparent”。"
+
+msgid ""
+"Setting Type to \"Pseudo-Transparent\" will make the window transparent but "
+"the window will have a shadow. The shadow can be disabled by configuring "
+"your window manager."
+msgstr ""
+"将类型设为“Pseudo-Transparent”会使窗口透明，但窗口仍会有阴影。可以通过配置窗口管理器"
+"禁用阴影。"
+
+msgid "Time"
+msgstr "时间"
+
+msgid "Time Format"
+msgstr "时间格式"
+
+msgid "12 Hour"
+msgstr "12 小时制"
+
+msgid "24 Hour"
+msgstr "24 小时制"
+
+msgid "Network"
+msgstr "网络"
+
+msgid "Interface"
+msgstr "接口"
+
+msgid "WiFi"
+msgstr "WiFi"
+
+msgid "WiFi Network"
+msgstr "WiFi 网络"
+
+msgid "LAN"
+msgstr "局域网"
+
+msgid "Wired LAN Network"
+msgstr "有线局域网"
+
+msgid "Apply"
+msgstr "应用"
+
+msgid "Apply Changes"
+msgstr "应用更改"
+
+msgid "Reset"
+msgstr "重置"
+
+msgid "Reset Changes"
+msgstr "重置更改"
+
+msgid "Discard Changes"
+msgstr "放弃更改"
+
+msgid "Loading"
+msgstr "正在加载"
+
+msgid "Time format cannot be changed for selected widget"
+msgstr "无法更改所选小组件的时间格式"
+
+msgid "Network interface cannot be changed for selected widget"
+msgstr "无法更改所选小组件的网络接口"
+
+msgid "Updating theme"
+msgstr "正在更新主题"
