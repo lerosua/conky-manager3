@@ -41,38 +41,38 @@ public class EditThemeWindow : Dialog {
 	private Entry entry_name;
 	private ComboBox cmb_wallpaper;
 	private ComboBox cmb_scaling;
-    private FileChooserButton fcb_wallpaper;
+    private Entry txt_wallpaper;
+    private Button btn_choose_wallpaper;
 	public ConkyTheme th = null;
 
 	public EditThemeWindow(ConkyTheme? _theme) {
-		
-        window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
-        skip_taskbar_hint = false;
         set_default_size (450, 400);	
-		icon = get_app_icon(16);
 		
 		th = _theme;
 		title = (th == null) ? _("Save Theme") : _("Edit Theme");
 
 	    vbox_main = get_content_area();
-		vbox_main.margin = 6;
+		vbox_main.set_margin_top(6);
+		vbox_main.set_margin_bottom(6);
+		vbox_main.set_margin_start(6);
+		vbox_main.set_margin_end(6);
 		vbox_main.spacing = 6;
 
 		//theme_name
         Box hbox_theme_name = new Box (Orientation.HORIZONTAL, 6);
-		vbox_main.add(hbox_theme_name);
+		vbox_main.append(hbox_theme_name);
 		
 		Label lbl_theme_name = new Gtk.Label(_("Theme Name"));
 		lbl_theme_name.xalign = (float) 0.0;
-		hbox_theme_name.add(lbl_theme_name);
+		hbox_theme_name.append(lbl_theme_name);
 		
 		entry_name = new Gtk.Entry();
 		entry_name.xalign = (float) 0.0;
 		entry_name.hexpand = true;
 		entry_name.text = (th == null)? "" : th.base_name.replace(".cmtheme","");
-		hbox_theme_name.add(entry_name);
+		hbox_theme_name.append(entry_name);
 		
 		init_list_view();
 
@@ -81,13 +81,13 @@ public class EditThemeWindow : Dialog {
 		lbl_header_wp.margin_top = 5;
 		lbl_header_wp.set_use_markup(true);
 		lbl_header_wp.halign = Align.START;
-		vbox_main.pack_start (lbl_header_wp, false, true, 0);
+		vbox_main.append(lbl_header_wp);
 		
 		//grid_wp
 		Grid grid_wp = new Grid();
         grid_wp.set_column_spacing (6);
         grid_wp.set_row_spacing (6);
-        vbox_main.pack_start (grid_wp, false, true, 0);
+        vbox_main.append(grid_wp);
 
 		//lbl_wp_option
 		Label lbl_wp_option = new Label (_("Wallpaper") + ":" );
@@ -131,20 +131,40 @@ public class EditThemeWindow : Dialog {
 		lbl_custom_wallpaper.xalign = (float) 0.0;
 		grid_wp.attach(lbl_custom_wallpaper,0,1,1,1);
 
-		//fcb_wallpaper
-		fcb_wallpaper = new FileChooserButton (_("Select Wallpaper"), FileChooserAction.OPEN);
-		grid_wp.attach(fcb_wallpaper,1,1,1,1);
-		
-		fcb_wallpaper.selection_changed.connect(()=>{
-			if (th != null){
-				th.wallpaper_path = fcb_wallpaper.get_file().get_path();
+		var hbox_wallpaper = new Box(Orientation.HORIZONTAL, 6);
+		grid_wp.attach(hbox_wallpaper,1,1,1,1);
+
+		txt_wallpaper = new Entry();
+		txt_wallpaper.hexpand = true;
+		hbox_wallpaper.append(txt_wallpaper);
+
+		btn_choose_wallpaper = new Button.with_label(_("Browse"));
+		hbox_wallpaper.append(btn_choose_wallpaper);
+
+		btn_choose_wallpaper.clicked.connect(()=>{
+			var dialog = new FileDialog();
+			dialog.title = _("Select Wallpaper");
+			if (txt_wallpaper.text.length > 0){
+				dialog.initial_file = File.new_for_path(txt_wallpaper.text);
 			}
+			dialog.open.begin(this, null, (obj, res) => {
+				try{
+					File file = dialog.open.end(res);
+					txt_wallpaper.text = file.get_path();
+					if (th != null){
+						th.wallpaper_path = txt_wallpaper.text;
+					}
+				}
+				catch(Error e){
+					log_debug(e.message);
+				}
+			});
 		});
 
 		if (th != null){
 			if (th.wallpaper_path.length > 0){
 				cmb_wallpaper.active = 1;
-				fcb_wallpaper.select_filename(th.wallpaper_path);
+				txt_wallpaper.text = th.wallpaper_path;
 			}
 		}
 
@@ -189,29 +209,27 @@ public class EditThemeWindow : Dialog {
 
 		//set initial state
 		cmb_wallpaper.changed.connect(()=>{
-			fcb_wallpaper.sensitive = (cmb_wallpaper.active == 1);
+			txt_wallpaper.sensitive = (cmb_wallpaper.active == 1);
+			btn_choose_wallpaper.sensitive = (cmb_wallpaper.active == 1);
 			cmb_scaling.sensitive = (cmb_wallpaper.active != 0);
 		});
-		fcb_wallpaper.sensitive = (cmb_wallpaper.active == 1);
+		txt_wallpaper.sensitive = (cmb_wallpaper.active == 1);
+		btn_choose_wallpaper.sensitive = (cmb_wallpaper.active == 1);
 		cmb_scaling.sensitive = (cmb_wallpaper.active != 0);
 		
 		tv_widget_refresh();
 		
 		//hbox_commands --------------------------------------------------
 		
-		hbox_action = (Box) get_action_area();
-		
 		//btn_ok
 		btn_ok = new Button.with_label("  " + _("OK"));
-		btn_ok.set_image(new Image.from_stock ("gtk-ok", IconSize.MENU));
-		hbox_action.add(btn_ok);	
+		add_action_widget(btn_ok, Gtk.ResponseType.OK);	
 			
         btn_ok.clicked.connect(btn_ok_clicked);
 
 		//btn_cancel
 		btn_cancel = new Button.with_label("  " + _("Cancel"));
-		btn_cancel.set_image (new Image.from_stock ("gtk-cancel", IconSize.MENU));
-		hbox_action.add(btn_cancel);
+		add_action_widget(btn_cancel, Gtk.ResponseType.CANCEL);
 		
 		btn_cancel.clicked.connect(()=>{ this.response(Gtk.ResponseType.CANCEL); });
 	}
@@ -224,19 +242,18 @@ public class EditThemeWindow : Dialog {
 		lbl_header_widgets.margin_top = 5;
 		lbl_header_widgets.set_use_markup(true);
 		lbl_header_widgets.halign = Align.START;
-		vbox_main.pack_start (lbl_header_widgets, false, true, 0);
+		vbox_main.append(lbl_header_widgets);
 		
 		//list view
 		tv_widget = new TreeView();
 		tv_widget.get_selection().mode = SelectionMode.SINGLE;
 		tv_widget.headers_visible = false;
-		tv_widget.set_rules_hint (true);
 		
-		sw_widget = new ScrolledWindow(null, null);
-		sw_widget.set_shadow_type (ShadowType.ETCHED_IN);
-		sw_widget.add (tv_widget);
-		sw_widget.expand = true;
-		vbox_main.add(sw_widget);
+		sw_widget = new ScrolledWindow();
+		sw_widget.set_child (tv_widget);
+		sw_widget.hexpand = true;
+		sw_widget.vexpand = true;
+		vbox_main.append(sw_widget);
 
 		TreeViewColumn col_widget = new TreeViewColumn();
 		col_widget.title = "";
@@ -383,9 +400,9 @@ public class EditThemeWindow : Dialog {
 			txt += th.wallpaper_path.replace(Environment.get_home_dir(),"~") + "\n";
 			txt += "wallpaper-scaling:" + th.wallpaper_scaling + "\n";
 		}
-		else if ((cmb_wallpaper.active == 1)&&(file_exists(fcb_wallpaper.get_filename()))){
-			if (fcb_wallpaper.get_filename() != th.wallpaper_path){
-				th.wallpaper_path = th.save_wallpaper(fcb_wallpaper.get_filename());
+		else if ((cmb_wallpaper.active == 1)&&(file_exists(txt_wallpaper.text))){
+			if (txt_wallpaper.text != th.wallpaper_path){
+				th.wallpaper_path = th.save_wallpaper(txt_wallpaper.text);
 			}
 			th.wallpaper_scaling = gtk_combobox_get_value(cmb_scaling,0,"");
 			

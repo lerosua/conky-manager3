@@ -5,7 +5,7 @@ Conky Manager
 Simple tool for managing Conky configs.
 ...
 
-# Conky Manager 2 - a newer conky config manager
+# Conky Manager 3 - a newer conky config manager
 
 This is a fork of the old original Conky Manager by teejee2008(Tony George).
 
@@ -21,7 +21,7 @@ It also provides support for the newer lua-based conky and configuration files(v
 ```bash
 sudo add-apt-repository ppa:teejee2008/foss
 sudo apt update
-sudo apt install conky-manager2
+sudo apt install conky-manager3
 ```
 
 **Other Distributions**

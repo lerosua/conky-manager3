@@ -900,30 +900,42 @@ namespace TeeJee.GtkHelper{
 				
 		/* Do pending events */
 		
-		while(Gtk.events_pending ())
-			Gtk.main_iteration ();
+		var context = MainContext.default();
+		while(context.pending())
+			context.iteration(false);
 	}
 
 	public void gtk_set_busy (bool busy, Gtk.Window win) {
 				
 		/* Show or hide busy cursor on window */
 		
-		Gdk.Cursor? cursor = null;
-
 		if (busy){
-			cursor = new Gdk.Cursor(Gdk.CursorType.WATCH);
+			win.set_cursor_from_name("wait");
 		}
 		else{
-			cursor = new Gdk.Cursor(Gdk.CursorType.ARROW);
-		}
-		
-		var window = win.get_window ();
-		
-		if (window != null) {
-			window.set_cursor (cursor);
+			win.set_cursor(null);
 		}
 		
 		gtk_do_events ();
+	}
+
+	public int gtk_dialog_run(Gtk.Dialog dialog){
+		int response_id = (int) Gtk.ResponseType.NONE;
+		var loop = new MainLoop();
+
+		dialog.response.connect((id) => {
+			response_id = id;
+			loop.quit();
+		});
+		dialog.close_request.connect(() => {
+			response_id = (int) Gtk.ResponseType.CANCEL;
+			loop.quit();
+			return false;
+		});
+
+		dialog.present();
+		loop.run();
+		return response_id;
 	}
 	
 	public void gtk_messagebox(string title, string message, Gtk.Window? parent_win, bool is_error = false){
@@ -945,7 +957,7 @@ namespace TeeJee.GtkHelper{
 			dlg.set_transient_for(parent_win);
 			dlg.set_modal(true);
 		}
-		dlg.run();
+		gtk_dialog_run(dlg);
 		dlg.destroy();
 	}
 	
@@ -986,32 +998,19 @@ namespace TeeJee.GtkHelper{
 		return val;
 	}
 
-	public class CellRendererProgress2 : Gtk.CellRendererProgress{
-		public override void render (Cairo.Context cr, Gtk.Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gtk.CellRendererState flags) {
-			if (text == "--") 
-				return;
-				
-			int diff = (int) ((cell_area.height - height)/2);
-			
-			// Apply the new height into the bar, and center vertically:
-			Gdk.Rectangle new_area = Gdk.Rectangle() ;
-			new_area.x = cell_area.x;
-			new_area.y = cell_area.y + diff;
-			new_area.width = width - 5;
-			new_area.height = height;
-			
-			base.render(cr, widget, background_area, new_area, flags);
-		}
-	} 
-	
 	public Gdk.Pixbuf? get_app_icon(int icon_size, string format = ".png"){
-		var img_icon = get_shared_icon(AppShortName, AppShortName + format,icon_size,"pixmaps");
-		if (img_icon != null){
-			return img_icon.pixbuf;
+		string fallback_icon_file_path = "/usr/share/pixmaps/%s%s".printf(AppShortName, format);
+		try {
+			return new Gdk.Pixbuf.from_file_at_size(fallback_icon_file_path, icon_size, icon_size);
+		} catch (Error e) {
+			string local_icon_file_path = App.app_path + "/share/pixmaps/%s%s".printf(AppShortName, format);
+			try {
+				return new Gdk.Pixbuf.from_file_at_size(local_icon_file_path, icon_size, icon_size);
+			} catch (Error e) {
+				log_error (_("Missing Icon") + ": '%s'".printf(fallback_icon_file_path));
+			}
 		}
-		else{
-			return null;
-		}
+		return null;
 	}
 	
 	public Gtk.Image? get_shared_icon(string icon_name, string fallback_icon_file_name, int icon_size, string icon_directory = AppShortName + "/images"){
@@ -1019,8 +1018,12 @@ namespace TeeJee.GtkHelper{
 		Gtk.Image img_icon = null;
 		
 		try {
-			Gtk.IconTheme icon_theme = Gtk.IconTheme.get_default();
-			pix_icon = icon_theme.load_icon (icon_name, icon_size, 0);
+			Gtk.IconTheme icon_theme = Gtk.IconTheme.get_for_display(Gdk.Display.get_default());
+			if ((icon_name.length > 0) && icon_theme.has_icon(icon_name)){
+				img_icon = new Gtk.Image.from_icon_name(icon_name);
+				img_icon.pixel_size = icon_size;
+				return img_icon;
+			}
 		} catch (Error e) {
 			//log_error (e.message);
 		}
@@ -1585,4 +1588,3 @@ namespace TeeJee.Misc {
 		return GLib.Uri.unescape_string(escaped_string);
 	}
 }
-

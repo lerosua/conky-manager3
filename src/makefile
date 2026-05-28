@@ -6,12 +6,12 @@ launcherdir=$(sharedir)/applications
 mandir=$(sharedir)/man
 man1dir=$(mandir)/man1
 CFLAGS=--std=c99
-app_name=conky-manager2
+app_name=conky-manager3
 app_fullname="Conky Manager"
 
 all:
 	#build binaries
-	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs "Main.vala" "MainWindow.vala" "EditWidgetWindow.vala" "EditThemeWindow.vala" "SettingsWindow.vala" "DonationWindow.vala" "GeneratePreviewWindow.vala" "AboutWindow.vala" "Utility.vala" -o ${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk+-3.0 --pkg gee-0.8 --pkg json-glib-1.0 
+	valac -X -D'GETTEXT_PACKAGE="${app_name}"' --Xcc="-lm" -X -Wl,-rpath,/usr/share/${app_name}/libs "Main.vala" "MainWindow.vala" "EditWidgetWindow.vala" "EditThemeWindow.vala" "SettingsWindow.vala" "DonationWindow.vala" "GeneratePreviewWindow.vala" "AboutWindow.vala" "Utility.vala" -o ${app_name} --pkg glib-2.0 --pkg gio-unix-2.0 --pkg posix --pkg gtk4 --pkg gee-0.8 --pkg json-glib-1.0 
 	
 	#update translation template
 	xgettext --language=C --keyword=_ --copyright-holder='Tony George (teejee2008@gmail.com)' --package-name='${app_name}' --package-version='2.0' --msgid-bugs-address='teejee2008@gmail.com' --escape --sort-output -o ../${app_name}.pot *.vala

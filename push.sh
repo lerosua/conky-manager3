@@ -14,7 +14,7 @@ if [ $? -ne 0 ]; then
 fi
 
 echo "Pushing new revisions to launchpad..."
-bzr push lp:~zcot/conky-manager2/trunk
+bzr push lp:~zcot/conky-manager3/trunk
 
 #check for errors
 if [ $? -ne 0 ]; then

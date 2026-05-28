@@ -1,0 +1,54 @@
+# GTK4 Migration Status
+
+Date: 2026-05-28
+
+## Completed
+
+- Meson now builds against `gtk4` instead of `gtk+-3.0`.
+- The explicit `gdk-x11-3.0` dependency was removed from the active build.
+- Debian build dependencies now require `libgtk-4-dev`.
+- The legacy `src/makefile` uses `--pkg gtk4`.
+- `HOWTOBUILD.md` now documents GTK4 build dependencies and Meson commands.
+- The application entry point now uses `Gtk.Application` instead of `Gtk.main`.
+- Removed direct GTK3-only API usage from active source, including:
+  - `Gtk.Toolbar` / `Gtk.ToolButton`
+  - `Gtk.RadioButton`
+  - `Gtk.EventBox`
+  - `Gtk.FileChooserButton`
+  - `Gtk.Widget.add` / `pack_start` / `pack_end`
+  - `Gtk.Dialog.run`
+  - `Gtk.Widget.get_window`
+  - `Gdk.Screen.width/height`
+  - stock icon APIs such as `Image.from_stock`
+
+## Verification
+
+The GTK4 build was verified with:
+
+```bash
+meson setup builddir-gtk4
+meson compile -C builddir-gtk4
+```
+
+The resulting binary links to GTK4:
+
+```text
+libgtk-4.so.1
+```
+
+## Remaining Modernization Work
+
+The project is now on GTK4, but still uses several GTK4-deprecated compatibility widgets/APIs:
+
+- `Gtk.TreeView`, `Gtk.TreeStore`, `Gtk.ListStore`
+- `Gtk.ComboBox`
+- `Gtk.Dialog` and `Gtk.MessageDialog`
+- `Gtk.FileChooserDialog`
+- `Gtk.ColorButton`
+- `Gtk.Image.set_from_pixbuf`
+
+These are no longer GTK3 dependencies, but they should be replaced in a follow-up modernization pass with GTK4-native APIs such as `ListView`/`ColumnView`, `DropDown`, `AlertDialog`/custom windows, `FileDialog`, and `ColorDialogButton` where available.
+
+## Runtime Notes
+
+Preview generation still depends on Conky/ImageMagick behavior and may remain X11-oriented because it shells out to `import -window`. That is separate from the GTK toolkit migration and should be treated as a Wayland compatibility task.

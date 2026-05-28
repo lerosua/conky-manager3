@@ -220,22 +220,22 @@ public class AboutWindow : Dialog {
 	}
 	
 	public AboutWindow() {
-        window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
-        skip_taskbar_hint = false;
         set_default_size (450, 400);	
 
 	    vbox_main = get_content_area();
-		vbox_main.margin = 6;
+		vbox_main.set_margin_top(6);
+		vbox_main.set_margin_bottom(6);
+		vbox_main.set_margin_start(6);
+		vbox_main.set_margin_end(6);
 		vbox_main.spacing = 6;
 		
 		vbox_logo = new Box(Orientation.VERTICAL,0);
-		vbox_main.add(vbox_logo);
+		vbox_main.append(vbox_logo);
 		
 		vbox_credits = new Box(Orientation.VERTICAL,0);
-		vbox_credits.no_show_all = true;
-		vbox_main.add(vbox_credits);
+		vbox_main.append(vbox_credits);
 
 		vbox_lines = new Box(Orientation.VERTICAL,0);
 		vbox_lines.margin_top = 10;
@@ -244,33 +244,34 @@ public class AboutWindow : Dialog {
 		img_logo = new Gtk.Image();
 		img_logo.margin_top = 6;
 		img_logo.margin_bottom = 6;
-        vbox_logo.add(img_logo);
+        vbox_logo.append(img_logo);
 		
 		//program_name
 		lbl_program_name = new Label("");
 		lbl_program_name.set_use_markup(true);
-		vbox_logo.add(lbl_program_name);
+		vbox_logo.append(lbl_program_name);
 
 		//version
 		lbl_version = new Label("");
 		lbl_version.set_use_markup(true);
 		lbl_version.margin_top = 5;
-		vbox_logo.add(lbl_version);
+		vbox_logo.append(lbl_version);
 
 		//comments
 		lbl_comments = new Label("");
 		lbl_comments.set_use_markup(true);
 		lbl_comments.margin_top = 10;
-		vbox_logo.add(lbl_comments);
+		vbox_logo.append(lbl_comments);
 		
 		//website
 		lbtn_website = new LinkButton("");
 		lbtn_website.margin_top = 5;
-		vbox_logo.add(lbtn_website);
+		vbox_logo.append(lbtn_website);
 
 		lbtn_website.activate_link.connect(()=>{
 			try{
-				return Gtk.show_uri(null, lbtn_website.uri, Gdk.CURRENT_TIME); 
+				Gtk.show_uri(null, lbtn_website.uri, Gdk.CURRENT_TIME);
+				return true; 
 			}
 			catch(Error e){
 				return false;
@@ -281,16 +282,17 @@ public class AboutWindow : Dialog {
 		lbl_copyright = new Label("");
 		lbl_copyright.set_use_markup(true);
 		lbl_copyright.margin_top = 5;
-		vbox_logo.add(lbl_copyright);
+		vbox_logo.append(lbl_copyright);
 
 		//website2
 		lbtn_website2 = new LinkButton("");
 		lbtn_website2.margin_top = 5;
-		vbox_logo.add(lbtn_website2);
+		vbox_logo.append(lbtn_website2);
 
 		lbtn_website2.activate_link.connect(()=>{
 			try{
-				return Gtk.show_uri(null, lbtn_website2.uri, Gdk.CURRENT_TIME); 
+				Gtk.show_uri(null, lbtn_website2.uri, Gdk.CURRENT_TIME);
+				return true; 
 			}
 			catch(Error e){
 				return false;
@@ -301,59 +303,51 @@ public class AboutWindow : Dialog {
 		lbl_copyright2 = new Label("");
 		lbl_copyright2.set_use_markup(true);
 		lbl_copyright2.margin_top = 5;
-		vbox_logo.add(lbl_copyright2);
+		vbox_logo.append(lbl_copyright2);
 
 		//spacer_bottom
 		var spacer_bottom = new Label("");
 		spacer_bottom.margin_top = 20;
-		vbox_logo.add(spacer_bottom);
+		vbox_logo.append(spacer_bottom);
 
 		//scroller
-		var sw_credits = new ScrolledWindow(null, null);
-		sw_credits.set_shadow_type(ShadowType.ETCHED_IN);
-		sw_credits.expand = true;
+		var sw_credits = new ScrolledWindow();
+		sw_credits.hexpand = true;
+		sw_credits.vexpand = true;
 		
-		vbox_credits.add(sw_credits);
-		sw_credits.add(vbox_lines);
-		
-		//hbox_commands --------------------------------------------------
-		
-		hbox_action = (Box) get_action_area();
+		vbox_credits.append(sw_credits);
+		sw_credits.set_child(vbox_lines);
 		
 		//btn_credits
 		btn_credits = new Button.with_label("  " + _("Credits"));
-		btn_credits.set_image (new Image.from_stock ("gtk-about", IconSize.MENU));
-		hbox_action.add(btn_credits);	
+		add_action_widget(btn_credits, Gtk.ResponseType.APPLY);	
 			
         btn_credits.clicked.connect(()=>{
 			vbox_logo.visible = !(vbox_logo.visible);
 			vbox_credits.visible = !(vbox_credits.visible);
 			
 			if ((vbox_credits.visible)&&(!sw_credits.visible)){
-				sw_credits.show_all();
+				sw_credits.visible = true;
 			}
 			
 			if (vbox_credits.visible){
 				btn_credits.label = "  " + _("Back");
-				btn_credits.set_image (new Image.from_stock ("gtk-go-back", IconSize.MENU));
 			}
 			else{
 				btn_credits.label = "  " + _("Credits");
-				btn_credits.set_image (new Image.from_stock ("gtk-about", IconSize.MENU));
 			}
 		});
 
 		//btn_close
 		btn_close = new Button.with_label("  " + _("Close"));
-		btn_close.set_image (new Image.from_stock ("gtk-close", IconSize.MENU));
-		hbox_action.add(btn_close);
+		add_action_widget(btn_close, Gtk.ResponseType.CLOSE);
 		
 		btn_close.clicked.connect(()=>{ this.destroy(); });
 	}
 	
 	public void initialize() {
 		title = program_name;
-		img_logo.pixbuf = logo;
+		img_logo.set_from_pixbuf(logo);
 		lbl_program_name.label = "<span size='larger'>%s</span>".printf(program_name);
 		lbl_version.label = "v%s".printf(version);
 		lbl_comments.label = "%s".printf(comments);
@@ -414,7 +408,7 @@ public class AboutWindow : Dialog {
 			add_line("\n");
 		}
 
-		if (vbox_lines.get_children().length() == 0){
+		if (vbox_lines.get_first_child() == null){
 			btn_credits.visible = false;
 		}
 	}
@@ -422,7 +416,7 @@ public class AboutWindow : Dialog {
 	public void add_line(string text){
 		if (text.split(":").length >= 2){
 			var link = new LinkButton(text.split(":")[0]);
-			vbox_lines.add(link);
+			vbox_lines.append(link);
 			
 			string val = text[text.index_of(":") + 1:text.length];
 			if (val.contains("@")){
@@ -437,7 +431,8 @@ public class AboutWindow : Dialog {
 
 			link.activate_link.connect(()=>{
 				try{
-					return Gtk.show_uri(null, link.uri, Gdk.CURRENT_TIME); 
+					Gtk.show_uri(null, link.uri, Gdk.CURRENT_TIME);
+				return true; 
 				}
 				catch(Error e){
 					return false;
@@ -450,7 +445,7 @@ public class AboutWindow : Dialog {
 			lbl.valign = Align.START;
 			lbl.wrap = true;
 			lbl.wrap_mode = Pango.WrapMode.WORD;
-			vbox_lines.add(lbl);
+			vbox_lines.append(lbl);
 		}
 	}
 }

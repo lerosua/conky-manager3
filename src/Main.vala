@@ -36,13 +36,13 @@ using TeeJee.Misc;
 
 public Main App;
 public const string AppName = "Conky Manager";
-public const string AppShortName = "conky-manager2";
+public const string AppShortName = "conky-manager3";
 public const string AppVersion = "2.73";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
 public const string AppAuthorEmail2 = "zcotcaudle@gmail.com";
 
-const string GETTEXT_PACKAGE = "conky-manager2";
+const string GETTEXT_PACKAGE = "conky-manager3";
 const string LOCALE_DIR = "/usr/share/locale";
 
 extern void exit(int exit_code);
@@ -87,33 +87,26 @@ public class Main : GLib.Object {
 		Intl.bind_textdomain_codeset(GETTEXT_PACKAGE, "utf-8");
 		Intl.bindtextdomain(GETTEXT_PACKAGE, LOCALE_DIR);
 
-		//init GTK
-		Gtk.init (ref args);
-
 		//init TMP
 		init_tmp();
 
-		//init app
-		App = new Main(args);
+		var gtk_app = new Gtk.Application("org.conkymanager3.ConkyManager", ApplicationFlags.DEFAULT_FLAGS);
+		gtk_app.activate.connect(() => {
+			if (App == null){
+				App = new Main(args);
+			}
 
-		//show window
-		var window = new MainWindow();
-		//quit app when window is closed
-		window.destroy.connect(()=>{
-			App.exit_app();
-			Gtk.main_quit();
+			var window = new MainWindow();
+			window.application = gtk_app;
+			window.close_request.connect(() => {
+				window.get_default_size(out App.window_width,out App.window_height);
+				App.exit_app();
+				return false;
+			});
+			window.present();
 		});
-		//save window size when closed
-		window.delete_event.connect((event)=>{
-			window.get_size(out App.window_width,out App.window_height);
-			return false;
-		});
-		window.show_all();
 
-		//run main loop
-	    Gtk.main();
-
-        return 0;
+        return gtk_app.run(args);
     }
 
     public Main(string[] args) {
@@ -121,7 +114,7 @@ public class Main : GLib.Object {
 		app_path = (File.new_for_path (args[0])).get_parent().get_path ();
 		share_folder = "/usr/share";
 		data_dir = home + "/.conky";
-		app_conf_path = home + "/.config/conky-manager2.json";
+		app_conf_path = home + "/.config/conky-manager3.json";
 		search_folders = new Gee.ArrayList<string>();
 
 		conkyrc_list = new Gee.ArrayList<ConkyRC>();
@@ -281,7 +274,7 @@ public class Main : GLib.Object {
 	}
 
 	public void init_theme_packs(){
-		string sharePath = "/usr/share/conky-manager2/themepacks";
+		string sharePath = "/usr/share/conky-manager3/themepacks";
 		string config_file = data_dir + "/.themepacks";
 
 		//create empty config file if missing

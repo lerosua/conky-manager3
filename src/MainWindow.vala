@@ -51,22 +51,22 @@ public class MainWindow : Window {
 	private TreeModelFilter filterThemes;
 	
 	//toolbar
-	private Toolbar toolbar;
-	private ToolButton btn_prev;
-	private ToolButton btn_next;
-	private ToolButton btn_start;
-	private ToolButton btn_start_terminal;
-	private ToolButton btn_stop;
-	private ToolButton btn_edit;
-	private ToolButton btn_edit_gui;
-	private ToolButton btn_open_dir;
-	private ToolButton btn_scan;
-	private ToolButton btn_generate_preview;
-	private ToolButton btn_kill_all;
-	private ToolButton btn_import_themes;
-	private ToolButton btn_settings;
-	private ToolButton btn_donate;
-	private ToolButton btn_about;
+	private Box toolbar;
+	private Button btn_prev;
+	private Button btn_next;
+	private Button btn_start;
+	private Button btn_start_terminal;
+	private Button btn_stop;
+	private Button btn_edit;
+	private Button btn_edit_gui;
+	private Button btn_open_dir;
+	private Button btn_scan;
+	private Button btn_generate_preview;
+	private Button btn_kill_all;
+	private Button btn_import_themes;
+	private Button btn_settings;
+	private Button btn_donate;
+	private Button btn_about;
 	
 	//status
 	private Box hbox_progressbar;
@@ -74,8 +74,6 @@ public class MainWindow : Window {
 	private Label lbl_status;
 	private Button btn_cancel_action;
 	private ScrolledWindow sw_preview;
-	private EventBox ebox_preview;
-	
 	//credits
 	private Box hbox_credits;
 	private Label lbl_credits;
@@ -89,46 +87,39 @@ public class MainWindow : Window {
 	private uint timer_init;
 	private Gee.ArrayList<ConkyRC> rclist_generate;
 
-	private const Gtk.TargetEntry[] targets = {
-		{ "text/uri-list", 0, 0}
-	};
-	
 	public MainWindow() {
 		title = AppName + " v" + AppVersion;
-        window_position = WindowPosition.CENTER;
         modal = true;
         set_default_size(App.window_width, App.window_height);
-		icon = get_app_icon(16);
 
-		Gtk.drag_dest_set (this,Gtk.DestDefaults.ALL, targets, Gdk.DragAction.COPY);
-		drag_data_received.connect(on_drag_data_received);
+		setup_drag_and_drop();
 		
 		string tt = "";
 		
 		//vbox_main
         vbox_main = new Box (Orientation.VERTICAL, 6);
-		add(vbox_main);
+		set_child(vbox_main);
 		
 		//toolbar
         init_toolbar();
         
         //hbox_widget
         hbox_widget = new Box (Orientation.HORIZONTAL, 6);
-        hbox_widget.margin_left = 3;
-        hbox_widget.margin_right = 3;
-		vbox_main.add(hbox_widget);
+        hbox_widget.margin_start = 3;
+        hbox_widget.margin_end = 3;
+		vbox_main.append(hbox_widget);
 
 		//lbl_type
 		Label lbl_type = new Label (_("Browse:"));
-		hbox_widget.add(lbl_type);
+		hbox_widget.append(lbl_type);
 		
 		//btn_show_widgets
 		btn_show_widgets = new ToggleButton.with_label(_("Widgets"));
-		hbox_widget.pack_start (btn_show_widgets, false, true, 0);
+		hbox_widget.append(btn_show_widgets);
 		
 		//btn_show_themes
 		btn_show_themes = new ToggleButton.with_label(_("Themes"));
-		hbox_widget.pack_start (btn_show_themes, false, true, 0);
+		hbox_widget.append(btn_show_themes);
 		
 		btn_show_widgets.toggled.connect(()=>{
 			if (btn_show_widgets.active){
@@ -155,28 +146,26 @@ public class MainWindow : Window {
 		});
 
 		//separator
-		hbox_widget.add(new Label(" | "));
+		hbox_widget.append(new Label(" | "));
 		
 		//add theme button
 		btn_add_theme = new Button.with_label(_("Save Theme"));
 		btn_add_theme.set_size_request(10,-1);
-		btn_add_theme.set_image(new Image.from_stock ("gtk-add", IconSize.MENU));
-		btn_add_theme.no_show_all = true;
 		btn_add_theme.set_tooltip_text(_("Save running widgets and current desktop wallpaper as new theme"));
-		hbox_widget.pack_start (btn_add_theme, false, true, 0);
+		hbox_widget.append(btn_add_theme);
 		
 		btn_add_theme.clicked.connect(btn_add_theme_clicked);
 		
 		//separator
 		lblSaveThemeSeparator = new Label(" | ");
-		hbox_widget.add(lblSaveThemeSeparator);
+		hbox_widget.append(lblSaveThemeSeparator);
 		
 		//filter
 		lblFilter = new Label(_("Filter"));
-		hbox_widget.add(lblFilter);
+		hbox_widget.append(lblFilter);
 		
 		txtFilter = new Entry();
-		hbox_widget.pack_start (txtFilter, true, true, 0);
+		hbox_widget.append(txtFilter);
 		txtFilter.changed.connect(()=>{ 
 			filterThemes.refilter(); 
 			show_preview(selected_item()); 
@@ -189,52 +178,53 @@ public class MainWindow : Window {
 		//lbl_expand
 		Label lbl_expand = new Label ("");
 		lbl_expand.hexpand = true;
-		hbox_widget.add(lbl_expand);
+		hbox_widget.append(lbl_expand);
 		
 		//btn_preview
 		btn_preview = new ToggleButton.with_label(_("Preview"));
 		btn_preview.active = App.show_preview;
 		btn_preview.set_tooltip_text(_("Toggle Preview"));
-		hbox_widget.pack_start (btn_preview, false, true, 0);
+		hbox_widget.append(btn_preview);
 
 		//btn_list
 		btn_list = new ToggleButton.with_label(_("List"));
 		btn_list.active = App.show_list;
 		btn_list.set_tooltip_text(_("Toggle List"));
-		hbox_widget.pack_start (btn_list, false, true, 0);
+		hbox_widget.append(btn_list);
 
 		btn_preview.toggled.connect(btn_preview_toggled);
 		btn_list.toggled.connect(btn_list_toggled);
 		
 		//status
         vbox_status = new Box (Orientation.VERTICAL, 3);
-        vbox_status.no_show_all = true;
-        vbox_status.margin = 3;
-		vbox_main.add(vbox_status);
+        vbox_status.set_margin_top(3);
+		vbox_status.set_margin_bottom(3);
+		vbox_status.set_margin_start(3);
+		vbox_status.set_margin_end(3);
+		vbox_main.append(vbox_status);
 
 		lbl_status = new Label ("");
 		lbl_status.halign = Align.START;
 		lbl_status.max_width_chars = 100;
 		lbl_status.ellipsize = Pango.EllipsizeMode.END;
-		vbox_status.pack_start (lbl_status, false, true, 0);
+		vbox_status.append(lbl_status);
 		
 		//progressbar
         hbox_progressbar = new Box (Orientation.HORIZONTAL, 6);
-		vbox_status.add(hbox_progressbar);
+		vbox_status.append(hbox_progressbar);
 
 		progressbar = new ProgressBar();
-		progressbar.no_show_all = true;
 		progressbar.set_size_request(-1,20);
-		hbox_progressbar.pack_start (progressbar, true, true, 0);
+		hbox_progressbar.append(progressbar);
 
 		btn_cancel_action = new Gtk.Button.with_label (" " + _("Stop") + " ");
 		btn_cancel_action.set_size_request(50,-1);
 		btn_cancel_action.set_tooltip_text(_("Stop"));
-		hbox_progressbar.pack_start (btn_cancel_action, false, false, 0);
+		hbox_progressbar.append(btn_cancel_action);
 		
 		pane = new Gtk.Paned (Gtk.Orientation.VERTICAL);
 		pane.position = App.pane_position;
-		vbox_main.add(pane);
+		vbox_main.append(pane);
 		
 		pane.notify["position"].connect (() => {
 			App.pane_position = pane.position;
@@ -242,24 +232,27 @@ public class MainWindow : Window {
 
 		//credits
         hbox_credits = new Box (Orientation.HORIZONTAL, 3);
-        //hbox_credits.margin = 3;
-		vbox_main.add(hbox_credits);
+        //hbox_credits.set_margin_top(3);
+		hbox_credits.set_margin_bottom(3);
+		hbox_credits.set_margin_start(3);
+		hbox_credits.set_margin_end(3);
+		vbox_main.append(hbox_credits);
 
 		lbl_source = new Label (_("Source") + ":");
 		lbl_source.halign = Align.START;
 		lbl_source.max_width_chars = 100;
 		lbl_source.ellipsize = Pango.EllipsizeMode.END;
-		hbox_credits.pack_start (lbl_source, false, true, 0);
+		hbox_credits.append(lbl_source);
 		
 		lbtn_source = new LinkButton("");
 		lbtn_source.halign = Align.START;
-		hbox_credits.pack_start (lbtn_source, true, true, 0);
+		hbox_credits.append(lbtn_source);
 		
 		lbl_credits = new Label (_("Credits"));
 		lbl_credits.halign = Align.START;
 		lbl_credits.max_width_chars = 100;
 		lbl_credits.ellipsize = Pango.EllipsizeMode.END;
-		//hbox_credits.pack_end (lbl_credits, false, true, 0);
+		//hbox_credits.append(lbl_credits);
 		
 		//list_view
 		init_list_view();
@@ -275,167 +268,133 @@ public class MainWindow : Window {
 	
 	private void init_toolbar(){
         //toolbar
-		toolbar = new Gtk.Toolbar ();
-		toolbar.toolbar_style = ToolbarStyle.BOTH_HORIZ;
-		toolbar.get_style_context().add_class(Gtk.STYLE_CLASS_PRIMARY_TOOLBAR);
-		toolbar.set_icon_size(IconSize.LARGE_TOOLBAR);
-		//toolbar.set_size_request(-1,48);
-		vbox_main.add(toolbar);
+		toolbar = new Box(Orientation.HORIZONTAL, 6);
+		toolbar.add_css_class("toolbar");
+		vbox_main.append(toolbar);
 
 		//btn_prev
-		btn_prev = new Gtk.ToolButton.from_stock ("gtk-go-back");
-		btn_prev.is_important = false;
-		btn_prev.label = _("Previous");
+		btn_prev = toolbar_button(_("Previous"), "go-previous-symbolic");
 		btn_prev.set_tooltip_text (_("Previous Widget"));
-//        toolbar.add(btn_prev);
+//        toolbar.append(btn_prev);
 
         btn_prev.clicked.connect(btn_prev_clicked);
 
 		//btn_next
-		btn_next = new Gtk.ToolButton.from_stock ("gtk-go-forward");
-		btn_next.is_important = false;
-		btn_next.label = _("Next");
+		btn_next = toolbar_button(_("Next"), "go-next-symbolic");
 		btn_next.set_tooltip_text (_("Next Widget"));
-//        toolbar.add(btn_next);
+//        toolbar.append(btn_next);
 
         btn_next.clicked.connect(btn_next_clicked);
 
 		//btn_start terminal
-		btn_start_terminal = new Gtk.ToolButton.from_stock ("gtk-media-play");
-		btn_start_terminal.is_important = false;
-		btn_start_terminal.icon_widget = get_shared_icon("utilities-terminal","utilities-terminal.png",32);
-		btn_start_terminal.label = _("Terminal Start");
+		btn_start_terminal = toolbar_button(_("Terminal Start"), "utilities-terminal-symbolic");
 		btn_start_terminal.set_tooltip_text (_("Start/Restart Widget in Terminal"));
-        toolbar.add(btn_start_terminal);
+        toolbar.append(btn_start_terminal);
 
         btn_start_terminal.clicked.connect(btn_start_terminal_clicked);
 
 		//btn_start
-		btn_start = new Gtk.ToolButton.from_stock ("gtk-media-play");
-		btn_start.is_important = false;
-		btn_start.label = _("Start");
+		btn_start = toolbar_button(_("Start"), "media-playback-start-symbolic");
 		btn_start.set_tooltip_text (_("Start/Restart Widget"));
-        toolbar.add(btn_start);
+        toolbar.append(btn_start);
 
         btn_start.clicked.connect(btn_start_clicked);
 
 		//btn_stop
-		btn_stop = new Gtk.ToolButton.from_stock ("gtk-media-stop");
-		btn_stop.is_important = false;
-		btn_stop.label = _("Start");
+		btn_stop = toolbar_button(_("Stop"), "media-playback-stop-symbolic");
 		btn_stop.set_tooltip_text (_("Stop Widget"));
-        toolbar.add(btn_stop);
+        toolbar.append(btn_stop);
 
         btn_stop.clicked.connect(btn_stop_clicked);
         
         //separator1
-		var separator1 = new Gtk.SeparatorToolItem();
-		separator1.set_draw(true);
-		toolbar.add(separator1);
+		var separator1 = new Gtk.Separator(Orientation.VERTICAL);
+		toolbar.append(separator1);
 		
 		//btn_edit_gui
-		btn_edit_gui = new Gtk.ToolButton.from_stock ("gtk-preferences");
-		btn_edit_gui.is_important = false;
-		btn_edit_gui.label = _("Edit");
+		btn_edit_gui = toolbar_button(_("Edit"), "document-properties-symbolic");
 		btn_edit_gui.set_tooltip_text (_("Edit Widget"));
-        toolbar.add(btn_edit_gui);
+        toolbar.append(btn_edit_gui);
 
         btn_edit_gui.clicked.connect(btn_edit_gui_clicked);
         
 		//btn_edit
-		btn_edit = new Gtk.ToolButton.from_stock ("gtk-edit");
-		btn_edit.is_important = false;
-		btn_edit.label = _("Manual Edit");
+		btn_edit = toolbar_button(_("Manual Edit"), "document-edit-symbolic");
 		btn_edit.set_tooltip_text (_("Edit file manually in a text editor"));
-        toolbar.add(btn_edit);
+        toolbar.append(btn_edit);
 
         btn_edit.clicked.connect(btn_edit_clicked);
 
 		//btn_open_dir
-		btn_open_dir = new Gtk.ToolButton.from_stock ("gtk-directory");
-		btn_open_dir.is_important = false;
-		btn_open_dir.label = _("Open Folder");
+		btn_open_dir = toolbar_button(_("Open Folder"), "folder-open-symbolic");
 		btn_open_dir.set_tooltip_text (_("Open Theme Folder"));
-        toolbar.add(btn_open_dir);
+        toolbar.append(btn_open_dir);
 
         btn_open_dir.clicked.connect(btn_open_dir_clicked);
 
         //separator1
-		var separator2 = new Gtk.SeparatorToolItem();
-		separator2.set_draw(true);
-		toolbar.add(separator2);
+		var separator2 = new Gtk.Separator(Orientation.VERTICAL);
+		toolbar.append(separator2);
 
 		//btn_scan
-		btn_scan = new Gtk.ToolButton.from_stock ("gtk-refresh");
-		btn_scan.is_important = false;
-		btn_scan.label = _("Refresh");
+		btn_scan = toolbar_button(_("Refresh"), "view-refresh-symbolic");
 		btn_scan.set_tooltip_text (_("Search for new themes"));
-        toolbar.add(btn_scan);
+        toolbar.append(btn_scan);
 
         btn_scan.clicked.connect(btn_scan_clicked);
         
 		//btn_generate_preview
-		btn_generate_preview = new Gtk.ToolButton.from_stock ("gtk-missing-image");
-		btn_generate_preview.is_important = false;
-		btn_generate_preview.label = _("Generate Preview");
+		btn_generate_preview = toolbar_button(_("Generate Preview"), "image-x-generic-symbolic");
 		btn_generate_preview.set_tooltip_text (_("Generate preview images"));
-        toolbar.add(btn_generate_preview);
-
-		btn_generate_preview.icon_widget = get_shared_icon("","image-generate24x24.png",24);
+        toolbar.append(btn_generate_preview);
 		
         btn_generate_preview.clicked.connect(btn_generate_preview_clicked);
 
 		//btn_kill_all
-		btn_kill_all = new Gtk.ToolButton.from_stock ("gtk-cancel");
-		btn_kill_all.is_important = false;
-		btn_kill_all.label = _("Stop All Widgets");
+		btn_kill_all = toolbar_button(_("Stop All Widgets"), "process-stop-symbolic");
 		btn_kill_all.set_tooltip_text (_("Stop all running widgets"));
-        toolbar.add(btn_kill_all);
+        toolbar.append(btn_kill_all);
 
         btn_kill_all.clicked.connect(btn_kill_all_clicked);
 
 		//btn_import_themes
-		btn_import_themes = new Gtk.ToolButton.from_stock ("gtk-open");
-		btn_import_themes.is_important = false;
-		btn_import_themes.label = _("Import");
+		btn_import_themes = toolbar_button(_("Import"), "document-open-symbolic");
 		btn_import_themes.set_tooltip_text (_("Import Theme Pack (*.cmtp.7z) or various archive type"));
-        toolbar.add(btn_import_themes);
+        toolbar.append(btn_import_themes);
 
         btn_import_themes.clicked.connect(btn_import_themes_clicked);
         
         //separator
-		var separator = new Gtk.SeparatorToolItem();
-		separator.set_draw(false);
-		separator.set_expand(true);
-		toolbar.add(separator);
+		var separator = new Label("");
+		separator.hexpand = true;
+		toolbar.append(separator);
 		
 		//btn_settings
-		btn_settings = new Gtk.ToolButton.from_stock ("gtk-preferences");
-		btn_settings.is_important = false;
-		btn_settings.label = _("Settings");
+		btn_settings = toolbar_button(_("Settings"), "emblem-system-symbolic");
 		btn_settings.set_tooltip_text (_("Application Settings"));
-        toolbar.add(btn_settings);
+        toolbar.append(btn_settings);
 
         btn_settings.clicked.connect(btn_settings_clicked);
 
         //btn_donate
-		btn_donate = new Gtk.ToolButton.from_stock ("gtk-dialog-info");
-		btn_donate.is_important = false;
-		btn_donate.icon_widget = get_shared_icon("donate","donate.svg",32);
-		btn_donate.label = _("Funding");
+		btn_donate = toolbar_button(_("Funding"), "emblem-favorite-symbolic");
 		btn_donate.set_tooltip_text (_("Funding Support"));
-        toolbar.add(btn_donate);
+        toolbar.append(btn_donate);
 
         btn_donate.clicked.connect(() => { show_donation_window(false); });
         
         //btn_about
-		btn_about = new Gtk.ToolButton.from_stock ("gtk-about");
-		btn_about.is_important = false;
-		btn_about.label = _("About");
+		btn_about = toolbar_button(_("About"), "help-about-symbolic");
 		btn_about.set_tooltip_text (_("About"));
-        toolbar.add(btn_about);
+        toolbar.append(btn_about);
 
         btn_about.clicked.connect(btn_about_clicked);
+	}
+
+	private Button toolbar_button(string label, string icon_name){
+		var button = new Button.with_label(label);
+		button.set_icon_name(icon_name);
+		return button;
 	}
 	
 	private void init_list_view(){
@@ -443,13 +402,14 @@ public class MainWindow : Window {
 		tv_widget = new TreeView();
 		tv_widget.get_selection().mode = SelectionMode.SINGLE;
 		tv_widget.headers_visible = false;
-		tv_widget.set_rules_hint (true);
 		
-		sw_widget = new ScrolledWindow(null, null);
-		sw_widget.set_shadow_type (ShadowType.ETCHED_IN);
-		sw_widget.add (tv_widget);
-		sw_widget.expand = true;
-		pane.pack1(sw_widget,true,true);
+		sw_widget = new ScrolledWindow();
+		sw_widget.set_child(tv_widget);
+		sw_widget.hexpand = true;
+		sw_widget.vexpand = true;
+		pane.set_start_child(sw_widget);
+		pane.resize_start_child = true;
+		pane.shrink_start_child = true;
 
 		TreeViewColumn col_widget = new TreeViewColumn();
 		col_widget.title = " " + _("Enable") + " ";
@@ -483,34 +443,58 @@ public class MainWindow : Window {
 	}
 	
 	private void init_preview_area(){
-		sw_preview = new ScrolledWindow(null, null);
-		sw_preview.set_shadow_type(ShadowType.ETCHED_IN);
-		sw_preview.expand = true;
-		pane.pack2(sw_preview,true,true);
+		sw_preview = new ScrolledWindow();
+		sw_preview.hexpand = true;
+		sw_preview.vexpand = true;
+		pane.set_end_child(sw_preview);
+		pane.resize_end_child = true;
+		pane.shrink_end_child = true;
 		
 		string tt = _("Use the keyboard arrow keys to browse.\nPress ENTER to start and stop.");
 		sw_preview.set_tooltip_text(tt);
 
 		img_preview = new Image();
-		ebox_preview = new EventBox();
-		ebox_preview.add(img_preview);
-		sw_preview.add_with_viewport(ebox_preview);
+		sw_preview.set_child(img_preview);
+	}
+
+	private void setup_drag_and_drop(){
+		var drop_target = new Gtk.DropTarget(typeof(Gdk.FileList), Gdk.DragAction.COPY);
+		drop_target.drop.connect((value, x, y) => {
+			var file_list = (Gdk.FileList) value.get_boxed();
+			if (file_list == null) { return false; }
+
+			SList<string> files = new SList<string>();
+			foreach(File file in file_list.get_files()){
+				string path = file.get_path();
+				if (path == null) { continue; }
+				if ( path.has_suffix(".7z") || path.has_suffix(".bz2") || path.has_suffix(".gz") 
+					|| path.has_suffix(".xz") || path.has_suffix(".tar") || path.has_suffix(".zip") ){
+					files.append(path);
+				}
+			}
+
+			if (files.length() == 0) { return false; }
+			install_theme_packs(files);
+			return true;
+		});
+		((Gtk.Widget) this).add_controller(drop_target);
 	}
 	
 	private void init_keyboard_shortcuts(){
-		this.key_press_event.connect ((w, event) => {
+		var key_controller = new Gtk.EventControllerKey();
+		key_controller.key_pressed.connect((keyval, keycode, state) => {
 
 			if (!toolbar.sensitive) { return false; }
 
-			if ((event.keyval == 65361)||(event.keyval == 65362)) {
+			if ((keyval == 65361)||(keyval == 65362)) {
 				btn_prev_clicked();
 				return false;
 			}
-			else if ((event.keyval == 65363)||(event.keyval == 65364)){
+			else if ((keyval == 65363)||(keyval == 65364)){
 				btn_next_clicked();
 				return false;
 			}
-			else if (event.keyval == 65293) {
+			else if (keyval == 65293) {
 				if (selected_item().enabled){
 					btn_stop_clicked();
 				}
@@ -522,6 +506,7 @@ public class MainWindow : Window {
 
 			return false;
 		});
+		((Gtk.Widget) this).add_controller(key_controller);
 	}
 	
 	private bool init_delayed(){
@@ -557,24 +542,6 @@ public class MainWindow : Window {
 		sw_widget.vadjustment.value = vpos;
 	}
 
-	private void on_drag_data_received (Gdk.DragContext drag_context, int x, int y, Gtk.SelectionData data, uint info, uint time) {
-        gtk_set_busy(true, this);
-		gtk_do_events();
-        
-        SList<string> files = new SList<string>();
-        foreach(string uri in data.get_uris()){
-			string file = uri.replace("file://","").replace("file:/","");
-			file = Uri.unescape_string(file);
-			if ( file.has_suffix(".7z") || file.has_suffix(".bz2") || file.has_suffix(".gz") 
-                || file.has_suffix(".xz") || file.has_suffix(".tar") || file.has_suffix(".zip") )
-				files.append(file);
-		}
-
-		install_theme_packs(files);
-
-        Gtk.drag_finish (drag_context, true, false, time);
-    }
-	
 	//actions
 	
 	private void btn_preview_toggled(){
@@ -598,8 +565,8 @@ public class MainWindow : Window {
 		
 		var dialog = new EditThemeWindow(null);
 		dialog.set_transient_for (this);
-		dialog.show_all();
-		dialog.run();
+		dialog.present();
+		gtk_dialog_run(dialog);
 		dialog.destroy();
 		
 		reload_themes();
@@ -761,8 +728,8 @@ public class MainWindow : Window {
 		if (item is ConkyRC){
 			var dialog = new EditWidgetWindow((ConkyRC) item);
 			dialog.set_transient_for(this);
-			dialog.show_all();
-			dialog.run();
+			dialog.present();
+			gtk_dialog_run(dialog);
 			dialog.destroy();
 		}
 		else{
@@ -770,8 +737,8 @@ public class MainWindow : Window {
 			
 			var dialog = new EditThemeWindow((ConkyTheme)selected_item());
 			dialog.set_transient_for (this);
-			dialog.show_all();
-			dialog.run();
+			dialog.present();
+			gtk_dialog_run(dialog);
 			dialog.destroy();
 		}
 	}
@@ -796,11 +763,11 @@ public class MainWindow : Window {
 		//get options
 		var dialog = new GeneratePreviewWindow();
 		dialog.set_transient_for (this);
-		dialog.show_all();
+		dialog.present();
 		dialog.optGenerateCurrent.sensitive = (selected_item() != null);
 		dialog.optGenerateMissing.active = (selected_item() == null);
 		
-		int response = dialog.run();
+		int response = gtk_dialog_run(dialog);
 		string action = dialog.action;
 		dialog.destroy();
 		
@@ -958,8 +925,7 @@ public class MainWindow : Window {
 		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import") + " (cmtp.7z; 7z; gz; bz2; xz; tar; zip; etc.)", this, Gtk.FileChooserAction.OPEN,
 							"gtk-cancel", Gtk.ResponseType.CANCEL,
 							"gtk-open", Gtk.ResponseType.ACCEPT);
-		dlgAddFiles.local_only = true;
- 		dlgAddFiles.set_modal (true);
+		 		dlgAddFiles.set_modal (true);
  		dlgAddFiles.set_select_multiple (true);
  		
 		Gtk.FileFilter filter = new Gtk.FileFilter ();
@@ -975,13 +941,13 @@ public class MainWindow : Window {
 		filter.add_pattern ("*.tar.xz");
 		filter.add_pattern ("*.tar");
 		filter.add_pattern ("*.zip");
-        filter.set_name("Conky Manager Theme or various compressed archive");
+        filter.set_filter_name("Conky Manager Theme or various compressed archive");
 		dlgAddFiles.add_filter (filter);
 		
 		//show the dialog and get list of files
 		SList<string> files = null;
- 		if (dlgAddFiles.run() == Gtk.ResponseType.ACCEPT){
-			files = dlgAddFiles.get_filenames();
+ 		if (gtk_dialog_run(dlgAddFiles) == Gtk.ResponseType.ACCEPT){
+			files = files_from_list_model(dlgAddFiles.get_files());
 	 	}
 		dlgAddFiles.destroy();
 		
@@ -1016,20 +982,33 @@ public class MainWindow : Window {
 			gtk_messagebox(_("Error"), _("Failed to import themes"),this);
 		}
 	}
+
+	private SList<string> files_from_list_model(ListModel model){
+		SList<string> files = new SList<string>();
+		for (uint i = 0; i < model.get_n_items(); i++){
+			File? file = model.get_item(i) as File;
+			if (file == null) { continue; }
+			string? path = file.get_path();
+			if (path != null){
+				files.append(path);
+			}
+		}
+		return files;
+	}
 	
 	private void btn_settings_clicked(){
 		var dialog = new SettingsWindow();
 		dialog.set_transient_for(this);
-		dialog.show_all();
-		dialog.run();
+		dialog.present();
+		gtk_dialog_run(dialog);
 		dialog.destroy();
 	}
 
 	public void show_donation_window(bool on_exit){
 		var dialog = new DonationWindow();
 		dialog.set_transient_for(this);
-		dialog.show_all();
-		dialog.run();
+		dialog.present();
+		gtk_dialog_run(dialog);
 		dialog.destroy();
 	}
 
@@ -1095,23 +1074,23 @@ public class MainWindow : Window {
 		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
 		dialog.website = "http://teejeetech.in";
 		dialog.website_label = "http://teejeetech.blogspot.in";
-		dialog.website2 = "https://github.com/zcot/conky-manager2";
+		dialog.website2 = "https://github.com/zcot/conky-manager3";
 		dialog.website_label2 = "project on github";
 
 		dialog.initialize();
-		dialog.show_all();
+		dialog.present();
 	}
 	
 	private void show_preview(ConkyConfigItem? item){
-		img_preview.pixbuf = null;
+		img_preview.clear();
 		
 		if (item == null){
-			img_preview.pixbuf = null;
+			img_preview.clear();
 			return;
 		}
 		
-		int screen_width = Gdk.Screen.width();
-		int screen_height = Gdk.Screen.height();
+		int screen_width = get_width();
+		int screen_height = get_height();
 
 		if ((item.image_path.length > 0) && file_exists(item.image_path)){
 			try{
@@ -1123,10 +1102,10 @@ public class MainWindow : Window {
 					int scaled_width = px.width / 2;
 					int scaled_height = px.height / 2;
 					px = new Gdk.Pixbuf.from_file_at_scale(item.image_path,scaled_width,scaled_height,true);
-					img_preview.pixbuf = px;
+					img_preview.set_from_pixbuf(px);
 				}
 				else{
-					img_preview.pixbuf = px;
+					img_preview.set_from_pixbuf(px);
 				}
 			}
 			catch(Error e){
@@ -1134,7 +1113,7 @@ public class MainWindow : Window {
 			}
 		}
 		else{
-			img_preview.pixbuf = null;
+			img_preview.clear();
 		}
 		
 		if (item.url.length > 0){

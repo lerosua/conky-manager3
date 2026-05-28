@@ -45,12 +45,9 @@ public class SettingsWindow : Dialog {
 	
 	public SettingsWindow() {
 		title = _("Application Settings");
-        window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
-        skip_taskbar_hint = false;
         set_default_size (400, 20);	
-		icon = get_app_icon(16);
 		
 	    folder_list_user = new Gee.ArrayList<string>();
 	    foreach(string path in App.search_folders){
@@ -61,16 +58,23 @@ public class SettingsWindow : Dialog {
 
         //notebook
         notebook = new Notebook ();
-		notebook.margin = 6;
-		notebook.expand = true;
+		notebook.set_margin_top(6);
+		notebook.set_margin_bottom(6);
+		notebook.set_margin_start(6);
+		notebook.set_margin_end(6);
+		notebook.hexpand = true;
+		notebook.vexpand = true;
 		notebook.set_size_request(-1,400);
-		vbox_main.add(notebook);
+		vbox_main.append(notebook);
 		
 		//options -----------------------------------------------------
 		
 		//vbox_options
         Box vbox_options = new Box (Orientation.VERTICAL, 6);
-		vbox_options.margin = 12;
+		vbox_options.set_margin_top(12);
+		vbox_options.set_margin_bottom(12);
+		vbox_options.set_margin_start(12);
+		vbox_options.set_margin_end(12);
 
         //lbl_options
 		Label lbl_options = new Gtk.Label(_("General"));
@@ -80,7 +84,7 @@ public class SettingsWindow : Dialog {
         //hbox_startup --------------------------------------------------
         
         Box hbox_startup = new Box (Gtk.Orientation.HORIZONTAL, 6);
-        vbox_options.add (hbox_startup);
+        vbox_options.append (hbox_startup);
         
         //lbl_startup
 		Label lbl_startup = new Gtk.Label(_("Run Conky at system startup") );
@@ -88,18 +92,18 @@ public class SettingsWindow : Dialog {
 		lbl_startup.hexpand = true;
 		lbl_startup.xalign = (float) 0.0;
 		lbl_startup.valign = Align.CENTER;
-		hbox_startup.add(lbl_startup);
+		hbox_startup.append(lbl_startup);
 		
 		//switch_startup
         switch_startup = new Gtk.Switch();
         switch_startup.set_size_request(100,20);
         switch_startup.active =  App.check_startup();
-        hbox_startup.pack_end(switch_startup,false,false,0);
+        hbox_startup.append(switch_startup);
 
         //hbox_startup_delay --------------------------------------------------
         
         Box hbox_startup_delay = new Box (Gtk.Orientation.HORIZONTAL, 6);
-        vbox_options.add (hbox_startup_delay);
+        vbox_options.append (hbox_startup_delay);
         
         //lbl_startup_delay
 		Label lbl_startup_delay = new Gtk.Label(_("Startup Delay (seconds)") );
@@ -107,20 +111,23 @@ public class SettingsWindow : Dialog {
 		lbl_startup_delay.hexpand = true;
 		lbl_startup_delay.xalign = (float) 0.0;
 		lbl_startup_delay.valign = Align.CENTER;
-		hbox_startup_delay.add(lbl_startup_delay);
+		hbox_startup_delay.append(lbl_startup_delay);
 		
 		//spin_startup_delay
 		spin_startup_delay = new SpinButton.with_range(0,120,10);
 		spin_startup_delay.xalign = (float) 0.5;
 		spin_startup_delay.value = App.startup_delay;
 		spin_startup_delay.set_size_request(100,20);
-		hbox_startup_delay.pack_end(spin_startup_delay,false,false,0);
+		hbox_startup_delay.append(spin_startup_delay);
 		
 		//vbox_folders -----------------------------------------------
 		
 		//vbox_folders
         Box vbox_folders = new Box (Orientation.VERTICAL, 6);
-		vbox_folders.margin = 6;
+		vbox_folders.set_margin_top(6);
+		vbox_folders.set_margin_bottom(6);
+		vbox_folders.set_margin_start(6);
+		vbox_folders.set_margin_end(6);
 
         //lbl_folders
 		Label lbl_folders = new Gtk.Label(_("Locations"));
@@ -131,42 +138,38 @@ public class SettingsWindow : Dialog {
 
 		//hbox_datadir
         Box hbox_datadir = new Box (Orientation.HORIZONTAL, 6);
-		vbox_folders.add(hbox_datadir);
+		vbox_folders.append(hbox_datadir);
 		
         //lbl_header_theme_dir
 		Label lbl_header_theme_dir = new Gtk.Label(_("Theme Directory"));
 		lbl_header_theme_dir.set_use_markup(true);
 		lbl_header_theme_dir.xalign = (float) 0.0;
-		hbox_datadir.add(lbl_header_theme_dir);
+		hbox_datadir.append(lbl_header_theme_dir);
 		
 		Entry entry_themedir = new Gtk.Entry();
-		hbox_datadir.add(entry_themedir);
+		hbox_datadir.append(entry_themedir);
 		entry_themedir.text = App.data_dir.replace(Environment.get_home_dir() ,"~");
 		entry_themedir.sensitive = false;
 		entry_themedir.hexpand = true;
-		Gdk.Color black;
-		Gdk.Color.parse("000000",out black);
-		entry_themedir.modify_fg(StateType.INSENSITIVE,black);
 
         //lbl_search_folders
 		Label lbl_search_folders = new Gtk.Label(_("Additional locations to search for Conky themes") + ":");
 		lbl_search_folders.set_use_markup(true);
 		lbl_search_folders.xalign = (float) 0.0;
 		lbl_search_folders.margin_top = 10;
-		vbox_folders.add(lbl_search_folders);
+		vbox_folders.append(lbl_search_folders);
 		
 		//tv_folders
 		tv_folders = new TreeView();
 		tv_folders.get_selection().mode = SelectionMode.MULTIPLE;
 		tv_folders.headers_visible = false;
-		tv_folders.set_rules_hint (true);
 
 		//sw_folders
-		ScrolledWindow sw_folders = new ScrolledWindow(null, null);
-		sw_folders.set_shadow_type (ShadowType.ETCHED_IN);
-		sw_folders.add (tv_folders);
-		sw_folders.expand = true;
-		vbox_folders.add(sw_folders);
+		ScrolledWindow sw_folders = new ScrolledWindow();
+		sw_folders.set_child (tv_folders);
+		sw_folders.hexpand = true;
+		sw_folders.vexpand = true;
+		vbox_folders.append(sw_folders);
 
         //col_path
 		TreeViewColumn col_path = new TreeViewColumn();
@@ -178,7 +181,7 @@ public class SettingsWindow : Dialog {
 		col_path.pack_start (cell_margin, false);
 		
 		CellRendererPixbuf cell_icon = new CellRendererPixbuf ();
-		cell_icon.stock_id = "gtk-directory";
+		cell_icon.icon_name = "folder-symbolic";
 		col_path.pack_start (cell_icon, false);
 		
 		CellRendererText cell_text = new CellRendererText ();
@@ -193,35 +196,27 @@ public class SettingsWindow : Dialog {
 		
 		//hbox_folder_actions
         Box hbox_folder_actions = new Box (Orientation.HORIZONTAL, 6);
-        vbox_folders.add(hbox_folder_actions);
+        vbox_folders.append(hbox_folder_actions);
         
 		//btn_add_folder
 		btn_add_folder = new Button.with_label("  " + _("Add"));
-		btn_add_folder.set_image (new Image.from_stock ("gtk-add", IconSize.MENU));
         btn_add_folder.clicked.connect (btn_add_folder_clicked);
-		hbox_folder_actions.add(btn_add_folder);
+		hbox_folder_actions.append(btn_add_folder);
 
 		//btn_remove_folder
 		btn_remove_folder = new Button.with_label("  " + _("Remove"));
-		btn_remove_folder.set_image (new Image.from_stock ("gtk-remove", IconSize.MENU));
         btn_remove_folder.clicked.connect (btn_remove_folder_clicked);
-		hbox_folder_actions.add(btn_remove_folder);
-		
-		//hbox_commands --------------------------------------------------
-		
-		Box hbox_action = (Box) get_action_area();
+		hbox_folder_actions.append(btn_remove_folder);
 		
 		//btn_apply_changes
 		btn_apply_changes = new Button.with_label("  " + _("OK"));
-		btn_apply_changes.set_image (new Image.from_stock ("gtk-apply", IconSize.MENU));
         btn_apply_changes.clicked.connect (btn_apply_changes_clicked);
-		hbox_action.add(btn_apply_changes);
+		add_action_widget(btn_apply_changes, Gtk.ResponseType.OK);
 		
 		//btn_cancel_changes
 		btn_cancel_changes = new Button.with_label("  " + _("Cancel"));
-		btn_cancel_changes.set_image (new Image.from_stock ("gtk-cancel", IconSize.MENU));
         btn_cancel_changes.clicked.connect (btn_cancel_changes_clicked);
-		hbox_action.add(btn_cancel_changes);
+		add_action_widget(btn_cancel_changes, Gtk.ResponseType.CANCEL);
 		
 		tv_folders_refresh();
 	}
@@ -271,16 +266,28 @@ public class SettingsWindow : Dialog {
 							"gtk-cancel", Gtk.ResponseType.CANCEL,
 							"gtk-open", Gtk.ResponseType.ACCEPT);
 		dialog.action = FileChooserAction.SELECT_FOLDER;
-		dialog.local_only = true;
 		dialog.set_transient_for(this);
  		dialog.set_modal (true);
  		dialog.set_select_multiple (false);
  		
-		dialog.run();
-		var list = dialog.get_filenames();
+		gtk_dialog_run(dialog);
+		var list = files_from_list_model(dialog.get_files());
 	 	dialog.destroy ();
 	 	
 	 	return list;
+	}
+
+	private SList<string> files_from_list_model(ListModel model){
+		SList<string> files = new SList<string>();
+		for (uint i = 0; i < model.get_n_items(); i++){
+			File? file = model.get_item(i) as File;
+			if (file == null) { continue; }
+			string? path = file.get_path();
+			if (path != null){
+				files.append(path);
+			}
+		}
+		return files;
 	}
 	
 	private void btn_apply_changes_clicked () {

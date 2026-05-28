@@ -34,32 +34,31 @@ using TeeJee.Misc;
 public class DonationWindow : Dialog {
 	public DonationWindow() {
 		set_title(_("Funding Support"));
-		window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
 		set_deletable(true);
-		set_skip_taskbar_hint(false);
 		set_default_size (400, 20);
-		icon = get_app_icon(16);
 
 		//vbox_main
 		Box vbox_main = get_content_area();
-		vbox_main.margin = 6;
+		vbox_main.set_margin_top(6);
+		vbox_main.set_margin_bottom(6);
+		vbox_main.set_margin_start(6);
+		vbox_main.set_margin_end(6);
 		vbox_main.homogeneous = false;
 
-		get_action_area().visible = false;
 
 		//lbl_message
 		Label lbl_message = new Gtk.Label("");
 		string msg = _("Did you find this software useful?\n\nYou can buy me a coffee or make a donation via PayPal to show your support. Or just drop me an email and say Hi. This application is completely free and will continue to remain that way. Your contributions will help in keeping this project alive and improving it further.\n\nFeel free to send me an email if you find any issues in this application or if you need any changes. Suggestions and feedback are always welcome.\n\nThanks,\nTony George\n(teejeetech@gmail.com)\n\nBionic to Focal to Jammy support, 1.10+ config support, magic archive import, terminal debug function, and more\n-help finance the efforts with these buttons to the right.\n                                                                                          Scott Caudle\n                                                                                (zcotcaudle@gmail.com)");
 		lbl_message.label = msg;
 		lbl_message.wrap = true;
-		vbox_main.pack_start(lbl_message,true,true,0);
+		vbox_main.append(lbl_message);
 
 		//vbox_actions
 		Grid vbox_actions = new Grid ();
-		vbox_actions.margin_left = 10;
-		vbox_actions.margin_right = 10;
+		vbox_actions.margin_start = 10;
+		vbox_actions.margin_end = 10;
 		vbox_actions.margin_top = 10;
 		//vbox_actions.set_row_spacing = 5;
 		//vbox_actions.set_column_spacing = 5;
@@ -75,7 +74,7 @@ public class DonationWindow : Dialog {
 		vbox_actions.insert_row(3);
 		vbox_actions.insert_row(4);
 		vbox_actions.insert_row(5);
-		vbox_main.pack_start(vbox_actions,false,false,0);
+		vbox_main.append(vbox_actions);
 
 		//btn_donate_paypal
 		Button btn_donate_paypal = new Button.with_label("   " + _("Donate with PayPal") + "   ");
@@ -138,7 +137,7 @@ public class DonationWindow : Dialog {
 		Button btn_visit2 = new Button.with_label("   " + _("github site") + "   ");
 		vbox_actions.attach(btn_visit2, 2, 4, 1, 1);
 		btn_visit2.clicked.connect(()=>{
-			xdg_open("https://github.com/zcot/conky-manager2");
+			xdg_open("https://github.com/zcot/conky-manager3");
 		});
 	}
 }

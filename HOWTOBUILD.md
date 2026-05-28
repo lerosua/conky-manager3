@@ -1,11 +1,11 @@
-# How to build this software. It was tested on Mint 18.x and 19 versions, but will probably build just the same on the various *ubuntu systems too.
+# How to build this software. It was tested on modern Ubuntu/Mint versions and now builds against GTK 4.
 
 ## additional required packages to build:
  build-essential
  git
  valac
  libgee-0.8-dev
- libgtk-3-dev
+ libgtk-4-dev
  libjson-glib-dev
  gettext
  libgettextpo-dev
@@ -16,22 +16,28 @@
 
 ## here is a one-shot installation command for all of the above packages:
 ```
-apt install build-essential git valac libgee-0.8-dev libgtk-3-dev libjson-glib-dev gettext libgettextpo-dev p7zip-full imagemagick
+apt install build-essential git valac libgee-0.8-dev libgtk-4-dev libjson-glib-dev gettext libgettextpo-dev p7zip-full imagemagick
 ```
 
 
 ## clone this repository
-the following command will create a subdirectory from whatever directory you are currently in called conky-manager2 then download the files from github and put them in that subdirectory:
+the following command will create a subdirectory from whatever directory you are currently in called conky-manager3 then download the files from github and put them in that subdirectory:
 ```
-git clone https://github.com/zcot/conky-manager2.git
+git clone https://github.com/zcot/conky-manager3.git
 ```
 
 ## change the directory to that source code location:
 ```
-cd conky-manager2
+cd conky-manager3
 ```
 
-## compile the source:
+## compile the source with Meson:
+```
+meson setup builddir
+meson compile -C builddir
+```
+
+## legacy Makefile build:
 ```
 make
 ```
@@ -45,6 +51,5 @@ sudo make install
 ```
 sudo make uninstall
 ```
-
 
 

@@ -62,12 +62,9 @@ public class EditWidgetWindow : Dialog {
 	
 	public EditWidgetWindow(ConkyRC conkyrc_edit) {
 		title = _("Edit Widget");
-        window_position = WindowPosition.CENTER_ON_PARENT;
 		set_destroy_with_parent (true);
 		set_modal (true);
-        skip_taskbar_hint = true;
         set_default_size (400, 20);	
-		icon = get_app_icon(16);
 		
 		conkyrc = conkyrc_edit;
 
@@ -79,10 +76,14 @@ public class EditWidgetWindow : Dialog {
         
         //tab_widget_properties ---------------------------------------
         tab_widget_properties = new Notebook ();
-		tab_widget_properties.margin = 6;
-		tab_widget_properties.expand = true;
+		tab_widget_properties.set_margin_top(6);
+		tab_widget_properties.set_margin_bottom(6);
+		tab_widget_properties.set_margin_start(6);
+		tab_widget_properties.set_margin_end(6);
+		tab_widget_properties.hexpand = true;
+		tab_widget_properties.vexpand = true;
 		tab_widget_properties.set_size_request(-1,400);
-		vbox_main.add(tab_widget_properties);
+		vbox_main.append(tab_widget_properties);
 		
 		//lblWidgetLocation
 		Label lblWidgetLocation = new Label (_("Location"));
@@ -94,7 +95,10 @@ public class EditWidgetWindow : Dialog {
         grid_widget_location.set_row_spacing (6);
         grid_widget_location.column_homogeneous = false;
         grid_widget_location.visible = false;
-        grid_widget_location.margin = page_margin;
+        grid_widget_location.set_margin_top(page_margin);
+		grid_widget_location.set_margin_bottom(page_margin);
+		grid_widget_location.set_margin_start(page_margin);
+		grid_widget_location.set_margin_end(page_margin);
         tab_widget_properties.append_page (grid_widget_location, lblWidgetLocation);
         
 		int row = -1;
@@ -170,8 +174,10 @@ public class EditWidgetWindow : Dialog {
         grid_widget_size.set_row_spacing (6);
         grid_widget_size.column_homogeneous = false;
         grid_widget_size.visible = false;
-        grid_widget_size.margin = page_margin;
-        grid_widget_size.border_width = 1;
+        grid_widget_size.set_margin_top(page_margin);
+		grid_widget_size.set_margin_bottom(page_margin);
+		grid_widget_size.set_margin_start(page_margin);
+		grid_widget_size.set_margin_end(page_margin);
         tab_widget_properties.append_page (grid_widget_size, lblWidgetSize);
         
         row = -1;
@@ -234,7 +240,7 @@ public class EditWidgetWindow : Dialog {
 		lblSize1.margin_bottom = 6;
 		lblSize1.xalign = (float) 0.0;
 		lblSize1.set_size_request(100,-1);
-		lblSize1.set_line_wrap(true);
+		lblSize1.wrap = true;
 		grid_widget_size.attach(lblSize1,0,++row,3,1);
 		
 		tt = "Ø " + _("Setting Type to \"Opaque\" (from the transparency tab) will make it easier to see the changes");
@@ -244,7 +250,7 @@ public class EditWidgetWindow : Dialog {
 		lbl_size2.margin_bottom = 6;
 		lbl_size2.xalign = (float) 0.0;
 		lbl_size2.set_size_request(100,-1);
-		lbl_size2.set_line_wrap(true);
+		lbl_size2.wrap = true;
 		grid_widget_size.attach(lbl_size2,0,++row,3,1);
 		
 		//lblWidgetTransparency
@@ -257,7 +263,10 @@ public class EditWidgetWindow : Dialog {
         grid_widget_transparency.set_row_spacing (6);
         grid_widget_transparency.column_homogeneous = false;
         grid_widget_transparency.visible = false;
-        grid_widget_transparency.margin = page_margin;
+        grid_widget_transparency.set_margin_top(page_margin);
+		grid_widget_transparency.set_margin_bottom(page_margin);
+		grid_widget_transparency.set_margin_start(page_margin);
+		grid_widget_transparency.set_margin_end(page_margin);
         tab_widget_properties.append_page (grid_widget_transparency, lblWidgetTransparency);
         
         row = -1;
@@ -329,7 +338,7 @@ public class EditWidgetWindow : Dialog {
 		lblTrans1.margin_bottom = 6;
 		lblTrans1.xalign = (float) 0.0;
 		lblTrans1.set_size_request(100,-1);
-		lblTrans1.set_line_wrap(true);
+		lblTrans1.wrap = true;
 		grid_widget_transparency.attach(lblTrans1,0,++row,3,1);
 		
 		tt = "Ø " + _("Setting Type to \"Pseudo-Transparent\" will make the window transparent but the window will have a shadow. The shadow can be disabled by configuring your window manager.");
@@ -339,7 +348,7 @@ public class EditWidgetWindow : Dialog {
 		lblTrans2.margin_bottom = 6;
 		lblTrans2.xalign = (float) 0.0;
 		lblTrans2.set_size_request(100,-1);
-		lblTrans2.set_line_wrap(true);
+		lblTrans2.wrap = true;
 		grid_widget_transparency.attach(lblTrans2,0,++row,3,1);
 
 		//lbl_widget_time
@@ -352,8 +361,10 @@ public class EditWidgetWindow : Dialog {
         grid_widget_time.set_row_spacing (6);
         grid_widget_time.column_homogeneous = false;
         grid_widget_time.visible = false;
-        grid_widget_time.margin = page_margin;
-        grid_widget_time.border_width = 1;
+        grid_widget_time.set_margin_top(page_margin);
+		grid_widget_time.set_margin_bottom(page_margin);
+		grid_widget_time.set_margin_start(page_margin);
+		grid_widget_time.set_margin_end(page_margin);
         tab_widget_properties.append_page (grid_widget_time, lbl_widget_time);
 		
 		row = -1;
@@ -375,7 +386,10 @@ public class EditWidgetWindow : Dialog {
 		lbl_widget_time_not_found = new Gtk.Label("");
 		lbl_widget_time_not_found.set_use_markup(true);
 		lbl_widget_time_not_found.xalign = (float) 0.0;
-		lbl_widget_time_not_found.margin = 6;
+		lbl_widget_time_not_found.set_margin_top(6);
+		lbl_widget_time_not_found.set_margin_bottom(6);
+		lbl_widget_time_not_found.set_margin_start(6);
+		lbl_widget_time_not_found.set_margin_end(6);
 		grid_widget_time.attach(lbl_widget_time_not_found,0,++row,2,1);
 		
 		//populate
@@ -396,8 +410,10 @@ public class EditWidgetWindow : Dialog {
         grid_widget_network.set_row_spacing (6);
         grid_widget_network.column_homogeneous = false;
         grid_widget_network.visible = false;
-        grid_widget_network.margin = page_margin;
-        grid_widget_network.border_width = 1;
+        grid_widget_network.set_margin_top(page_margin);
+		grid_widget_network.set_margin_bottom(page_margin);
+		grid_widget_network.set_margin_start(page_margin);
+		grid_widget_network.set_margin_end(page_margin);
         tab_widget_properties.append_page (grid_widget_network, lblWidgetNetwork);
 		
 		row = -1;
@@ -434,36 +450,32 @@ public class EditWidgetWindow : Dialog {
 		lbl_widget_network_not_found = new Gtk.Label("");
 		lbl_widget_network_not_found.set_use_markup(true);
 		lbl_widget_network_not_found.xalign = (float) 0.0;
-		lbl_widget_network_not_found.margin = 6;
+		lbl_widget_network_not_found.set_margin_top(6);
+		lbl_widget_network_not_found.set_margin_bottom(6);
+		lbl_widget_network_not_found.set_margin_start(6);
+		lbl_widget_network_not_found.set_margin_end(6);
 		grid_widget_network.attach(lbl_widget_network_not_found,0,++row,4,1);
-		
-		//hbox_commands --------------------------------------------------
-		
-		Box hbox_action = (Box) get_action_area();
 		
 		//btn_apply_changes
 		btn_apply_changes = new Button.with_label("  " + _("Apply"));
-		btn_apply_changes.set_image (new Image.from_stock ("gtk-apply", IconSize.MENU));
         btn_apply_changes.clicked.connect (btn_apply_changes_clicked);
         btn_apply_changes.set_tooltip_text (_("Apply Changes"));
         //btn_apply_changes.set_size_request(-1,30);
-		hbox_action.add(btn_apply_changes);
+		add_action_widget(btn_apply_changes, Gtk.ResponseType.APPLY);
 		
 		//btn_discard_changes
 		btn_discard_changes = new Button.with_label("  " + _("Reset"));
-		btn_discard_changes.set_image (new Image.from_stock ("gtk-clear", IconSize.MENU));
-        btn_discard_changes.clicked.connect (btn_discard_changes_clicked);
+		btn_discard_changes.clicked.connect (btn_discard_changes_clicked);
         btn_discard_changes.set_tooltip_text (_("Reset Changes"));
         //btn_discard_changes.set_size_request(-1,30);
-		hbox_action.add(btn_discard_changes);
+		add_action_widget(btn_discard_changes, Gtk.ResponseType.REJECT);
 
 		//btn_cancel_changes
 		btn_cancel_changes = new Button.with_label("  " + _("Close"));
-		btn_cancel_changes.set_image (new Image.from_stock ("gtk-cancel", IconSize.MENU));
-        btn_cancel_changes.clicked.connect (btn_cancel_changes_clicked);
+		btn_cancel_changes.clicked.connect (btn_cancel_changes_clicked);
         btn_cancel_changes.set_tooltip_text (_("Discard Changes"));
         //btn_cancel_changes.set_size_request(-1,30);
-		hbox_action.add(btn_cancel_changes);
+		add_action_widget(btn_cancel_changes, Gtk.ResponseType.CLOSE);
 		
 		reload_widget_properties();
 	}

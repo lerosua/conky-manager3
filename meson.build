@@ -1,10 +1,10 @@
-project('conky-manager2', ['c','vala'])
+project('conky-manager3', ['c','vala'], version : '2.73')
 
 prefix = '/usr'
 bindir = prefix + '/bin'
 sharedir = prefix + '/share'
 launcherdir = sharedir + '/applications'
-app_name = 'conky-manager2'
+app_name = 'conky-manager3'
 
 sources = [
         'src/AboutWindow.vala',
@@ -20,10 +20,9 @@ sources = [
 
 dependencies = [
     dependency('glib-2.0'),
-    dependency('gdk-x11-3.0'),
     dependency('gio-unix-2.0'),
     dependency('gobject-2.0'),
-    dependency('gtk+-3.0'),
+    dependency('gtk4'),
     dependency('gee-0.8'),
     dependency('json-glib-1.0'),
     meson.get_compiler('vala').find_library('posix'),
@@ -34,8 +33,8 @@ install_data('src/' + app_name + '.desktop', install_dir : launcherdir)
 install_data('src/share/pixmaps/' + app_name + '.png', install_dir : sharedir + '/pixmaps')
 install_data('src/' + app_name + '.appdata.xml', install_dir : sharedir + '/metainfo')
 install_data('man/' + app_name + '.1', install_dir : sharedir + '/man/man1')
-install_subdir('src/share/conky-manager2/images', install_dir : sharedir + '/' + app_name)
-install_subdir('src/share/conky-manager2/themepacks', install_dir : sharedir + '/' + app_name)
+install_subdir('src/share/conky-manager3/images', install_dir : sharedir + '/' + app_name)
+install_subdir('src/share/conky-manager3/themepacks', install_dir : sharedir + '/' + app_name)
 
 subdir('po')
 
@@ -48,4 +47,4 @@ subdir('po')
 #    )
 #endif
 
-executable('conky-manager2', sources, install : true, dependencies: dependencies)
+executable('conky-manager3', sources, install : true, dependencies: dependencies)
