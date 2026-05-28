@@ -96,7 +96,8 @@ public class SettingsWindow : Dialog {
 		
 		//switch_startup
         switch_startup = new Gtk.Switch();
-        switch_startup.set_size_request(100,20);
+        switch_startup.halign = Align.END;
+        switch_startup.valign = Align.CENTER;
         switch_startup.active =  App.check_startup();
         hbox_startup.append(switch_startup);
 

@@ -90,7 +90,8 @@ public class GeneratePreviewWindow : Dialog {
 		hbox_capture_bg.append(lbl_capture_bg);
 
         switch_capture_bg = new Gtk.Switch();
-        switch_capture_bg.set_size_request(100,20);
+        switch_capture_bg.halign = Align.END;
+        switch_capture_bg.valign = Align.CENTER;
         switch_capture_bg.active =  App.capture_background;
         hbox_capture_bg.append(switch_capture_bg);
 		
@@ -111,7 +112,8 @@ public class GeneratePreviewWindow : Dialog {
 		hbox_png.append(lbl_png);
 
         switch_png = new Gtk.Switch();
-        switch_png.set_size_request(100,20);
+        switch_png.halign = Align.END;
+        switch_png.valign = Align.CENTER;
         switch_png.active =  App.generate_png;
         hbox_png.append(switch_png);
 		
