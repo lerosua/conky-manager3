@@ -5,7 +5,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: conky-manager\n"
+"Project-Id-Version: conky-manager3 3.0\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2014-07-13 23:32+0530\n"
 "PO-Revision-Date: 2014-07-25 09:03+0000\n"

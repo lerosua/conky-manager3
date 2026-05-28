@@ -1,31 +1,24 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-backup=`pwd`
-DIR="$( cd "$( dirname "$0" )" && pwd )"
-cd "$DIR"
+set -euo pipefail
 
-sh build-installer.sh
-#check for errors
-if [ $? -ne 0 ]; then
-	cd "$backup"
-	echo "Failed"
-	exit 1
-fi
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+parent_dir="$(dirname "$script_dir")"
+build_dir="$parent_dir/builds"
+release_dir="$parent_dir/releases"
 
-cd installer
-for arch in i386 amd64
-do
-  cp -p --no-preserve=ownership -t /home/teejee/Dropbox/Public/linux ./conky-manager-latest-${arch}.run
-  cp -p --no-preserve=ownership -t /home/teejee/Dropbox/Public/linux ./conky-manager-latest-${arch}.deb
-done
-cd ..
+cd "$script_dir"
 
-sh push.sh
-#check for errors
-if [ $? -ne 0 ]; then
-	cd "$backup"
-	echo "Failed"
-	exit 1
-fi
+"$script_dir/build-deb.sh"
 
-cd "$backup"
+rm -rf "$release_dir"
+mkdir -p "$release_dir"
+
+cp -p "$build_dir"/* "$release_dir"/
+
+"$script_dir/build-source.sh"
+
+cp -p "$build_dir"/* "$release_dir"/
+
+echo "Release artifacts copied to $release_dir"
+ls -lh "$release_dir"

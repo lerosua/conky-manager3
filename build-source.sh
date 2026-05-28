@@ -1,27 +1,29 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-backup=`pwd`
-DIR="$( cd "$( dirname "$0" )" && pwd )"
-cd "$DIR"
+set -euo pipefail
 
-#check for errors
-if [ $? -ne 0 ]; then
-	cd "$backup"
-	echo "Failed"
-	exit 1
-fi
+app_name="conky-manager3"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+parent_dir="$(dirname "$script_dir")"
+build_dir="$parent_dir/builds"
 
-rm -rf ../builds
+cd "$script_dir"
 
-bzr builddeb --source --native --build-dir ../builds/temp --result-dir ../builds
+cleanup() {
+	debian/rules clean >/dev/null 2>&1 || true
+}
+trap cleanup EXIT
 
-#check for errors
-if [ $? -ne 0 ]; then
-	cd "$backup"
-	echo "Failed"
-	exit 1
-fi
+rm -rf "$build_dir"
+mkdir -p "$build_dir"
 
-ls -l ../builds
+dpkg-buildpackage -us -uc -S
 
-cd "$backup"
+find "$parent_dir" -maxdepth 1 -type f \( \
+	-name "${app_name}_*.dsc" -o \
+	-name "${app_name}_*.tar.*" -o \
+	-name "${app_name}_*.buildinfo" -o \
+	-name "${app_name}_*.changes" \
+\) -exec mv -t "$build_dir" {} +
+
+ls -lh "$build_dir"

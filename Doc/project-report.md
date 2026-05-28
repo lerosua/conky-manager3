@@ -6,7 +6,7 @@
 
 本项目是 `conky-manager3`，即 Conky Manager 的延续/分叉版本。它的核心目标是为 Conky 配置提供图形化管理能力，包括扫描、预览、启动、停止、编辑、导入主题包，以及把当前运行的 Conky 组合保存为主题。
 
-代码主体是 Vala 编写的 GTK 桌面应用，安装后生成一个原生二进制程序 `conky-manager3`。当前源码版本号在 `src/Main.vala` 中定义为 `2.73`。
+代码主体是 Vala 编写的 GTK 桌面应用，安装后生成一个原生二进制程序 `conky-manager3`。当前源码版本号在 `src/Main.vala` 中定义为 `3.0`。
 
 项目规模大致如下：
 
@@ -69,21 +69,22 @@ valac ... -o conky-manager3 \
   --pkg glib-2.0 \
   --pkg gio-unix-2.0 \
   --pkg posix \
-  --pkg gtk+-3.0 \
+  --pkg gtk4 \
   --pkg gee-0.8 \
   --pkg json-glib-1.0
 ```
 
-README 与 `HOWTOBUILD.md` 仍把 `make` / `sudo make install` 描述为源码安装方式。这个路径可读性直接，但缺少现代构建系统的依赖检查、安装规则抽象和更细的打包集成。
+README 与 `HOWTOBUILD.md` 仍保留 `make` / `sudo make install` 作为传统源码安装方式，但当前推荐入口已经转向 Meson 与 Debian 打包脚本。
 
 ### 2.3 Debian 打包
 
 `debian/control` 声明的构建依赖：
 
-- `debhelper (>= 8.0.0)`
+- `debhelper-compat (= 13)`
 - `meson`
+- `ninja-build`
 - `valac`
-- `libgtk-3-dev`
+- `libgtk-4-dev`
 - `libgee-0.8-dev`
 - `libjson-glib-dev`
 
@@ -95,7 +96,7 @@ README 与 `HOWTOBUILD.md` 仍把 `make` / `sudo make install` 描述为源码�
 - `rsync`
 - `imagemagick`
 
-仓库中也有 `build-deb.sh`、`build-install.sh`、`build-release.sh` 等脚本，但这些脚本仍带有较老的个人发布流程痕迹，例如 `bzr builddeb`、`gdebi`、固定的 Dropbox 路径等，不应被视为当前最可靠的通用发布入口。
+仓库中的 `build-deb.sh`、`build-source.sh`、`build-install.sh`、`build-installer.sh`、`build-release.sh` 已统一改为基于 `dpkg-buildpackage` 和 `apt install` 的流程，生成物默认放到仓库父目录的 `builds` 或 `releases` 目录。
 
 ## 3. UI 版本与依赖关系
 
@@ -103,8 +104,7 @@ README 与 `HOWTOBUILD.md` 仍把 `make` / `sudo make install` 描述为源码�
 
 `meson.build` 明确依赖：
 
-- `gtk+-3.0`
-- `gdk-x11-3.0`
+- `gtk4`
 - `glib-2.0`
 - `gio-unix-2.0`
 - `gobject-2.0`
@@ -113,7 +113,7 @@ README 与 `HOWTOBUILD.md` 仍把 `make` / `sudo make install` 描述为源码�
 - Vala `posix`
 - C math library `m`
 
-其中 `gdk-x11-3.0` 是关键点：项目不仅是 GTK3 应用，还显式依赖 X11 后端相关 API。
+GTK4 已经是当前活动构建目标，显式 `gdk-x11-3.0` 编译依赖已从 Meson 构建中移除。
 
 ### 3.2 UI 代码形态
 
@@ -130,20 +130,13 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 
 ### 3.3 已触发的 GTK 弃用点
 
-当前在 GTK 3.24.50 下可编译，但编译器报告大量弃用 API，典型包括：
+当前已经可以按 GTK4 编译，但源码中仍有一批 GTK4 可用但偏传统的 UI 模式，典型包括：
 
-- `Gtk.ToolButton.from_stock`，GTK 3.10 起弃用；
-- `Gtk.Image.from_stock`，GTK 3.10 起弃用；
-- `Gtk.Dialog.get_action_area`，GTK 3.12 起弃用；
-- `Gtk.Widget.margin_left/right`，GTK 3.12 起弃用；
-- `Gtk.TreeView.set_rules_hint`，GTK 3.14 起弃用；
-- `Gdk.Color`、`Gtk.Widget.modify_fg`、`Gtk.StateType`，GTK 3 系列中已弃用；
-- `Gdk.Screen.width/height`，GTK 3.22 起弃用；
-- `Gtk.show_uri`，GTK 3.22 起弃用；
-- `GLib.Thread.create`，GLib 2.32 起弃用；
-- `Gdk.Cursor.new`，GTK 3.16 起弃用。
+- `Gtk.TreeView` / `TreeViewColumn`，在 GTK4 中仍可编译，但现代 GTK4 更推荐 `ListView` / `ColumnView`；
+- `Gtk.show_uri`，仍可工作，但后续可替换为更现代的 URI 打开 API；
+- 手写工具栏、按钮和表格布局较多，缺少 GtkBuilder、GResource 或 libadwaita 风格分层。
 
-这些不阻止当前 GTK3 编译，但说明 UI 层仍停留在 GTK3 早期写法。官方 GTK4 迁移文档也明确 GTK4 是破坏 ABI/API 的大版本迁移，GTK3 中很多旧 API 已有替代方案，迁移前应先消除 GTK3 弃用符号。
+这些不阻止当前 GTK4 编译，但说明 UI 层只是完成了可编译迁移，尚未完成现代 GTK4/libadwaita 体验改造。
 
 参考：
 
@@ -191,7 +184,7 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 import -window 0x... ...
 ```
 
-这意味着预览功能天然偏 X11。Wayland 下应用通常不能任意读取其他窗口内容，也不能稳定依赖 X11 window id。即使 GTK3 本身可在 Wayland 上运行，这部分功能也会成为现代桌面兼容性的主要风险。
+这意味着预览功能天然偏 X11。Wayland 下应用通常不能任意读取其他窗口内容，也不能稳定依赖 X11 window id。即使主程序已经迁到 GTK4，这部分功能仍会成为现代桌面兼容性的主要风险。
 
 GTK 官方文档中，X11 相关 API 也被单独归入平台专用构建入口，例如 GTK4 下需要使用 `gtk4-x11` / GDK X11 专用接口。
 
@@ -214,31 +207,29 @@ GTK 官方文档中，X11 相关 API 也被单独归入平台专用构建入口�
 
 差距：
 
-- `project()` 没有声明版本号；
 - `po/meson.build` 使用了已弃用的 `meson.source_root()`；
-- README 仍主推旧 `make` 路线，与 Debian/Meson 路线不完全一致；
-- 发布脚本残留 `bzr builddeb`、个人路径等老流程；
+- README 仍保留旧 `make` 路线，需要进一步强调 Debian/Meson 路线；
 - 没有 CI、没有自动测试、没有静态检查作为默认质量门。
 
-结论：构建层已经有现代化基础，但文档和发布流程没有统一。
+结论：构建层已经有现代化基础，打包脚本也已转向标准 Debian/Ubuntu 工具链；剩余工作主要是 CI、测试和文档进一步收敛。
 
 ### 5.2 UI 技术：较大距离
 
 优点：
 
-- GTK3 仍能在当前系统上编译；
+- GTK4 已经能在当前系统上编译；
 - UI 轻量，依赖少；
 - 功能直接围绕 Conky 工作流设计。
 
 差距：
 
-- 尚未迁移 GTK4；
+- 尚未完成 GTK4-native UI 重构；
 - 没有 libadwaita/GNOME HIG 风格组件；
-- 大量 stock icon、旧 toolbar、旧 dialog action area 等 GTK3 早期 API；
+- 仍有 `TreeView`、传统工具栏和手写对话框等旧式 UI 结构；
 - UI 直接写在 Vala 代码里，缺少资源化、分层和可测试边界；
 - `TreeView`、手写工具栏和传统对话框风格与现代 GNOME/KDE 应用观感有明显年代感。
 
-结论：作为传统 GTK3 工具仍可用，但离现代 GTK4/libadwaita 应用有较明显距离。
+结论：项目已经进入 GTK4 构建路径，但 UI 形态仍是传统手写 GTK 应用，离 libadwaita/HIG 风格应用仍有距离。
 
 ### 5.3 Wayland 与安全模型：较大距离
 
@@ -249,7 +240,6 @@ GTK 官方文档中，X11 相关 API 也被单独归入平台专用构建入口�
 
 差距：
 
-- 显式依赖 `gdk-x11-3.0`；
 - 预览功能依赖 XID 与 ImageMagick `import -window`；
 - 修改壁纸依赖 DE 私有命令；
 - 没有使用 XDG Desktop Portal；
@@ -313,21 +303,19 @@ GTK 官方文档中，X11 相关 API 也被单独归入平台专用构建入口�
 - 删除或标记过时发布脚本；
 - 增加最小 CI：`meson setup` + `meson compile`。
 
-### P1：清理 GTK3 弃用 API
+### P1：完成 GTK4-native UI 清理
 
-目标：在不立即迁移 GTK4 的前提下，先把 GTK3 内部可替代的旧 API 清掉。
+目标：在已经迁到 GTK4 可编译的基础上，继续替换传统 GTK3/GTK4 兼容式 UI 结构。
 
 建议：
 
-- 用 icon name 替换 stock icon；
-- 替换 `Gtk.Dialog.get_action_area`；
-- 替换 `margin_left/right` 为 `margin_start/end`；
-- 替换 `Gdk.Screen.width/height`；
-- 替换 `Gtk.show_uri`；
-- 替换 `GLib.Thread.create`；
-- 处理 `TreeView.set_rules_hint`、`Gdk.Color`、`modify_fg` 等旧样式接口。
+- 用 `ListView` / `ColumnView` 替换 `TreeView`；
+- 用 GTK4 推荐 API 替换 `Gtk.show_uri`；
+- 梳理工具栏、菜单和对话框结构；
+- 评估是否引入 libadwaita；
+- 将 UI 构造与业务逻辑进一步拆分。
 
-完成后再评估 GTK4 迁移成本会更真实。
+完成后再评估 libadwaita、Flatpak 和 Wayland 适配成本会更真实。
 
 ### P2：隔离 X11/Wayland 相关功能
 
@@ -339,7 +327,7 @@ GTK 官方文档中，X11 相关 API 也被单独归入平台专用构建入口�
 - X11 backend 继续保留 `import -window`；
 - 新增 Wayland/portal 可行性实验；
 - 在 Wayland 下禁用或降级不可用功能，并给出明确 UI 状态；
-- 避免主程序强依赖 `gdk-x11-3.0`，能延迟加载或条件编译更好。
+- 避免后续重新引入硬编码 X11 依赖，X11 能力应尽量延迟加载或条件编译。
 
 ### P3：拆分核心业务逻辑
 
@@ -360,20 +348,19 @@ GTK 官方文档中，X11 相关 API 也被单独归入平台专用构建入口�
 
 建议路径：
 
-1. GTK3 内先消除弃用 API；
-2. 将 UI 与业务逻辑分离；
-3. 给配置解析/主题导入补测试；
-4. 做一个小型 GTK4 原型窗口，验证 TreeView 替代方案、预览区域、工具栏/菜单模型；
-5. 决定是继续 Vala+GTK4，还是迁移到其他语言绑定。
+1. 将 UI 与业务逻辑分离；
+2. 给配置解析/主题导入补测试；
+3. 做一个小型 GTK4-native 原型窗口，验证 TreeView 替代方案、预览区域、工具栏/菜单模型；
+4. 决定是继续纯 GTK4，还是引入 libadwaita 或迁移到其他语言绑定。
 
 ## 7. 总体结论
 
-`conky-manager3` 当前不是不可维护的老项目：它代码量不大，Meson 构建已经存在，且在 2026 年的本机工具链上可以编译成功。它的问题主要不是“构建不了”，而是 UI 与桌面集成方式明显停留在 GTK3/X11 时代。
+`conky-manager3` 当前不是不可维护的老项目：它代码量不大，Meson 构建已经存在，且在 2026 年的本机工具链上可以按 GTK4 编译成功。它的问题主要不是“构建不了”，而是 UI 结构与桌面集成方式仍明显带有传统 X11 桌面工具痕迹。
 
 最现实的判断是：
 
-- 短期：可以作为传统 GTK3/X11 工具继续维护；
-- 中期：应统一 Meson、清理弃用 API、补 CI 和基础测试；
+- 短期：可以作为传统 GTK4/X11 兼容工具继续维护；
+- 中期：应继续统一 Meson/打包文档、清理传统 UI 结构、补 CI 和基础测试；
 - 长期：如果目标是现代 GNOME/Wayland/软件中心体验，需要重做预览截图、桌面集成和 UI 架构。
 
-建议不要一开始就直接“全量 GTK4 重写”。更稳妥的路线是先把构建、弃用 API、业务分层和测试补起来，再进入 GTK4/libadwaita 或 Wayland 适配。
+建议不要继续做纯机械式 API 替换。更稳妥的路线是先把业务分层和测试补起来，再进入 GTK4-native/libadwaita 或 Wayland 适配。

@@ -3,6 +3,10 @@
 ## additional required packages to build:
  build-essential
  git
+ debhelper-compat
+ dpkg-dev
+ meson
+ ninja-build
  valac
  libgee-0.8-dev
  libgtk-4-dev
@@ -16,7 +20,7 @@
 
 ## here is a one-shot installation command for all of the above packages:
 ```
-apt install build-essential git valac libgee-0.8-dev libgtk-4-dev libjson-glib-dev gettext libgettextpo-dev p7zip-full imagemagick
+apt install build-essential git debhelper-compat dpkg-dev meson ninja-build valac libgee-0.8-dev libgtk-4-dev libjson-glib-dev gettext libgettextpo-dev p7zip-full imagemagick
 ```
 
 
@@ -37,11 +41,17 @@ meson setup builddir
 meson compile -C builddir
 ```
 
+## build a Debian/Ubuntu package:
+```
+./build-deb.sh
+```
+
+The generated `.deb`, `.changes`, and `.buildinfo` files are written to `../builds`.
+
 ## legacy Makefile build:
 ```
 make
 ```
-( follow instructions here to build a `.deb` file instead: https://gist.github.com/zcot/ff43f40ceaf970623bfd18ead1bd65b2 )
 ## install the finished program into the local file system:
 ```
 sudo make install
@@ -51,5 +61,4 @@ sudo make install
 ```
 sudo make uninstall
 ```
-
 

@@ -1,3 +1,11 @@
+conky-manager3 (3.0) unstable; urgency=medium
+
+  * Modernize Debian packaging scripts for dpkg-buildpackage.
+  * Rename remaining package descriptions to Conky Manager 3.
+  * Build against GTK4.
+
+ -- lerosua <lerosua@gmail.com>  Thu, 28 May 2026 09:40:00 +0800
+
 conky-manager3 (2.7-0ubuntu2) hirsute; urgency=medium
 
    * Fix debian control files for lintian errors
