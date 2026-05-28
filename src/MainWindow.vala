@@ -381,12 +381,12 @@ public class MainWindow : Adw.ApplicationWindow {
 		btn_settings.set_tooltip_text (_("Application Settings"));
         toolbar.append(btn_settings);
 
-        btn_settings.clicked.connect(btn_settings_clicked);
+	        btn_settings.clicked.connect(btn_settings_clicked);
 
-        //btn_donate
-		btn_donate = toolbar_button(_("Funding"), "emblem-favorite-symbolic");
-		btn_donate.set_tooltip_text (_("Funding Support"));
-        toolbar.append(btn_donate);
+	        //btn_donate
+			btn_donate = toolbar_button_with_fallback_icon(_("Funding"), "donate-symbolic", "donate.svg");
+			btn_donate.set_tooltip_text (_("Funding Support"));
+	        toolbar.append(btn_donate);
 
         btn_donate.clicked.connect(() => { show_donation_window(false); });
         
@@ -401,6 +401,20 @@ public class MainWindow : Adw.ApplicationWindow {
 	private Button toolbar_button(string label, string icon_name){
 		var button = new Button.with_label(label);
 		button.set_icon_name(icon_name);
+		return button;
+	}
+
+	private Button toolbar_button_with_fallback_icon(string label, string icon_name, string fallback_icon_file_name){
+		var button = new Button();
+		var image = get_shared_icon(icon_name, fallback_icon_file_name, 20);
+
+		if (image != null){
+			button.set_child(image);
+		}
+		else{
+			button.label = label;
+		}
+
 		return button;
 	}
 	
@@ -1076,14 +1090,17 @@ public class MainWindow : Adw.ApplicationWindow {
 		dialog.comments = _("Utility for managing Conky configuration files");
 		dialog.copyright = "Copyright © 2014 Tony George (%s)".printf(AppAuthorEmail);
 		dialog.copyright2 = "Copyright © 2018 Scott Caudle (%s)".printf(AppAuthorEmail2);
+		dialog.copyright3 = "Copyright © 2026 lerosua with codex gpt-5.5";
 		dialog.version = AppVersion;
 		dialog.logo = get_app_icon(128);
 
 		dialog.license = "This program is free for personal and commercial use and comes with absolutely no warranty. You use this program entirely at your own risk. The author will not be liable for any damages arising from the use of this program.";
 		dialog.website = "http://teejeetech.in";
 		dialog.website_label = "http://teejeetech.blogspot.in";
-		dialog.website2 = "https://github.com/zcot/conky-manager3";
-		dialog.website_label2 = "project on github";
+		dialog.website2 = "https://github.com/zcot/conky-manager2";
+		dialog.website_label2 = "https://github.com/zcot/conky-manager2";
+		dialog.website3 = "https://github.com/lerosua/conky-manager3";
+		dialog.website_label3 = "https://github.com/lerosua/conky-manager3";
 
 		dialog.initialize();
 		dialog.present();

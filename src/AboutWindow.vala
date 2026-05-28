@@ -46,8 +46,10 @@ public class AboutWindow : Dialog {
 	private Label lbl_comments;
 	private LinkButton lbtn_website;
 	private LinkButton lbtn_website2;
+	private LinkButton lbtn_website3;
 	private Label lbl_copyright;
 	private Label lbl_copyright2;
+	private Label lbl_copyright3;
 
 	private string[] _artists;
 	public string[] artists{
@@ -96,6 +98,16 @@ public class AboutWindow : Dialog {
 		}
 		set{
 			_copyright2 = value;
+		}
+	}
+
+	private string _copyright3 = "";
+	public string copyright3{
+		get{
+			return _copyright3;
+		}
+		set{
+			_copyright3 = value;
 		}
 	}
 
@@ -218,6 +230,26 @@ public class AboutWindow : Dialog {
 			_website_label2 = value;
 		}
 	}
+
+	private string _website3 = "";
+	public string website3{
+		get{
+			return _website3;
+		}
+		set{
+			_website3 = value;
+		}
+	}
+
+	private string _website_label3 = "";
+	public string website_label3{
+		get{
+			return _website_label3;
+		}
+		set{
+			_website_label3 = value;
+		}
+	}
 	
 	public AboutWindow() {
 		set_destroy_with_parent (true);
@@ -305,6 +337,27 @@ public class AboutWindow : Dialog {
 		lbl_copyright2.margin_top = 5;
 		vbox_logo.append(lbl_copyright2);
 
+		//website3
+		lbtn_website3 = new LinkButton("");
+		lbtn_website3.margin_top = 5;
+		vbox_logo.append(lbtn_website3);
+
+		lbtn_website3.activate_link.connect(()=>{
+			try{
+				AppInfo.launch_default_for_uri(lbtn_website3.uri, null);
+				return true;
+			}
+			catch(Error e){
+				return false;
+			}
+		});
+
+		//copyright3
+		lbl_copyright3 = new Label("");
+		lbl_copyright3.set_use_markup(true);
+		lbl_copyright3.margin_top = 5;
+		vbox_logo.append(lbl_copyright3);
+
 		//spacer_bottom
 		var spacer_bottom = new Label("");
 		spacer_bottom.margin_top = 20;
@@ -360,6 +413,9 @@ public class AboutWindow : Dialog {
 		lbtn_website2.label = website_label2;
 		//lbl_copyright.label = "<span size='smaller'>%s</span>".printf(copyright);
 		lbl_copyright2.label = "<span>%s</span>".printf(copyright2);
+		lbtn_website3.uri = website3;
+		lbtn_website3.label = website_label3;
+		lbl_copyright3.label = "<span>%s</span>".printf(copyright3);
 		
 		if (authors.length > 0){
 			add_line("<b>%s</b>\n".printf(_("Authors")));
