@@ -459,6 +459,7 @@ public class Main : GLib.Object {
 			if (line.index_of(":") > -1){
 				file_path = line.split(":")[0].strip();
 				if (file_path.strip().has_suffix("~")){ continue; }
+				if (file_path.down().has_suffix(".lua")){ continue; }
 
 				bool found = false;
 				foreach(ConkyConfigItem item in conkyrc_list){
