@@ -752,24 +752,34 @@ public abstract class ConkyConfigItem: GLib.Object{
 		//search using base name
 		foreach(string ext in ext_list){
 			image_path = dir + "/" + base_name + ext;
-			if (file_exists(image_path)){ return; }
+			if (file_exists(image_path)){
+				log_preview("image match base name: item='%s' image='%s'".printf(name, image_path));
+				return;
+			}
 		}
 
 		//search without basename extension
 		if (base_name.split(".").length == 2){
 			foreach(string ext in ext_list){
 				image_path = dir + "/" + base_name.split(".")[0] + ext;
-				if (file_exists(image_path)){ return; }
+				if (file_exists(image_path)){
+					log_preview("image match base stem: item='%s' image='%s'".printf(name, image_path));
+					return;
+				}
 			}
 		}
 
 		//search using fixed names
 		foreach(string ext in ext_list){
 			image_path = dir + "/preview" + ext;
-			if (file_exists(image_path)){ return; }
+			if (file_exists(image_path)){
+				log_preview("image match fixed preview: item='%s' image='%s'".printf(name, image_path));
+				return;
+			}
 		}
 
 		image_path = ""; //clear if not found
+		log_preview("image not found: item='%s' dir='%s' base='%s'".printf(name, dir, base_name));
 	}
 
 	public void init_credits(){

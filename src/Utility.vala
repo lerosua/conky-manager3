@@ -80,6 +80,7 @@ namespace TeeJee.Logging{
 		msg += "\n";
 		
 		stdout.printf (msg);
+		stdout.flush();
 		
 		try {
 			if (dos_log != null){
@@ -115,6 +116,7 @@ namespace TeeJee.Logging{
 		msg += "\n";
 		
 		stdout.printf (msg);
+		stdout.flush();
 		
 		try {
 			if (dos_log != null){
@@ -141,6 +143,12 @@ namespace TeeJee.Logging{
 			catch (Error e) {
 				stdout.printf (e.message);
 			}
+		}
+	}
+
+	public void log_preview (string message){
+		if (Environment.get_variable("CONKY_MANAGER3_DEBUG_PREVIEW") == "1"){
+			log_msg("[PREVIEW] " + message);
 		}
 	}
 }

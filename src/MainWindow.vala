@@ -33,7 +33,7 @@ using TeeJee.Misc;
 
 public class MainWindow : Adw.ApplicationWindow {
 
-	private Image img_preview;
+	private Picture img_preview;
 	private Box vbox_main;
 	private Box vbox_status;
 	private Box hbox_widget;
@@ -89,7 +89,7 @@ public class MainWindow : Adw.ApplicationWindow {
 
 	public MainWindow(Gtk.Application app) {
 		Object(application: app);
-		title = AppName + " v" + AppVersion;
+		title = AppName;
 		modal = true;
 		set_default_size(App.window_width, App.window_height);
 
@@ -468,6 +468,7 @@ public class MainWindow : Adw.ApplicationWindow {
 		sw_preview = new ScrolledWindow();
 		sw_preview.hexpand = true;
 		sw_preview.vexpand = true;
+		sw_preview.set_min_content_height(180);
 		pane.set_end_child(sw_preview);
 		pane.resize_end_child = true;
 		pane.shrink_end_child = true;
@@ -475,7 +476,9 @@ public class MainWindow : Adw.ApplicationWindow {
 		string tt = _("Use the keyboard arrow keys to browse.\nPress ENTER to start and stop.");
 		sw_preview.set_tooltip_text(tt);
 
-		img_preview = new Image();
+		img_preview = new Picture();
+		img_preview.can_shrink = true;
+		img_preview.content_fit = Gtk.ContentFit.CONTAIN;
 		sw_preview.set_child(img_preview);
 	}
 
@@ -545,16 +548,23 @@ public class MainWindow : Adw.ApplicationWindow {
 	}
 	
 	private void reload_themes(){
+		log_preview("reload_themes: show_widgets=%s show_preview=%s show_list=%s active_only=%s".printf(
+			btn_show_widgets.active.to_string(),
+			btn_preview.active.to_string(),
+			btn_list.active.to_string(),
+			App.show_active.to_string()));
 		
 		txtFilter.text = "";
 		
 		double vpos = sw_widget.vadjustment.value;
 		
 		tv_widget_refresh();
-		show_preview(selected_item());
+		ConkyConfigItem? selected = selected_item();
+		log_preview("reload_themes selected: %s".printf((selected == null) ? "null" : selected.name));
+		show_preview(selected);
 		
 		if (btn_preview.active){
-			sw_preview.visible = true;
+			ensure_preview_area_visible();
 		}
 		
 		if (btn_list.active){
@@ -569,9 +579,33 @@ public class MainWindow : Adw.ApplicationWindow {
 	private void btn_preview_toggled(){
 		App.show_preview = btn_preview.active;
 		sw_preview.visible = App.show_preview;
+		ConkyConfigItem? selected = selected_item();
+		log_preview("btn_preview_toggled: active=%s selected=%s".printf(
+			App.show_preview.to_string(),
+			(selected == null) ? "null" : selected.name));
+		if (App.show_preview){
+			ensure_preview_area_visible();
+			show_preview(selected);
+		}
 		if ((!btn_list.active)&&(!btn_preview.active)){
 			btn_list.active = true;
 		}
+	}
+
+	private void ensure_preview_area_visible(){
+		sw_preview.visible = true;
+
+		int window_height = get_height();
+		int min_preview_height = 180;
+		log_preview("ensure_preview_area_visible before: pane_position=%d window_height=%d preview_alloc=%dx%d".printf(
+			pane.position,
+			window_height,
+			sw_preview.get_width(),
+			sw_preview.get_height()));
+		if ((window_height > (min_preview_height + 120)) && (pane.position > (window_height - min_preview_height))){
+			pane.position = window_height - min_preview_height;
+		}
+		log_preview("ensure_preview_area_visible after: pane_position=%d".printf(pane.position));
 	}
 
 	private void btn_list_toggled(){
@@ -1108,23 +1142,45 @@ public class MainWindow : Adw.ApplicationWindow {
 	}
 	
 	private void show_preview(ConkyConfigItem? item){
-		img_preview.clear();
+		img_preview.set_paintable(null);
 		
 		if (item == null){
+			log_preview("show_preview: item=null preview_visible=%s pane_position=%d window=%dx%d".printf(
+				sw_preview.visible.to_string(), pane.position, get_width(), get_height()));
 			return;
 		}
+
+		bool exists = (item.image_path.length > 0) && file_exists(item.image_path);
+		log_preview("show_preview: item='%s' path='%s' image='%s' exists=%s preview_visible=%s pane_position=%d window=%dx%d preview_alloc=%dx%d".printf(
+			item.name,
+			item.path,
+			item.image_path,
+			exists.to_string(),
+			sw_preview.visible.to_string(),
+			pane.position,
+			get_width(),
+			get_height(),
+			sw_preview.get_width(),
+			sw_preview.get_height()));
 
 		if ((item.image_path.length > 0) && file_exists(item.image_path)){
 			try{
 				var texture = Gdk.Texture.from_filename(item.image_path);
-				img_preview.set_from_paintable(texture);
+				img_preview.set_paintable(texture);
+				log_preview("texture loaded: image='%s' intrinsic=%dx%d picture_alloc=%dx%d".printf(
+					item.image_path,
+					texture.get_intrinsic_width(),
+					texture.get_intrinsic_height(),
+					img_preview.get_width(),
+					img_preview.get_height()));
 			}
 			catch(Error e){
-				log_error (e.message);
+				log_error ("[PREVIEW] texture load failed: image='%s' error='%s'".printf(item.image_path, e.message));
 			}
 		}
 		else{
-			img_preview.clear();
+			img_preview.set_paintable(null);
+			log_preview("no image set: item='%s' image='%s'".printf(item.name, item.image_path));
 		}
 		
 		if (item.url.length > 0){
@@ -1172,7 +1228,6 @@ public class MainWindow : Adw.ApplicationWindow {
 	
 	private void scan_themes_thread(){
 		App.load_themes_and_widgets();
-		reload_themes();
 		is_running = false;
 	}
 
@@ -1223,9 +1278,11 @@ public class MainWindow : Adw.ApplicationWindow {
 		if (selection.count_selected_rows() > 0){
 			selection.get_selected(out model, out iter);
 			model.get(iter, 1, out item, -1);
+			log_preview("selected_item: '%s' image='%s'".printf(item.name, item.image_path));
 			return item;
 		}	
 		else{
+			log_preview("selected_item: null");
 			return null;
 		}
 	}
@@ -1242,6 +1299,7 @@ public class MainWindow : Adw.ApplicationWindow {
 		else{
 			list = App.conkytheme_list;
 		}
+		int added = 0;
 		
 		foreach(ConkyConfigItem item in list){
 			if ((btn_show_widgets.active) && (App.show_active)){
@@ -1254,7 +1312,13 @@ public class MainWindow : Adw.ApplicationWindow {
 			model.append(out iter, null);
 			model.set(iter, 0, item.enabled);
 			model.set(iter, 1, item);
+			added++;
 		}
+		log_preview("tv_widget_refresh: source_count=%d added=%d show_widgets=%s filter='%s'".printf(
+			list.size,
+			added,
+			btn_show_widgets.active.to_string(),
+			txtFilter.text));
 		
 		filterThemes = new TreeModelFilter (model, null);
 		filterThemes.set_visible_func(filterThemes_filter);
@@ -1271,6 +1335,10 @@ public class MainWindow : Adw.ApplicationWindow {
 		TreeIter iter;
 		if (filterThemes.get_iter_first(out iter)){
 			tv_widget.get_selection().select_iter(iter);
+			log_preview("select_first_visible_item: selected first row");
+		}
+		else{
+			log_preview("select_first_visible_item: no visible row");
 		}
 	}
 
