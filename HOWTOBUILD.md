@@ -9,7 +9,7 @@
  ninja-build
  valac
  libgee-0.8-dev
- libgtk-4-dev
+ libgtk-4-dev (>= 4.10)
  libjson-glib-dev
  gettext
  libgettextpo-dev
@@ -61,4 +61,3 @@ sudo make install
 ```
 sudo make uninstall
 ```
-

@@ -84,7 +84,7 @@ README 与 `HOWTOBUILD.md` 仍保留 `make` / `sudo make install` 作为传统�
 - `meson`
 - `ninja-build`
 - `valac`
-- `libgtk-4-dev`
+- `libgtk-4-dev (>= 4.10)`
 - `libgee-0.8-dev`
 - `libjson-glib-dev`
 
@@ -104,7 +104,7 @@ README 与 `HOWTOBUILD.md` 仍保留 `make` / `sudo make install` 作为传统�
 
 `meson.build` 明确依赖：
 
-- `gtk4`
+- `gtk4 >= 4.10`
 - `glib-2.0`
 - `gio-unix-2.0`
 - `gobject-2.0`
@@ -113,7 +113,7 @@ README 与 `HOWTOBUILD.md` 仍保留 `make` / `sudo make install` 作为传统�
 - Vala `posix`
 - C math library `m`
 
-GTK4 已经是当前活动构建目标，显式 `gdk-x11-3.0` 编译依赖已从 Meson 构建中移除。
+GTK4 已经是当前活动构建目标，当前要求 GTK 4.10 以上以使用 `Gtk.FileDialog`。显式 `gdk-x11-3.0` 编译依赖已从 Meson 构建中移除。
 
 ### 3.2 UI 代码形态
 
@@ -237,9 +237,10 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 
 - 修改壁纸依赖 DE 私有命令；
 - 没有使用 XDG Desktop Portal；
-- 运行时大量 shell 命令拼接，对沙箱/Flatpak 化不友好。
+- 文件与目录选择已经改用 GTK4 `FileDialog`；
+- 运行时仍有较多 shell 命令拼接，对沙箱/Flatpak 化不友好。
 
-结论：项目已经移除了最直接的 X11 窗口截图依赖，并且文件/目录/URL 打开已改用 GIO 默认应用启动 API。要成为现代 Wayland 一等公民，还需要继续重做壁纸、文件选择对话框、终端运行和沙箱权限相关的桌面集成方式。
+结论：项目已经移除了最直接的 X11 窗口截图依赖，并且文件/目录/URL 打开已改用 GIO 默认应用启动 API，文件选择也已切到 GTK4 `FileDialog`。要成为现代 Wayland 一等公民，还需要继续重做壁纸、终端运行和沙箱权限相关的桌面集成方式。
 
 ### 5.4 打包与元数据：中等距离
 

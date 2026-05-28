@@ -920,14 +920,11 @@ public class MainWindow : Window {
 	}
 
 	private void btn_import_themes_clicked(){
-		var dlgAddFiles = new Gtk.FileChooserDialog(_("Import") + " (cmtp.7z; 7z; gz; bz2; xz; tar; zip; etc.)", this, Gtk.FileChooserAction.OPEN,
-							"gtk-cancel", Gtk.ResponseType.CANCEL,
-							"gtk-open", Gtk.ResponseType.ACCEPT);
-		 		dlgAddFiles.set_modal (true);
- 		dlgAddFiles.set_select_multiple (true);
- 		
+		var dialog = new FileDialog();
+		dialog.title = _("Import") + " (cmtp.7z; 7z; gz; bz2; xz; tar; zip; etc.)";
+		dialog.modal = true;
+
 		Gtk.FileFilter filter = new Gtk.FileFilter ();
-		//dlgAddFiles.set_filter (filter);
 		filter.add_pattern ("*.cmtp.7z");
 		filter.add_pattern ("*.7z");
 		filter.add_pattern ("*.tar.7z");
@@ -940,20 +937,26 @@ public class MainWindow : Window {
 		filter.add_pattern ("*.tar");
 		filter.add_pattern ("*.zip");
         filter.set_filter_name("Conky Manager Theme or various compressed archive");
-		dlgAddFiles.add_filter (filter);
-		
-		//show the dialog and get list of files
-		SList<string> files = null;
- 		if (gtk_dialog_run(dlgAddFiles) == Gtk.ResponseType.ACCEPT){
-			files = files_from_list_model(dlgAddFiles.get_files());
-	 	}
-		dlgAddFiles.destroy();
-		
-		if (files == null){
-			return;
-		}
-		
-		install_theme_packs(files);
+
+		var filters = new GLib.ListStore(typeof(Gtk.FileFilter));
+		filters.append(filter);
+		dialog.filters = filters;
+		dialog.default_filter = filter;
+
+		dialog.open_multiple.begin(this, null, (obj, res) => {
+			try{
+				ListModel? model = dialog.open_multiple.end(res);
+				if (model == null) { return; }
+
+				var files = files_from_list_model(model);
+				if (files.length() == 0) { return; }
+
+				install_theme_packs(files);
+			}
+			catch(Error e){
+				log_debug(e.message);
+			}
+		});
 	}
 	
 	private void install_theme_packs(SList<string> files){

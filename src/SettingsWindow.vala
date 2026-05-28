@@ -233,17 +233,26 @@ public class SettingsWindow : Dialog {
 	}
 	
 	private void btn_add_folder_clicked () {
-		var list = browse_folder();
-		
-		if (list.length() > 0){
-			foreach(string path in list){
-				if (!folder_list_user.contains(path)){
+		var dialog = new FileDialog();
+		dialog.title = _("Select directory");
+		dialog.modal = true;
+
+		dialog.select_folder.begin(this, null, (obj, res) => {
+			try{
+				File? file = dialog.select_folder.end(res);
+				if (file == null) { return; }
+
+				string? path = file.get_path();
+				if (path != null && !folder_list_user.contains(path)){
 					folder_list_user.add(path);
 				}
+
+				tv_folders_refresh();
 			}
-		}
-		
-		tv_folders_refresh();
+			catch(Error e){
+				log_debug(e.message);
+			}
+		});
 	}
 
 	private void btn_remove_folder_clicked () {
@@ -261,35 +270,6 @@ public class SettingsWindow : Dialog {
 		tv_folders_refresh();
 	}
 
-	private SList<string> browse_folder(){
-		var dialog = new Gtk.FileChooserDialog(_("Select directory"), this, Gtk.FileChooserAction.OPEN,
-							"gtk-cancel", Gtk.ResponseType.CANCEL,
-							"gtk-open", Gtk.ResponseType.ACCEPT);
-		dialog.action = FileChooserAction.SELECT_FOLDER;
-		dialog.set_transient_for(this);
- 		dialog.set_modal (true);
- 		dialog.set_select_multiple (false);
- 		
-		gtk_dialog_run(dialog);
-		var list = files_from_list_model(dialog.get_files());
-	 	dialog.destroy ();
-	 	
-	 	return list;
-	}
-
-	private SList<string> files_from_list_model(ListModel model){
-		SList<string> files = new SList<string>();
-		for (uint i = 0; i < model.get_n_items(); i++){
-			File? file = model.get_item(i) as File;
-			if (file == null) { continue; }
-			string? path = file.get_path();
-			if (path != null){
-				files.append(path);
-			}
-		}
-		return files;
-	}
-	
 	private void btn_apply_changes_clicked () {
 		//startup
 		App.autostart(switch_startup.active);

@@ -6,7 +6,7 @@ Date: 2026-05-28
 
 - Meson now builds against `gtk4` instead of `gtk+-3.0`.
 - The explicit `gdk-x11-3.0` dependency was removed from the active build.
-- Debian build dependencies now require `libgtk-4-dev`.
+- Debian build dependencies now require `libgtk-4-dev (>= 4.10)`.
 - The legacy `src/makefile` uses `--pkg gtk4`.
 - `HOWTOBUILD.md` now documents GTK4 build dependencies and Meson commands.
 - The application entry point now uses `Gtk.Application` instead of `Gtk.main`.
@@ -17,6 +17,7 @@ Date: 2026-05-28
   - `Gtk.FileChooserButton`
   - `Gtk.Widget.add` / `pack_start` / `pack_end`
   - `Gtk.Dialog.run`
+  - `Gtk.FileChooserDialog`
   - `Gtk.Widget.get_window`
   - `Gdk.Screen.width/height`
   - stock icon APIs such as `Image.from_stock`
@@ -43,11 +44,10 @@ The project is now on GTK4, but still uses several GTK4-deprecated compatibility
 - `Gtk.TreeView`, `Gtk.TreeStore`, `Gtk.ListStore`
 - `Gtk.ComboBox`
 - `Gtk.Dialog` and `Gtk.MessageDialog`
-- `Gtk.FileChooserDialog`
 - `Gtk.ColorButton`
 - `Gtk.Image.set_from_pixbuf`
 
-These are no longer GTK3 dependencies, but they should be replaced in a follow-up modernization pass with GTK4-native APIs such as `ListView`/`ColumnView`, `DropDown`, `AlertDialog`/custom windows, `FileDialog`, and `ColorDialogButton` where available.
+File and folder selection already uses GTK4 `FileDialog`. The remaining items are no longer GTK3 dependencies, but they should be replaced in a follow-up modernization pass with GTK4-native APIs such as `ListView`/`ColumnView`, `DropDown`, `AlertDialog`/custom windows, and `ColorDialogButton` where available.
 
 ## Runtime Notes
 
