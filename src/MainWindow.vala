@@ -230,7 +230,7 @@ public class MainWindow : Adw.ApplicationWindow {
 		btn_cancel_action.set_tooltip_text(_("Stop"));
 		hbox_progressbar.append(btn_cancel_action);
 		
-		pane = new Gtk.Paned (Gtk.Orientation.VERTICAL);
+		pane = new Gtk.Paned (Gtk.Orientation.HORIZONTAL);
 		pane.position = App.pane_position;
 		vbox_main.append(pane);
 		
@@ -468,7 +468,7 @@ public class MainWindow : Adw.ApplicationWindow {
 		sw_preview = new ScrolledWindow();
 		sw_preview.hexpand = true;
 		sw_preview.vexpand = true;
-		sw_preview.set_min_content_height(180);
+		sw_preview.set_min_content_width(280);
 		pane.set_end_child(sw_preview);
 		pane.resize_end_child = true;
 		pane.shrink_end_child = true;
@@ -595,15 +595,15 @@ public class MainWindow : Adw.ApplicationWindow {
 	private void ensure_preview_area_visible(){
 		sw_preview.visible = true;
 
-		int window_height = get_height();
-		int min_preview_height = 180;
-		log_preview("ensure_preview_area_visible before: pane_position=%d window_height=%d preview_alloc=%dx%d".printf(
+		int window_width = get_width();
+		int min_preview_width = 280;
+		log_preview("ensure_preview_area_visible before: pane_position=%d window_width=%d preview_alloc=%dx%d".printf(
 			pane.position,
-			window_height,
+			window_width,
 			sw_preview.get_width(),
 			sw_preview.get_height()));
-		if ((window_height > (min_preview_height + 120)) && (pane.position > (window_height - min_preview_height))){
-			pane.position = window_height - min_preview_height;
+		if ((window_width > (min_preview_width + 180)) && (pane.position > (window_width - min_preview_width))){
+			pane.position = window_width - min_preview_width;
 		}
 		log_preview("ensure_preview_area_visible after: pane_position=%d".printf(pane.position));
 	}
