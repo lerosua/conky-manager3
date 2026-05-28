@@ -347,6 +347,7 @@ public class AboutWindow : Dialog {
 	
 	public void initialize() {
 		title = program_name;
+		gtk_use_adwaita_titlebar(this);
 		img_logo.set_from_pixbuf(logo);
 		lbl_program_name.label = "<span size='larger'>%s</span>".printf(program_name);
 		lbl_version.label = "v%s".printf(version);

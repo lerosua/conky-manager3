@@ -31,7 +31,7 @@ using TeeJee.GtkHelper;
 using TeeJee.System;
 using TeeJee.Misc;
 
-public class MainWindow : Window {
+public class MainWindow : Adw.ApplicationWindow {
 
 	private Image img_preview;
 	private Box vbox_main;
@@ -87,26 +87,33 @@ public class MainWindow : Window {
 	private uint timer_init;
 	private Gee.ArrayList<ConkyRC> rclist_generate;
 
-	public MainWindow() {
+	public MainWindow(Gtk.Application app) {
+		Object(application: app);
 		title = AppName + " v" + AppVersion;
-        modal = true;
-        set_default_size(App.window_width, App.window_height);
+		modal = true;
+		set_default_size(App.window_width, App.window_height);
 
 		setup_drag_and_drop();
 		
 		string tt = "";
-		
+
 		//vbox_main
-        vbox_main = new Box (Orientation.VERTICAL, 6);
-		set_child(vbox_main);
+		var toolbar_view = new Adw.ToolbarView();
+		var header_bar = new Adw.HeaderBar();
+		header_bar.show_title = true;
+		toolbar_view.add_top_bar(header_bar);
+
+		vbox_main = new Box (Orientation.VERTICAL, 6);
+		toolbar_view.set_content(vbox_main);
+		set_content(toolbar_view);
 		
 		//toolbar
-        init_toolbar();
-        
-        //hbox_widget
-        hbox_widget = new Box (Orientation.HORIZONTAL, 6);
-        hbox_widget.margin_start = 3;
-        hbox_widget.margin_end = 3;
+		init_toolbar();
+
+		//hbox_widget
+		hbox_widget = new Box (Orientation.HORIZONTAL, 6);
+		hbox_widget.margin_start = 3;
+		hbox_widget.margin_end = 3;
 		vbox_main.append(hbox_widget);
 
 		//lbl_type

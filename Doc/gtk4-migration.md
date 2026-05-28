@@ -6,10 +6,11 @@ Date: 2026-05-28
 
 - Meson now builds against `gtk4` instead of `gtk+-3.0`.
 - The explicit `gdk-x11-3.0` dependency was removed from the active build.
-- Debian build dependencies now require `libgtk-4-dev (>= 4.10)`.
-- The legacy `src/makefile` uses `--pkg gtk4`.
+- Debian build dependencies now require `libgtk-4-dev (>= 4.10)` and `libadwaita-1-dev (>= 1.4)`.
+- The legacy `src/makefile` uses `--pkg gtk4` and `--pkg libadwaita-1`.
 - `HOWTOBUILD.md` now documents GTK4 build dependencies and Meson commands.
-- The application entry point now uses `Gtk.Application` instead of `Gtk.main`.
+- The application entry point now uses `Adw.Application` instead of `Gtk.main`.
+- The main window now uses `Adw.ApplicationWindow` with `Adw.ToolbarView` and `Adw.HeaderBar`; dialogs use `Adw.HeaderBar` for client-side title bars.
 - Removed direct GTK3-only API usage from active source, including:
   - `Gtk.Toolbar` / `Gtk.ToolButton`
   - `Gtk.RadioButton`
@@ -31,10 +32,11 @@ meson setup builddir-gtk4
 meson compile -C builddir-gtk4
 ```
 
-The resulting binary links to GTK4:
+The resulting binary links to GTK4 and libadwaita:
 
 ```text
 libgtk-4.so.1
+libadwaita-1.so.0
 ```
 
 ## Remaining Modernization Work

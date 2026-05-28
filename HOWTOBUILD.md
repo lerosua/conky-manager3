@@ -10,6 +10,7 @@
  valac
  libgee-0.8-dev
  libgtk-4-dev (>= 4.10)
+ libadwaita-1-dev (>= 1.4)
  libjson-glib-dev
  gettext
  libgettextpo-dev
@@ -20,7 +21,7 @@
 
 ## here is a one-shot installation command for all of the above packages:
 ```
-apt install build-essential git debhelper-compat dpkg-dev meson ninja-build valac libgee-0.8-dev libgtk-4-dev libjson-glib-dev gettext libgettextpo-dev p7zip-full imagemagick
+apt install build-essential git debhelper-compat dpkg-dev meson ninja-build valac libgee-0.8-dev libgtk-4-dev libadwaita-1-dev libjson-glib-dev gettext libgettextpo-dev p7zip-full imagemagick
 ```
 
 

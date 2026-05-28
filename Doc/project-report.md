@@ -85,6 +85,7 @@ README 与 `HOWTOBUILD.md` 仍保留 `make` / `sudo make install` 作为传统�
 - `ninja-build`
 - `valac`
 - `libgtk-4-dev (>= 4.10)`
+- `libadwaita-1-dev (>= 1.4)`
 - `libgee-0.8-dev`
 - `libjson-glib-dev`
 
@@ -105,6 +106,7 @@ README 与 `HOWTOBUILD.md` 仍保留 `make` / `sudo make install` 作为传统�
 `meson.build` 明确依赖：
 
 - `gtk4 >= 4.10`
+- `libadwaita-1 >= 1.4`
 - `glib-2.0`
 - `gio-unix-2.0`
 - `gobject-2.0`
@@ -113,7 +115,7 @@ README 与 `HOWTOBUILD.md` 仍保留 `make` / `sudo make install` 作为传统�
 - Vala `posix`
 - C math library `m`
 
-GTK4 已经是当前活动构建目标，当前要求 GTK 4.10 以上以使用 `Gtk.FileDialog`。显式 `gdk-x11-3.0` 编译依赖已从 Meson 构建中移除。
+GTK4 已经是当前活动构建目标，当前要求 GTK 4.10 以上以使用 `Gtk.FileDialog`，并引入 `libadwaita-1` 提供 `Adw.Application`、`Adw.ApplicationWindow`、`Adw.ToolbarView` 和 `Adw.HeaderBar`。显式 `gdk-x11-3.0` 编译依赖已从 Meson 构建中移除。
 
 ### 3.2 UI 代码形态
 
@@ -133,9 +135,9 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 当前已经可以按 GTK4 编译，但源码中仍有一批 GTK4 可用但偏传统的 UI 模式，典型包括：
 
 - `Gtk.TreeView` / `TreeViewColumn`，在 GTK4 中仍可编译，但现代 GTK4 更推荐 `ListView` / `ColumnView`；
-- 手写工具栏、按钮和表格布局较多，缺少 GtkBuilder、GResource 或 libadwaita 风格分层。
+- 手写工具栏、按钮和表格布局较多，虽然标题栏已切到 Adwaita，但仍缺少 GtkBuilder、GResource 或完整 libadwaita 风格分层。
 
-这些不阻止当前 GTK4 编译，但说明 UI 层只是完成了可编译迁移，尚未完成现代 GTK4/libadwaita 体验改造。
+这些不阻止当前 GTK4/libadwaita 编译，但说明 UI 层只是完成了标题栏和应用壳层迁移，尚未完成现代 GTK4/libadwaita 体验改造。
 
 参考：
 
@@ -212,18 +214,19 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 优点：
 
 - GTK4 已经能在当前系统上编译；
+- 已经引入 libadwaita，并使用 Adwaita 应用壳层与 HeaderBar；
 - UI 轻量，依赖少；
 - 功能直接围绕 Conky 工作流设计。
 
 差距：
 
 - 尚未完成 GTK4-native UI 重构；
-- 没有 libadwaita/GNOME HIG 风格组件；
+- libadwaita 目前主要用于应用壳层和标题栏，内容区尚未改造成 Adwaita/HIG 风格组件；
 - 仍有 `TreeView`、传统工具栏和手写对话框等旧式 UI 结构；
 - UI 直接写在 Vala 代码里，缺少资源化、分层和可测试边界；
 - `TreeView`、手写工具栏和传统对话框风格与现代 GNOME/KDE 应用观感有明显年代感。
 
-结论：项目已经进入 GTK4 构建路径，但 UI 形态仍是传统手写 GTK 应用，离 libadwaita/HIG 风格应用仍有距离。
+结论：项目已经进入 GTK4 + libadwaita 构建路径，标题栏已经接近现代 GNOME 应用；但内容区仍是传统手写 GTK 应用，离完整 libadwaita/HIG 风格应用仍有距离。
 
 ### 5.3 Wayland 与安全模型：中等距离
 
@@ -306,10 +309,10 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 
 - 用 `ListView` / `ColumnView` 替换 `TreeView`；
 - 梳理工具栏、菜单和对话框结构；
-- 评估是否引入 libadwaita；
+- 继续把内容区迁到 Adwaita 组件；
 - 将 UI 构造与业务逻辑进一步拆分。
 
-完成后再评估 libadwaita、Flatpak 和 Wayland 适配成本会更真实。
+完成后再评估 Flatpak 和更深层 Wayland/Portal 适配成本会更真实。
 
 ### P2：继续 Wayland/Portal 化桌面集成
 
@@ -336,7 +339,7 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 - `PreviewService`：生成预览图；
 - `AppConfigStore`：读写 `~/.config/conky-manager3.json`。
 
-### P4：再考虑 GTK4/libadwaita 或其他前端
+### P4：继续 GTK4/libadwaita 或评估其他前端
 
 目标：把迁移建立在更清晰的模型层上，而不是直接把当前窗口代码逐行翻译到 GTK4。
 
@@ -344,8 +347,8 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 
 1. 将 UI 与业务逻辑分离；
 2. 给配置解析/主题导入补测试；
-3. 做一个小型 GTK4-native 原型窗口，验证 TreeView 替代方案、预览区域、工具栏/菜单模型；
-4. 决定是继续纯 GTK4，还是引入 libadwaita 或迁移到其他语言绑定。
+3. 做一个小型 GTK4/libadwaita 原型窗口，验证 TreeView 替代方案、预览区域、工具栏/菜单模型；
+4. 决定是继续深化 libadwaita，还是迁移到其他语言绑定。
 
 ## 7. 总体结论
 

@@ -23,6 +23,7 @@ dependencies = [
     dependency('gio-unix-2.0'),
     dependency('gobject-2.0'),
     dependency('gtk4', version : '>= 4.10'),
+    dependency('libadwaita-1', version : '>= 1.4'),
     dependency('gee-0.8'),
     dependency('json-glib-1.0'),
     meson.get_compiler('vala').find_library('posix'),

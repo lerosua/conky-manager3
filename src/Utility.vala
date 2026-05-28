@@ -914,6 +914,12 @@ namespace TeeJee.GtkHelper{
 		gtk_do_events ();
 	}
 
+	public void gtk_use_adwaita_titlebar(Gtk.Window win){
+		var header_bar = new Adw.HeaderBar();
+		header_bar.show_title = true;
+		win.set_titlebar(header_bar);
+	}
+
 	public int gtk_dialog_run(Gtk.Dialog dialog){
 		int response_id = (int) Gtk.ResponseType.NONE;
 		var loop = new MainLoop();

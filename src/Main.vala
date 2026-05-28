@@ -90,14 +90,13 @@ public class Main : GLib.Object {
 		//init TMP
 		init_tmp();
 
-		var gtk_app = new Gtk.Application("org.conkymanager3.ConkyManager", ApplicationFlags.DEFAULT_FLAGS);
+		var gtk_app = new Adw.Application("org.conkymanager3.ConkyManager", ApplicationFlags.DEFAULT_FLAGS);
 		gtk_app.activate.connect(() => {
 			if (App == null){
 				App = new Main(args);
 			}
 
-			var window = new MainWindow();
-			window.application = gtk_app;
+			var window = new MainWindow(gtk_app);
 			window.close_request.connect(() => {
 				window.get_default_size(out App.window_width,out App.window_height);
 				App.exit_app();

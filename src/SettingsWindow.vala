@@ -45,6 +45,7 @@ public class SettingsWindow : Dialog {
 	
 	public SettingsWindow() {
 		title = _("Application Settings");
+		gtk_use_adwaita_titlebar(this);
 		set_destroy_with_parent (true);
 		set_modal (true);
         set_default_size (400, 20);	

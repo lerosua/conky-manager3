@@ -2,7 +2,7 @@ Source: conky-manager3
 Section: utils
 Priority: optional
 Maintainer: Arkadiusz Felinczak <arek_felinczak@protonmail.com>
-Build-Depends: debhelper-compat (= 13), meson, ninja-build, valac, libgtk-4-dev (>= 4.10), libgee-0.8-dev, libjson-glib-dev
+Build-Depends: debhelper-compat (= 13), meson, ninja-build, valac, libgtk-4-dev (>= 4.10), libadwaita-1-dev (>= 1.4), libgee-0.8-dev, libjson-glib-dev
 Standards-Version: 4.5.0
 Homepage: https://github.com/zcot/conky-manager3
 

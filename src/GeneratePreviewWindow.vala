@@ -43,6 +43,7 @@ public class GeneratePreviewWindow : Dialog {
 	
 	public GeneratePreviewWindow() {
 		title = _("Generate Preview");
+		gtk_use_adwaita_titlebar(this);
 		set_destroy_with_parent (true);
 		set_modal (true);
         set_default_size (350, 300);	

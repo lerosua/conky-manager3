@@ -52,6 +52,7 @@ public class EditThemeWindow : Dialog {
 		
 		th = _theme;
 		title = (th == null) ? _("Save Theme") : _("Edit Theme");
+		gtk_use_adwaita_titlebar(this);
 
 	    vbox_main = get_content_area();
 		vbox_main.set_margin_top(6);

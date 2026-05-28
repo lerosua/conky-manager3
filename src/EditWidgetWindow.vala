@@ -62,6 +62,7 @@ public class EditWidgetWindow : Dialog {
 	
 	public EditWidgetWindow(ConkyRC conkyrc_edit) {
 		title = _("Edit Widget");
+		gtk_use_adwaita_titlebar(this);
 		set_destroy_with_parent (true);
 		set_modal (true);
         set_default_size (400, 20);	

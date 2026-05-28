@@ -34,6 +34,7 @@ using TeeJee.Misc;
 public class DonationWindow : Dialog {
 	public DonationWindow() {
 		set_title(_("Funding Support"));
+		gtk_use_adwaita_titlebar(this);
 		set_destroy_with_parent (true);
 		set_modal (true);
 		set_deletable(true);
