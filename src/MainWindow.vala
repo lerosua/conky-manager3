@@ -31,7 +31,7 @@ using TeeJee.GtkHelper;
 using TeeJee.System;
 using TeeJee.Misc;
 
-public class MainWindow : Adw.ApplicationWindow {
+public class MainWindow : Gtk.ApplicationWindow {
 
 	private Picture img_preview;
 	private Box vbox_main;
@@ -90,7 +90,7 @@ public class MainWindow : Adw.ApplicationWindow {
 	public MainWindow(Gtk.Application app) {
 		Object(application: app);
 		title = AppName;
-		modal = true;
+		resizable = true;
 		set_default_size(App.window_width, App.window_height);
 
 		setup_drag_and_drop();
@@ -98,14 +98,14 @@ public class MainWindow : Adw.ApplicationWindow {
 		string tt = "";
 
 		//vbox_main
-		var toolbar_view = new Adw.ToolbarView();
-		var header_bar = new Adw.HeaderBar();
-		header_bar.show_title = true;
-		toolbar_view.add_top_bar(header_bar);
+		var header_bar = new Gtk.HeaderBar();
+		header_bar.show_title_buttons = true;
+		header_bar.decoration_layout = "menu:minimize,maximize,close";
+		header_bar.set_title_widget(new Label(AppName));
+		set_titlebar(header_bar);
 
 		vbox_main = new Box (Orientation.VERTICAL, 6);
-		toolbar_view.set_content(vbox_main);
-		set_content(toolbar_view);
+		set_child(vbox_main);
 		
 		//toolbar
 		init_toolbar();
@@ -190,15 +190,13 @@ public class MainWindow : Adw.ApplicationWindow {
 		
 		//btn_preview
 		btn_preview = new ToggleButton.with_label(_("Preview"));
-		btn_preview.active = App.show_preview;
+		btn_preview.active = true;
 		btn_preview.set_tooltip_text(_("Toggle Preview"));
-		hbox_widget.append(btn_preview);
 
 		//btn_list
 		btn_list = new ToggleButton.with_label(_("List"));
-		btn_list.active = App.show_list;
+		btn_list.active = true;
 		btn_list.set_tooltip_text(_("Toggle List"));
-		hbox_widget.append(btn_list);
 
 		btn_preview.toggled.connect(btn_preview_toggled);
 		btn_list.toggled.connect(btn_list_toggled);
@@ -551,6 +549,8 @@ public class MainWindow : Adw.ApplicationWindow {
 		Source.remove(timer_init);
 		
 		//call handlers
+		btn_preview.active = true;
+		btn_list.active = true;
 		btn_preview_toggled();
 		btn_list_toggled();
 		btn_show_widgets.active = true;
@@ -590,19 +590,19 @@ public class MainWindow : Adw.ApplicationWindow {
 	//actions
 	
 	private void btn_preview_toggled(){
-		App.show_preview = btn_preview.active;
-		sw_preview.visible = App.show_preview;
+		if (!btn_preview.active){
+			btn_preview.active = true;
+			return;
+		}
+
+		App.show_preview = true;
+		sw_preview.visible = true;
 		ConkyConfigItem? selected = selected_item();
 		log_preview("btn_preview_toggled: active=%s selected=%s".printf(
 			App.show_preview.to_string(),
 			(selected == null) ? "null" : selected.name));
-		if (App.show_preview){
-			ensure_preview_area_visible();
-			show_preview(selected);
-		}
-		if ((!btn_list.active)&&(!btn_preview.active)){
-			btn_list.active = true;
-		}
+		ensure_preview_area_visible();
+		show_preview(selected);
 	}
 
 	private void ensure_preview_area_visible(){
@@ -622,11 +622,13 @@ public class MainWindow : Adw.ApplicationWindow {
 	}
 
 	private void btn_list_toggled(){
-		App.show_list = btn_list.active;
-		sw_widget.visible = App.show_list;
-		if ((!btn_list.active)&&(!btn_preview.active)){
-			btn_preview.active = true;
+		if (!btn_list.active){
+			btn_list.active = true;
+			return;
 		}
+
+		App.show_list = true;
+		sw_widget.visible = true;
 	}
 
 	private void btn_add_theme_clicked(){
@@ -893,11 +895,11 @@ public class MainWindow : Adw.ApplicationWindow {
 
 		progress_begin(_("Generating Previews") + "...");
 		
-		//change view
-		bool show_preview = btn_preview.active;
-		bool show_list = btn_list.active;
+		//keep the main view as a two-column layout while previews are generated
 		btn_preview.active = true;
-		btn_list.active = false;
+		btn_list.active = true;
+		sw_preview.visible = true;
+		sw_widget.visible = true;
 		
 		is_aborted = false;
 
@@ -919,10 +921,8 @@ public class MainWindow : Adw.ApplicationWindow {
 		btn_cancel_action.clicked.disconnect(btn_cancel_action_generate_preview);
 		
 		progress_hide();
-		
-		//restore selected view
-		btn_preview.active = show_preview;
-		btn_list.active = show_list;
+		sw_preview.visible = true;
+		sw_widget.visible = true;
 		
 		//reload_themes();
 	}
