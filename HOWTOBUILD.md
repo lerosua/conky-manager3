@@ -1,4 +1,7 @@
-# How to build this software. It was tested on modern Ubuntu/Mint versions and now builds against GTK 4.
+# How to build Conky Manager 3
+
+The current build system is Meson. Debian packaging also uses Meson through
+debhelper.
 
 ## additional required packages to build:
  build-essential
@@ -16,14 +19,16 @@
  libgettextpo-dev
 
 ## additional required run time packages:
+ conky
  p7zip-full
+ rsync
  imagemagick
  libglib2.0-bin
  x11-utils
 
 ## here is a one-shot installation command for all of the above packages:
 ```
-apt install build-essential git debhelper-compat dpkg-dev meson ninja-build valac libgee-0.8-dev libgtk-4-dev libadwaita-1-dev libjson-glib-dev gettext libgettextpo-dev p7zip-full imagemagick libglib2.0-bin x11-utils
+sudo apt install build-essential git debhelper-compat dpkg-dev meson ninja-build valac libgee-0.8-dev libgtk-4-dev libadwaita-1-dev libjson-glib-dev gettext libgettextpo-dev conky p7zip-full rsync imagemagick libglib2.0-bin x11-utils
 ```
 
 
@@ -44,6 +49,11 @@ meson setup builddir
 meson compile -C builddir
 ```
 
+## install from a Meson build:
+```
+sudo meson install -C builddir
+```
+
 ## build a Debian/Ubuntu package:
 ```
 ./build-deb.sh
@@ -51,16 +61,11 @@ meson compile -C builddir
 
 The generated `.deb`, `.changes`, and `.buildinfo` files are written to `../builds`.
 
-## legacy Makefile build:
+## build source and release artifacts:
 ```
-make
-```
-## install the finished program into the local file system:
-```
-sudo make install
+./build-source.sh
+./build-release.sh
 ```
 
-## can be uninstalled as follows:
-```
-sudo make uninstall
-```
+The old Makefile, Autotools template files, and ad-hoc installer script were
+removed. Use Meson or the Debian package scripts instead.

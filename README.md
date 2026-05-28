@@ -111,14 +111,8 @@ to show the application in GNOME Software and similar software centers. See
 [docs/gnome-software-packaging.md](./docs/gnome-software-packaging.md) for
 the current packaging notes and validation commands.
 
-## Legacy Build Path
+## Removed Legacy Paths
 
-A legacy Makefile is still present:
-
-```bash
-make
-sudo make install
-```
-
-The Meson/Debian package workflow is the maintained path for current
+The old direct Makefile build, Autotools template files, and ad-hoc installer
+script have been removed. Use Meson or the Debian package scripts for current
 development.

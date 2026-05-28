@@ -13,7 +13,7 @@
 | 项目 | 当前情况 |
 | --- | --- |
 | 主语言 | Vala，少量 shell/desktop/XML/PO 文件 |
-| UI 技术 | GTK 3，手写窗口布局 |
+| UI 技术 | GTK 4 / libadwaita，手写窗口布局 |
 | Vala 源文件 | 10 个 |
 | Vala 代码量 | 约 7,000 行 |
 | 本地化 | `cs/de/es/fr/hr/ko/nl/pt_BR` 8 组 PO |
@@ -22,7 +22,7 @@
 
 ## 2. 当前编译方式
 
-项目现在同时保留两套构建路径：Meson 与旧式 Makefile。
+项目现在保留一套主要构建路径：Meson。Debian 打包也通过 debhelper 调用 Meson。
 
 ### 2.1 Meson 构建
 
@@ -46,10 +46,10 @@ meson compile -C builddir
 | Meson | 1.7.0 |
 | GCC | 15.2.0 |
 | valac | 0.56.18 |
-| GTK | 3.24.50 |
+| GTK | 4.x |
 | GLib | 2.86.0 |
 | 编译结果 | 成功 |
-| 主要问题 | 编译通过但有大量弃用 API 警告，Vala 阶段约 72 条 |
+| 主要问题 | 编译通过但有大量 GTK4/Vala 弃用 API 警告 |
 
 Meson 安装内容包括：
 
@@ -60,21 +60,9 @@ Meson 安装内容包括：
 - 图标、图片资源与默认 theme pack；
 - PO 翻译。
 
-### 2.2 Makefile 构建
+### 2.2 已移除的旧构建入口
 
-根目录小写 `makefile` 会进入 `src` 目录执行 `make all`。`src/makefile` 直接调用 `valac`：
-
-```bash
-valac ... -o conky-manager3 \
-  --pkg glib-2.0 \
-  --pkg gio-unix-2.0 \
-  --pkg posix \
-  --pkg gtk4 \
-  --pkg gee-0.8 \
-  --pkg json-glib-1.0
-```
-
-README 与 `HOWTOBUILD.md` 仍保留 `make` / `sudo make install` 作为传统源码安装方式，但当前推荐入口已经转向 Meson 与 Debian 打包脚本。
+旧的直连 `valac` Makefile、Autotools 模板文件、Geany 项目文件和 ad-hoc installer 脚本已经移除。仓库不再提供 `make` / `sudo make install` 作为安装入口。
 
 ### 2.3 Debian 打包
 
@@ -99,7 +87,7 @@ README 与 `HOWTOBUILD.md` 仍保留 `make` / `sudo make install` 作为传统�
 - `libglib2.0-bin`
 - `x11-utils`
 
-仓库中的 `build-deb.sh`、`build-source.sh`、`build-install.sh`、`build-installer.sh`、`build-release.sh` 已统一改为基于 `dpkg-buildpackage` 和 `apt install` 的流程，生成物默认放到仓库父目录的 `builds` 或 `releases` 目录。
+仓库中的 `build-deb.sh`、`build-source.sh`、`build-install.sh`、`build-release.sh` 已统一改为基于 `dpkg-buildpackage` 和 `apt install` 的流程，生成物默认放到仓库父目录的 `builds` 或 `releases` 目录。
 
 ## 3. UI 版本与依赖关系
 
@@ -300,7 +288,7 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 建议：
 
 - 明确推荐 Meson 为主构建方式；
-- 更新 README/HOWTOBUILD，保留 Makefile 为 legacy 说明；
+- 更新 README/HOWTOBUILD，删除旧 Makefile/installer 入口说明；
 - 在 `meson.build` 中声明项目版本；
 - 替换 `meson.source_root()` 为 `meson.project_source_root()`；
 - 删除或标记过时发布脚本；
