@@ -151,6 +151,12 @@ namespace TeeJee.Logging{
 			log_msg("[PREVIEW] " + message);
 		}
 	}
+
+	public void log_preview_generation (string message){
+		if (Environment.get_variable("CONKY_MANAGER3_DEBUG_PREVIEW") == "1"){
+			log_msg("[PREVIEW-GENERATE] " + message);
+		}
+	}
 }
 
 namespace TeeJee.FileSystem{

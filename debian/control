@@ -8,7 +8,7 @@ Homepage: https://github.com/zcot/conky-manager3
 
 Package: conky-manager3
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}, coreutils (>= 8.28), conky | conky-all | conky-std, p7zip-full, rsync, imagemagick
+Depends: ${shlibs:Depends}, ${misc:Depends}, coreutils (>= 8.28), conky | conky-all | conky-std, p7zip-full, rsync, imagemagick, libglib2.0-bin, x11-utils
 Description: Utility for managing Conky configuration files
  Conky Manager 3 is a utility to manage themes and configurations for
  Conky, a free, light-weight system monitor that displays

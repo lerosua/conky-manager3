@@ -96,6 +96,8 @@ README 与 `HOWTOBUILD.md` 仍保留 `make` / `sudo make install` 作为传统�
 - `p7zip-full`
 - `rsync`
 - `imagemagick`
+- `libglib2.0-bin`
+- `x11-utils`
 
 仓库中的 `build-deb.sh`、`build-source.sh`、`build-install.sh`、`build-installer.sh`、`build-release.sh` 已统一改为基于 `dpkg-buildpackage` 和 `apt install` 的流程，生成物默认放到仓库父目录的 `builds` 或 `releases` 目录。
 
@@ -158,8 +160,11 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 - `touch`
 - `7za`
 - `convert`
+- `identify`
+- `gdbus`
+- `xwininfo`
 
-其中 `convert` 来自 ImageMagick。当前预览生成不再抓取 Conky 窗口，而是根据 conkyrc 内容生成一张静态配置预览图，因此不再需要 X server 窗口截图能力。
+其中 `convert` 与 `identify` 来自 ImageMagick。当前预览生成会启动临时 Conky 配置，通过 XWayland 窗口信息定位渲染位置，并使用 XDG Desktop Portal 截屏后裁剪出真实预览图；失败时会输出 `[PREVIEW-GENERATE]` 日志。
 
 参考：
 

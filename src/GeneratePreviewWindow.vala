@@ -79,15 +79,15 @@ public class GeneratePreviewWindow : Dialog {
 		lbl_header2.margin_top = 12;
 		vbox_main.append(lbl_header2);
 		
-		//transparent background
+		//desktop background
 		Box hbox_capture_bg = new Box (Gtk.Orientation.HORIZONTAL, 6);
         vbox_main.append (hbox_capture_bg);
         
-		Label lbl_capture_bg = new Gtk.Label(_("Transparent Preview Background") );
+		Label lbl_capture_bg = new Gtk.Label(_("Capture Desktop Background") );
 		lbl_capture_bg.hexpand = true;
 		lbl_capture_bg.xalign = (float) 0.0;
 		lbl_capture_bg.valign = Align.CENTER;
-		lbl_capture_bg.set_tooltip_text(_("When enabled, PNG previews are generated with a transparent background. Desktop background capture is not used."));
+		lbl_capture_bg.set_tooltip_text(_("Generate previews from the rendered Conky widget instead of drawing configuration text."));
 		hbox_capture_bg.append(lbl_capture_bg);
 
         switch_capture_bg = new Gtk.Switch();

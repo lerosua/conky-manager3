@@ -146,7 +146,7 @@ public class Main : GLib.Object {
 	public bool check_dependencies(out string msg){
 		msg = "";
 
-		string[] dependencies = { "conky", "rsync","killall","cp","rm","touch","7za","convert" };
+		string[] dependencies = { "conky", "rsync","killall","cp","rm","touch","7za","convert","identify","gdbus","xwininfo" };
 
 		string path;
 		foreach(string cmd_tool in dependencies){
@@ -752,7 +752,7 @@ public abstract class ConkyConfigItem: GLib.Object{
 		//search using base name
 		foreach(string ext in ext_list){
 			image_path = dir + "/" + base_name + ext;
-			if (file_exists(image_path)){
+			if (preview_image_is_usable(image_path)){
 				log_preview("image match base name: item='%s' image='%s'".printf(name, image_path));
 				return;
 			}
@@ -762,7 +762,7 @@ public abstract class ConkyConfigItem: GLib.Object{
 		if (base_name.split(".").length == 2){
 			foreach(string ext in ext_list){
 				image_path = dir + "/" + base_name.split(".")[0] + ext;
-				if (file_exists(image_path)){
+				if (preview_image_is_usable(image_path)){
 					log_preview("image match base stem: item='%s' image='%s'".printf(name, image_path));
 					return;
 				}
@@ -772,7 +772,7 @@ public abstract class ConkyConfigItem: GLib.Object{
 		//search using fixed names
 		foreach(string ext in ext_list){
 			image_path = dir + "/preview" + ext;
-			if (file_exists(image_path)){
+			if (preview_image_is_usable(image_path)){
 				log_preview("image match fixed preview: item='%s' image='%s'".printf(name, image_path));
 				return;
 			}
@@ -780,6 +780,85 @@ public abstract class ConkyConfigItem: GLib.Object{
 
 		image_path = ""; //clear if not found
 		log_preview("image not found: item='%s' dir='%s' base='%s'".printf(name, dir, base_name));
+	}
+
+	protected bool preview_image_is_usable(string candidate_path){
+		if (!file_exists(candidate_path)){
+			return false;
+		}
+
+		string std_out = "";
+		string std_err = "";
+		int exit_code = -1;
+
+		try {
+			Process.spawn_command_line_sync(
+				"identify -format '%w %h' " + preview_shell_quote(candidate_path),
+				out std_out,
+				out std_err,
+				out exit_code);
+		}
+		catch (Error e){
+			log_error("[PREVIEW] identify failed image='%s' error='%s'".printf(candidate_path, e.message));
+			return true;
+		}
+
+		if (exit_code != 0){
+			log_error("[PREVIEW] identify failed image='%s' exit=%d stderr='%s'".printf(
+				candidate_path,
+				exit_code,
+				std_err.strip()));
+			return true;
+		}
+
+		string[] parts = std_out.strip().split(" ");
+		if (parts.length < 2){
+			log_error("[PREVIEW] identify returned unexpected size image='%s' output='%s'".printf(
+				candidate_path,
+				std_out.strip()));
+			return true;
+		}
+
+		int width = int.parse(parts[0]);
+		int height = int.parse(parts[1]);
+		if (is_legacy_text_preview_image(candidate_path, width, height)){
+			log_error("[PREVIEW] ignoring legacy text preview image='%s' size=%dx%d".printf(
+				candidate_path,
+				width,
+				height));
+			return false;
+		}
+
+		if ((width < 64) || (height < 64)){
+			log_error("[PREVIEW] ignoring unusable preview image='%s' size=%dx%d".printf(
+				candidate_path,
+				width,
+				height));
+			return false;
+		}
+
+		log_preview("image usable: image='%s' size=%dx%d".printf(candidate_path, width, height));
+		return true;
+	}
+
+	private bool is_legacy_text_preview_image(string candidate_path, int width, int height){
+		if ((width != 640) || (height != 360)){
+			return false;
+		}
+
+		string candidate_name = File.new_for_path(candidate_path).get_basename();
+		string[] ext_list = {".png",".jpg",".jpeg"};
+		foreach(string ext in ext_list){
+			if (candidate_name == base_name + ext){
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	protected string preview_shell_quote(string value){
+		return "'" + value.replace("'", "'\"'\"'") + "'";
 	}
 
 	public void init_credits(){
@@ -1005,6 +1084,14 @@ public class ConkyRC : ConkyConfigItem {
 		stop();
 		read_file();
 
+		log_preview_generation("start item='%s' config='%s' session='%s' desktop='%s' png=%s transparent=%s".printf(
+			name,
+			path,
+			Environment.get_variable("XDG_SESSION_TYPE") ?? "",
+			Environment.get_variable("XDG_CURRENT_DESKTOP") ?? "",
+			App.generate_png.to_string(),
+			App.capture_background.to_string()));
+
 		if (App.generate_png){
 			image_path = dir + "/" + base_name + ".png";
 		}
@@ -1012,107 +1099,228 @@ public class ConkyRC : ConkyConfigItem {
 			image_path = dir + "/" + base_name + ".jpg";
 		}
 
+		log_preview_generation("output item='%s' image='%s'".printf(name, image_path));
+
 		file_delete(image_path);
 
-		if (generate_config_preview_image()){
+		if (generate_live_preview_image()){
 			log_msg(_("Saved") + ": " + image_path);
+			log_preview_generation("done item='%s' image='%s' exists=%s".printf(
+				name,
+				image_path,
+				file_exists(image_path).to_string()));
 			return true;
 		}
 		else{
+			log_error("[PREVIEW-GENERATE] failed item='%s' config='%s' image='%s'".printf(name, path, image_path));
 			image_path = "";
 			return false;
 		}
 	}
 
-	private bool generate_config_preview_image(){
-		string preview_text = build_preview_text().replace("%", "%%");
+	private bool generate_live_preview_image(){
+		string original_text = text;
+		string temp_config_path = path + "~temp~";
+		int preview_x = 40;
+		int preview_y = 40;
+		int preview_width = preview_capture_width();
+		int preview_height = preview_capture_height();
 
-		string background = "#20242a";
-		string fill = "#f4f6f8";
+		alignment = "top_left";
+		gap_x = preview_x.to_string();
+		gap_y = preview_y.to_string();
+		transparency = App.capture_background ? "pseudo" : "opaque";
+		set_preview_config_bool("own_window", true);
+		set_preview_config_string("own_window_type", "normal");
+		set_preview_config_string("own_window_hints", "undecorated,above,sticky,skip_taskbar,skip_pager");
+		save_file_temp();
+		text = original_text;
 
-		if (App.capture_background && App.generate_png){
-			background = "none";
-			fill = "#20242a";
+		string screenshot_dir = Environment.get_home_dir() + "/Pictures";
+		string marker_path = TEMP_DIR + "/" + base_name + "-preview-marker";
+		string conky_log_path = TEMP_DIR + "/" + base_name + "-preview-conky.log";
+		string portal_out_path = TEMP_DIR + "/" + base_name + "-preview-portal.out";
+		string portal_err_path = TEMP_DIR + "/" + base_name + "-preview-portal.err";
+
+		string script = """
+set -e
+mkdir -p @SCREENSHOT_DIR@
+touch @MARKER_PATH@
+cd @CONKY_DIR@
+conky -c @TEMP_CONFIG@ >@CONKY_LOG@ 2>&1 &
+CONKY_PID=$!
+WIN_ID=""
+for i in $(seq 1 60); do
+  WIN_ID=$(sed -n "s/.*drawing to created window (\(0x[0-9a-fA-F][0-9a-fA-F]*\)).*/\1/p" @CONKY_LOG@ | tail -n1)
+  [ -n "$WIN_ID" ] && break
+  sleep 0.2
+done
+if [ -z "$WIN_ID" ]; then
+  kill "$CONKY_PID" 2>/dev/null || true
+  wait "$CONKY_PID" 2>/dev/null || true
+  echo "window-id-missing"
+  tail -40 @CONKY_LOG@ || true
+  exit 20
+fi
+sleep 2
+XWININFO=$(xwininfo -id "$WIN_ID")
+ROOTINFO=$(xwininfo -root)
+WIN_X=$(printf '%s\n' "$XWININFO" | sed -n 's/^  Absolute upper-left X:[[:space:]]*//p' | head -n1)
+WIN_Y=$(printf '%s\n' "$XWININFO" | sed -n 's/^  Absolute upper-left Y:[[:space:]]*//p' | head -n1)
+ROOT_W=$(printf '%s\n' "$ROOTINFO" | sed -n 's/^  Width:[[:space:]]*//p' | head -n1)
+ROOT_H=$(printf '%s\n' "$ROOTINFO" | sed -n 's/^  Height:[[:space:]]*//p' | head -n1)
+gdbus call --session --dest org.freedesktop.portal.Desktop --object-path /org/freedesktop/portal/desktop --method org.freedesktop.portal.Screenshot.Screenshot '' "{'interactive': <false>}" >@PORTAL_OUT@ 2>@PORTAL_ERR@ || true
+SHOT=""
+for i in $(seq 1 20); do
+  SHOT=$(find @SCREENSHOT_DIR@ -maxdepth 1 -type f -name 'Screenshot*.png' -newer @MARKER_PATH@ -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -n1 | cut -d' ' -f2-)
+  [ -n "$SHOT" ] && break
+  sleep 0.5
+done
+kill "$CONKY_PID" 2>/dev/null || true
+wait "$CONKY_PID" 2>/dev/null || true
+if [ -z "$SHOT" ]; then
+  echo "portal-screenshot-missing"
+  cat @PORTAL_OUT@ || true
+  cat @PORTAL_ERR@ || true
+  tail -40 @CONKY_LOG@ || true
+  exit 21
+fi
+SHOT_W=$(identify -format '%w' "$SHOT")
+SHOT_H=$(identify -format '%h' "$SHOT")
+CROP=$(awk -v wx="$WIN_X" -v wy="$WIN_Y" -v lw="@PREVIEW_WIDTH@" -v lh="@PREVIEW_HEIGHT@" -v sw="$SHOT_W" -v sh="$SHOT_H" -v rw="$ROOT_W" -v rh="$ROOT_H" 'BEGIN { sx=sw/rw; sy=sh/rh; x=int(wx*sx); y=int(wy*sy); w=int(lw*sx); h=int(lh*sy); if (x < 0) x=0; if (y < 0) y=0; if (w < 64) w=64; if (h < 64) h=64; if (x + w > sw) w=sw-x; if (y + h > sh) h=sh-y; printf "%dx%d+%d+%d", w, h, x, y }')
+convert "$SHOT" -crop "$CROP" +repage @OUTPUT_IMAGE@
+rm -f "$SHOT"
+OUT_SIZE=$(identify -format '%w %h' @OUTPUT_IMAGE@)
+echo "window=$WIN_ID root=${ROOT_W}x${ROOT_H} shot=${SHOT_W}x${SHOT_H} crop=$CROP output=$OUT_SIZE"
+tail -20 @CONKY_LOG@ || true
+""";
+
+		script = script
+			.replace("@SCREENSHOT_DIR@", shell_quote(screenshot_dir))
+			.replace("@MARKER_PATH@", shell_quote(marker_path))
+			.replace("@CONKY_DIR@", shell_quote(dir))
+			.replace("@TEMP_CONFIG@", shell_quote(temp_config_path))
+			.replace("@CONKY_LOG@", shell_quote(conky_log_path))
+			.replace("@PORTAL_OUT@", shell_quote(portal_out_path))
+			.replace("@PORTAL_ERR@", shell_quote(portal_err_path))
+			.replace("@PREVIEW_WIDTH@", preview_width.to_string())
+			.replace("@PREVIEW_HEIGHT@", preview_height.to_string())
+			.replace("@OUTPUT_IMAGE@", shell_quote(image_path));
+
+		string std_out = "";
+		string std_err = "";
+		int exit_code = execute_command_script_sync(script, out std_out, out std_err);
+		delete_file_temp();
+
+		log_preview_generation("live result item='%s' exit=%d stdout='%s' stderr='%s'".printf(
+			name,
+			exit_code,
+			compact_command_output(std_out),
+			compact_command_output(std_err)));
+
+		if ((exit_code != 0) || !preview_image_is_usable(image_path)){
+			log_error("[PREVIEW-GENERATE] live capture failed item='%s' exit=%d stdout='%s' stderr='%s'".printf(
+				name,
+				exit_code,
+				compact_command_output(std_out),
+				compact_command_output(std_err)));
+			return false;
 		}
 
-		string cmd = "convert -size 640x360 -background %s -fill %s -gravity northwest -pointsize 16 %s %s".printf(
-			shell_quote(background),
-			shell_quote(fill),
-			shell_quote("caption:" + preview_text),
-			shell_quote(image_path));
-
-		int exit_code = execute_command_sync(cmd);
-
-		return (exit_code == 0) && file_exists(image_path);
+		return true;
 	}
 
-	private string build_preview_text(){
-		string preview = base_name + "\n" + path + "\n\n";
-		string body = "";
-		bool in_text = false;
-		int line_count = 0;
+	private int preview_capture_width(){
+		int width = int.parse(minimum_width);
+		string[] minimum_parts = minimum_size.split(" ");
+		if ((minimum_parts.length >= 2) && (int.parse(minimum_parts[0]) > width)){
+			width = int.parse(minimum_parts[0]);
+		}
 
+		int maximum_width = int.parse(get_value("maximum_width"));
+		if (maximum_width > width){
+			width = maximum_width;
+		}
+
+		if (width < 240){
+			width = 640;
+		}
+
+		return width + 48;
+	}
+
+	private int preview_capture_height(){
+		int height = int.parse(minimum_height);
+		string[] minimum_parts = minimum_size.split(" ");
+		if ((minimum_parts.length >= 2) && (int.parse(minimum_parts[1]) > height)){
+			height = int.parse(minimum_parts[1]);
+		}
+
+		if (height < 180){
+			height = 480;
+		}
+
+		return height + 48;
+	}
+
+	private void set_preview_config_string(string param, string value){
+		set_preview_config_value(param, value, true);
+	}
+
+	private void set_preview_config_bool(string param, bool value){
+		if (one_ten_config){
+			set_preview_config_value(param, value ? "true" : "false", false);
+		}
+		else{
+			set_preview_config_value(param, value ? "yes" : "no", false);
+		}
+	}
+
+	private void set_preview_config_value(string param, string value, bool quote_value){
+		string formatted = "";
+		if (one_ten_config){
+			formatted = quote_value ? "  %s = '%s',".printf(param, value) : "  %s = %s,".printf(param, value);
+		}
+		else{
+			formatted = "%s %s".printf(param, value);
+		}
+
+		string new_text = "";
+		bool found = false;
 		foreach(string line in text.split("\n")){
-			string stripped = line.strip();
-			string lowered = stripped.down();
-
-			if (!in_text){
-				if (one_ten_config){
-					if (lowered.has_prefix("conky.text")){
-						in_text = true;
-					}
-				}
-				else if (lowered == "text"){
-					in_text = true;
-				}
-				continue;
+			string stripped = line.down().strip();
+			if (stripped.has_prefix(param)){
+				new_text += formatted + "\n";
+				found = true;
 			}
-
-			if ((stripped == "]]") || (stripped == "]];") || (stripped == "';") || (stripped == "\";")){
-				break;
+			else if (!found && ((stripped == "text") || stripped.has_prefix("conky.text"))){
+				new_text += formatted + "\n";
+				new_text += line + "\n";
+				found = true;
 			}
-
-			string preview_line = clean_preview_line(stripped);
-			if (preview_line.length == 0){
-				continue;
-			}
-
-			body += preview_line + "\n";
-			line_count++;
-
-			if (line_count >= 14){
-				break;
+			else{
+				new_text += line + "\n";
 			}
 		}
 
-		if (body.strip().length == 0){
-			body = _("No preview text found in this Conky configuration.");
+		if (!found){
+			new_text += formatted + "\n";
 		}
 
-		return preview + body;
+		text = new_text[0:new_text.length - 1];
 	}
 
-	private string clean_preview_line(string line){
-		string preview_line = line.strip();
-
-		if (preview_line.has_prefix("#") || preview_line.has_prefix("--")){
+	private string compact_command_output(string? output){
+		if (output == null){
 			return "";
 		}
 
-		preview_line = preview_line
-			.replace("${", "")
-			.replace("}", "")
-			.replace("$", "")
-			.replace("[[", "")
-			.replace("]]", "")
-			.replace("\\n", " ")
-			.strip();
-
-		if (preview_line.length > 78){
-			preview_line = preview_line[0:78] + "...";
+		string text = output.strip().replace("\n", " ").replace("\r", " ");
+		if (text.length > 240){
+			text = text[0:240] + "...";
 		}
 
-		return preview_line;
+		return text;
 	}
 
 	private string shell_quote(string value){

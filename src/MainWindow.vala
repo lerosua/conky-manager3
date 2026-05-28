@@ -837,6 +837,11 @@ public class MainWindow : Adw.ApplicationWindow {
 		int response = gtk_dialog_run(dialog);
 		string action = dialog.action;
 		dialog.destroy();
+
+		log_preview_generation("dialog response=%d action='%s' selected='%s'".printf(
+			response,
+			action,
+			(selected_item() == null) ? "null" : selected_item().name));
 		
 		//clear list
 		rclist_generate = new Gee.ArrayList<ConkyRC>();
@@ -873,7 +878,17 @@ public class MainWindow : Adw.ApplicationWindow {
 			}
 		}
 		else{ 
+			log_preview_generation("cancelled");
 			return; //cancel
+		}
+
+		log_preview_generation("queued count=%d action='%s'".printf(rclist_generate.size, action));
+		foreach(ConkyRC rc in rclist_generate){
+			log_preview_generation("queued item='%s' config='%s' image='%s' exists=%s".printf(
+				rc.name,
+				rc.path,
+				rc.image_path,
+				file_exists(rc.image_path).to_string()));
 		}
 
 		progress_begin(_("Generating Previews") + "...");
@@ -922,6 +937,7 @@ public class MainWindow : Adw.ApplicationWindow {
 	}
 	
 	private void generate_previews(){
+		log_preview_generation("worker start count=%d".printf(rclist_generate.size));
 		
 		//save running widgets
 		var running_list = new Gee.ArrayList<string>();
@@ -942,8 +958,14 @@ public class MainWindow : Adw.ApplicationWindow {
 			if (is_aborted) { break; }
 			
 			current_rc = rc;
-			rc.generate_preview();
+			bool generated = rc.generate_preview();
 			current_rc = null;
+
+			log_preview_generation("worker item='%s' generated=%s image='%s' exists=%s".printf(
+				rc.name,
+				generated.to_string(),
+				rc.image_path,
+				file_exists(rc.image_path).to_string()));
 
 			count++;
 			progressbar.fraction = count / (count_total * 1.0);
@@ -963,6 +985,7 @@ public class MainWindow : Adw.ApplicationWindow {
 		
 		//show previously selected widget
 		show_preview(selected_item());
+		log_preview_generation("worker done count=%d aborted=%s".printf(count, is_aborted.to_string()));
 	}
 	
 	private void btn_cancel_action_scan(){
