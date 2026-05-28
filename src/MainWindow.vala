@@ -100,7 +100,6 @@ public class MainWindow : Gtk.ApplicationWindow {
 		//vbox_main
 		var header_bar = new Gtk.HeaderBar();
 		header_bar.show_title_buttons = true;
-		header_bar.decoration_layout = "menu:minimize,maximize,close";
 		header_bar.set_title_widget(new Label(AppName));
 		set_titlebar(header_bar);
 
