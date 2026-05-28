@@ -174,7 +174,8 @@ public class MainWindow : Adw.ApplicationWindow {
 		txtFilter = new Entry();
 		hbox_widget.append(txtFilter);
 		txtFilter.changed.connect(()=>{ 
-			filterThemes.refilter(); 
+			filterThemes.refilter();
+			select_first_visible_item();
 			show_preview(selected_item()); 
 		});
 		
@@ -1110,28 +1111,13 @@ public class MainWindow : Adw.ApplicationWindow {
 		img_preview.clear();
 		
 		if (item == null){
-			img_preview.clear();
 			return;
 		}
-		
-		int screen_width = get_width();
-		int screen_height = get_height();
 
 		if ((item.image_path.length > 0) && file_exists(item.image_path)){
 			try{
-				Gdk.Pixbuf px = new Gdk.Pixbuf.from_file(item.image_path);
-
-				//scale down the image if it is very large
-				if ((px.width > (screen_width * 1.5)) || (px.height > (screen_height * 1.5))){
-					//scale down 50%
-					int scaled_width = px.width / 2;
-					int scaled_height = px.height / 2;
-					px = new Gdk.Pixbuf.from_file_at_scale(item.image_path,scaled_width,scaled_height,true);
-					img_preview.set_from_pixbuf(px);
-				}
-				else{
-					img_preview.set_from_pixbuf(px);
-				}
+				var texture = Gdk.Texture.from_filename(item.image_path);
+				img_preview.set_from_paintable(texture);
 			}
 			catch(Error e){
 				log_error (e.message);
@@ -1274,6 +1260,18 @@ public class MainWindow : Adw.ApplicationWindow {
 		filterThemes.set_visible_func(filterThemes_filter);
 		tv_widget.set_model (filterThemes);
 		tv_widget.columns_autosize();
+		select_first_visible_item();
+	}
+
+	private void select_first_visible_item(){
+		if (filterThemes == null){
+			return;
+		}
+
+		TreeIter iter;
+		if (filterThemes.get_iter_first(out iter)){
+			tv_widget.get_selection().select_iter(iter);
+		}
 	}
 
 	private bool filterThemes_filter (Gtk.TreeModel model, Gtk.TreeIter iter){
