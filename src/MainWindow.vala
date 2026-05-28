@@ -449,13 +449,26 @@ public class MainWindow : Adw.ApplicationWindow {
 		
 		cell_widget_enable.toggled.connect (cell_widget_enable_toggled);
 
+		CellRendererPixbuf cell_widget_preview = new CellRendererPixbuf ();
+		cell_widget_preview.set_fixed_size(18, 18);
+		cell_widget_preview.set_padding(2, 0);
+		col_widget.pack_start (cell_widget_preview, false);
+
+		col_widget.set_cell_data_func (cell_widget_preview, (cell_layout, cell, model, iter)=>{
+			ConkyConfigItem item;
+			model.get (iter, 1, out item, -1);
+			bool has_preview = (item.image_path.length > 0) && file_exists(item.image_path);
+			(cell as Gtk.CellRendererPixbuf).visible = has_preview;
+			(cell as Gtk.CellRendererPixbuf).icon_name = "image-x-generic-symbolic";
+		});
+
 		CellRendererText cell_widget_name = new CellRendererText ();
 		col_widget.pack_start (cell_widget_name, false);
 		
 		col_widget.set_cell_data_func (cell_widget_name, (cell_layout, cell, model, iter)=>{
-			ConkyRC rc;
-			model.get (iter, 1, out rc, -1);
-			(cell as Gtk.CellRendererText).text = rc.name;
+			ConkyConfigItem item;
+			model.get (iter, 1, out item, -1);
+			(cell as Gtk.CellRendererText).text = item.base_name;
 		});
 		
 		TreeSelection sel = tv_widget.get_selection();
