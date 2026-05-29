@@ -5,6 +5,10 @@ configuration files. It can scan common Conky locations, start and stop
 widgets, import theme packs, generate previews, and open widget configuration
 files for editing.
 
+<p align="center">
+  <img src="screenshots/preview.png" alt="Conky Manager 3 preview" width="800">
+</p>
+
 This project is a fork of the original Conky Manager by teejee2008
 (Tony George). It keeps the same general workflow, but has been updated for
 newer Conky configuration formats and modern GTK-based desktops.
