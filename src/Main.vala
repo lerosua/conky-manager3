@@ -1470,6 +1470,10 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 		return (stripped_line == "};") || (stripped_line == "}");
 	}
 
+	private bool is_lua_text_end(string stripped_line){
+		return (stripped_line == "]]") || (stripped_line == "]];");
+	}
+
 	private string raw_value_from_new_line(string newLine){
 		int pos = newLine.index_of(" ");
 		if (pos == -1){
@@ -1509,17 +1513,18 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 	}
 
 	private string lua_config_param_pattern(string param){
-		return """(^|[,{[:space:]])""" + Regex.escape_string(param) + """[[:space:]]*=[[:space:]]*([^,};]+)""";
+		return """(^|[,{}[:space:]])""" + Regex.escape_string(param) + """[[:space:]]*=[[:space:]]*([^,};]+)""";
 	}
 
 	private bool lua_config_line_has_param(string line, string param){
-		if (line.down().strip().has_prefix("--")){
+		string normalized_line = line.down();
+		if (normalized_line.strip().has_prefix("--")){
 			return false;
 		}
 
 		try{
 			Regex regx = new Regex(lua_config_param_pattern(param));
-			return regx.match(line.down());
+			return regx.match(normalized_line);
 		}
 		catch (Error e) {
 			log_error(e.message);
@@ -1528,14 +1533,15 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 	}
 
 	private string get_lua_config_value_from_line(string line, string param){
-		if (line.down().strip().has_prefix("--")){
+		string normalized_line = line.down();
+		if (normalized_line.strip().has_prefix("--")){
 			return "";
 		}
 
 		try{
 			Regex regx = new Regex(lua_config_param_pattern(param));
 			MatchInfo match_info;
-			if (regx.match(line.down(), 0, out match_info)){
+			if (regx.match(normalized_line, 0, out match_info)){
 				return clean_config_value(match_info.fetch(2));
 			}
 		}
@@ -1547,14 +1553,15 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 	}
 
 	private string replace_lua_config_value(string line, string param, string value){
-		if (line.down().strip().has_prefix("--")){
+		string normalized_line = line.down();
+		if (normalized_line.strip().has_prefix("--")){
 			return line;
 		}
 
 		try{
 			Regex regx = new Regex(lua_config_param_pattern(param));
 			MatchInfo match_info;
-			if (regx.match(line.down(), 0, out match_info)){
+			if (regx.match(normalized_line, 0, out match_info)){
 				int start_pos;
 				int end_pos;
 				if (match_info.fetch_pos(2, out start_pos, out end_pos)){
@@ -1906,7 +1913,7 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 					if (arr[k].strip() == ""){
 						//skip blank lines after "]]"
 					}
-					else if (arr[k].strip() == "]]"){
+					else if (is_lua_text_end(arr[k].strip())){
 						k--;
 						count++;//fudge this so works with following previous existing code below
 						break;
@@ -1945,7 +1952,7 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 						count++;
 						if (counting) { skipExisting++; }
 					}
-					else if (arr[k].strip() == "]]"){
+					else if (is_lua_text_end(arr[k].strip())){
 						count++;
 						counting = true;
 					}
