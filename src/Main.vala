@@ -1478,6 +1478,17 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 		return newLine[pos + 1:newLine.length].strip();
 	}
 
+	private string clean_config_value(string value){
+		string s = value.strip();
+		if (s.length >= 2){
+			if ((s.has_prefix("'") && s.has_suffix("'")) || (s.has_prefix("\"") && s.has_suffix("\""))){
+				return s[1:s.length - 1].strip();
+			}
+		}
+
+		return s;
+	}
+
 	private bool lua_config_value_needs_quotes(string param){
 		switch (param){
 			case "alignment":
@@ -1497,7 +1508,7 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 	}
 
 	private string lua_config_param_pattern(string param){
-		return """(^|[,{[:space:]])""" + Regex.escape_string(param) + """[[:space:]]*=[[:space:]]*([^,}]+)""";
+		return """(^|[,{[:space:]])""" + Regex.escape_string(param) + """[[:space:]]*=[[:space:]]*([^,};]+)""";
 	}
 
 	private bool lua_config_line_has_param(string line, string param){
@@ -1524,7 +1535,7 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 			Regex regx = new Regex(lua_config_param_pattern(param));
 			MatchInfo match_info;
 			if (regx.match(line.down(), 0, out match_info)){
-				return match_info.fetch(2).strip().replace("\'", " ").replace("\"", " ").strip();
+				return clean_config_value(match_info.fetch(2));
 			}
 		}
 		catch (Error e) {
@@ -2100,7 +2111,7 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 			string s = line.down().strip();
 			if (s.has_prefix(param)){
 				if (s.index_of("=") != -1){
-					return s[s.index_of("=")+1:s.length].strip().split(",")[0].replace("\'", " ").replace("\"", " ").strip();
+					return clean_config_value(s[s.index_of("=")+1:s.length].strip().split(",")[0]);
 				}
 				else if (s.index_of(" ") != -1){
 					return s[s.index_of(" ")+1:s.length].strip();
@@ -2207,9 +2218,12 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 
 					while (matchExists){
 						old_match = match.fetch(0);
-						new_match = old_match.replace(match.fetch(bracket_num),replace_string);
-						//log_debug("old_match=%s\nnew_match=%s\n".printf(old_match,new_match));
-						new_line = new_line.replace(old_match, new_match);
+						string bracket_match = match.fetch(bracket_num);
+						if (old_match.length > 0 && bracket_match.length > 0){
+							new_match = old_match.replace(bracket_match, replace_string);
+							//log_debug("old_match=%s\nnew_match=%s\n".printf(old_match,new_match));
+							new_line = new_line.replace(old_match, new_match);
+						}
 						matchExists = match.next();
 					}
 
