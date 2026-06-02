@@ -1414,8 +1414,10 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 
 	private void set_preview_config_value(string param, string value, bool quote_value){
 		string formatted = "";
+		string formatted_value = value;
 		if (one_ten_config){
-			formatted = quote_value ? "  %s = '%s',".printf(param, value) : "  %s = %s,".printf(param, value);
+			formatted_value = quote_value ? "'%s'".printf(value.replace("'", "\\'")) : value;
+			formatted = "\t%s = %s,".printf(param, formatted_value);
 		}
 		else{
 			formatted = "%s %s".printf(param, value);
@@ -1423,11 +1425,28 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 
 		string new_text = "";
 		bool found = false;
+		bool inserted = false;
+		bool inside_config = false;
 		foreach(string line in text.split("\n")){
 			string stripped = line.down().strip();
-			if (stripped.has_prefix(param)){
+			if (one_ten_config && stripped.has_prefix("conky.config")){
+				inside_config = true;
+			}
+
+			if (one_ten_config && lua_config_line_has_param(line, param)){
+				new_text += replace_lua_config_value(line, param, formatted_value) + "\n";
+				found = true;
+			}
+			else if (!one_ten_config && stripped.has_prefix(param)){
 				new_text += formatted + "\n";
 				found = true;
+			}
+			else if (one_ten_config && inside_config && !found && !inserted && is_lua_config_end(stripped)){
+				new_text += formatted + "\n";
+				new_text += line + "\n";
+				inserted = true;
+				found = true;
+				inside_config = false;
 			}
 			else if (!found && ((stripped == "text") || stripped.has_prefix("conky.text"))){
 				new_text += formatted + "\n";
@@ -1444,6 +1463,98 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 		}
 
 		text = new_text[0:new_text.length - 1];
+	}
+
+	private bool is_lua_config_end(string stripped_line){
+		return (stripped_line == "};") || (stripped_line == "}");
+	}
+
+	private string raw_value_from_new_line(string newLine){
+		int pos = newLine.index_of(" ");
+		if (pos == -1){
+			return "";
+		}
+
+		return newLine[pos + 1:newLine.length].strip();
+	}
+
+	private bool lua_config_value_needs_quotes(string param){
+		switch (param){
+			case "alignment":
+			case "own_window_colour":
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	private string format_lua_config_value(string param, string value){
+		if (lua_config_value_needs_quotes(param)){
+			return "'%s'".printf(value.replace("'", "\\'"));
+		}
+
+		return value;
+	}
+
+	private string lua_config_param_pattern(string param){
+		return """(^|[,[:space:]])""" + Regex.escape_string(param) + """[[:space:]]*=[[:space:]]*([^,]+)""";
+	}
+
+	private bool lua_config_line_has_param(string line, string param){
+		if (line.down().strip().has_prefix("--")){
+			return false;
+		}
+
+		try{
+			Regex regx = new Regex(lua_config_param_pattern(param));
+			return regx.match(line.down());
+		}
+		catch (Error e) {
+			log_error(e.message);
+			return false;
+		}
+	}
+
+	private string get_lua_config_value_from_line(string line, string param){
+		if (line.down().strip().has_prefix("--")){
+			return "";
+		}
+
+		try{
+			Regex regx = new Regex(lua_config_param_pattern(param));
+			MatchInfo match_info;
+			if (regx.match(line.down(), 0, out match_info)){
+				return match_info.fetch(2).strip().replace("\'", " ").replace("\"", " ").strip();
+			}
+		}
+		catch (Error e) {
+			log_error(e.message);
+		}
+
+		return "";
+	}
+
+	private string replace_lua_config_value(string line, string param, string value){
+		if (line.down().strip().has_prefix("--")){
+			return line;
+		}
+
+		try{
+			Regex regx = new Regex(lua_config_param_pattern(param));
+			MatchInfo match_info;
+			if (regx.match(line.down(), 0, out match_info)){
+				int start_pos;
+				int end_pos;
+				if (match_info.fetch_pos(2, out start_pos, out end_pos)){
+					return line[0:start_pos] + value + line[end_pos:line.length];
+				}
+			}
+		}
+		catch (Error e) {
+			log_error(e.message);
+		}
+
+		return line;
 	}
 
 	private string compact_command_output(string? output){
@@ -1977,6 +2088,15 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 
 	public string get_value(string param){
 		foreach(string line in this.text.split("\n")){
+			if (one_ten_config){
+				string value = get_lua_config_value_from_line(line, param);
+				if (value != ""){
+					return value;
+				}
+
+				continue;
+			}
+
 			string s = line.down().strip();
 			if (s.has_prefix(param)){
 				if (s.index_of("=") != -1){
@@ -1998,30 +2118,44 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 		string newText = "";
 		bool found = false;
 		bool remove = (newLine.strip() == param);
+		bool inserted = false;
+		bool inside_config = false;
+		string newValue = raw_value_from_new_line(newLine);
+		string luaValue = format_lua_config_value(param, newValue);
 
 		foreach(string line in this.text.split("\n")){
 			string s = line.down().strip();
-			if (s.has_prefix(param)){
+			if (one_ten_config && s.has_prefix("conky.config")){
+				inside_config = true;
+			}
+
+			if (one_ten_config && lua_config_line_has_param(line, param)){
 				if (!remove){
-					//replace line
-					if (one_ten_config){
-						newText += line.replace(get_value(param), newLine.split(" ")[1]) + "\n";
-					}
-					else{
-						newText += newLine + "\n";
-					}
+					newText += replace_lua_config_value(line, param, luaValue) + "\n";
 				}
 				found = true;
+			}
+			else if ((!one_ten_config) && s.has_prefix(param)){
+				if (!remove){
+					//replace line
+					newText += newLine + "\n";
+				}
+				found = true;
+			}
+			else if (one_ten_config && inside_config && (!found) && (!inserted) && is_lua_config_end(s)){
+				if (!remove){
+					//insert line
+					newText += "\t" + param + " = " + luaValue + ",\n";
+				}
+				newText += line + "\n";
+				inserted = true;
+				found = true;
+				inside_config = false;
 			}
 			else if (((s == "text") || s.has_prefix("conky.text")) && (!found)){
 				if (!remove){
 					//insert line
-					if (one_ten_config){
-						newText += newLine.split(" ")[0] + " = " + newLine.split(" ")[1] + ",\n";
-					}
-					else{
-						newText += newLine + "\n";
-					}
+					newText += newLine + "\n";
 				}
 				newText += line + "\n";
 				found = true;
