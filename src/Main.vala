@@ -1689,12 +1689,12 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 					break;
 				case "trans":
 					if (one_ten_config){
-						own_window_transparent = "true";
+						own_window_transparent = "false";
 						own_window_argb_visual = "true";
 						own_window_argb_value = "0";
 					}
 					else {
-						own_window_transparent = "yes";
+						own_window_transparent = "no";
 						own_window_argb_visual = "yes";
 						own_window_argb_value = "0";
 					}
@@ -2013,7 +2013,7 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 				}
 				found = true;
 			}
-			else if ((s == "text")&&(!found)){
+			else if (((s == "text") || s.has_prefix("conky.text")) && (!found)){
 				if (!remove){
 					//insert line
 					if (one_ten_config){

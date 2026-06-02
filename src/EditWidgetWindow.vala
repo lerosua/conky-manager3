@@ -586,8 +586,19 @@ public class EditWidgetWindow : Dialog {
 		conf.gap_y = spin_gap_y.value.to_string();
 		
 		//transparency
-		conf.transparency = gtk_combobox_get_value(cmb_transparency_type,1,"semi");
-		conf.own_window_argb_value = "%.0f".printf((spin_opacity.value / 100.0) * 255.0);
+		string transparency = gtk_combobox_get_value(cmb_transparency_type,1,"semi");
+		conf.transparency = transparency;
+		switch (transparency){
+			case "trans":
+				conf.own_window_argb_value = "0";
+				break;
+			case "opaque":
+				conf.own_window_argb_value = "255";
+				break;
+			case "semi":
+				conf.own_window_argb_value = "%.0f".printf((spin_opacity.value / 100.0) * 255.0);
+				break;
+		}
 		conf.own_window_colour = rgba_to_hex(cbtn_bg_color.rgba, false, false); 
 		
 		//window size 
