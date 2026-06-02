@@ -1014,7 +1014,7 @@ public class ConkyRC : ConkyConfigItem {
 		init_credits();
 
 		try{
-			rex_conky_text = new Regex("""^[[:space:]]*conky[.]text[[:space:]]*=[[:space:]]""");
+			rex_conky_text = new Regex("""^[[:space:]]*conky[.]text[[:space:]]*=""");
 		}
 		catch (Error e) {
 			log_error (e.message);
@@ -1497,7 +1497,7 @@ echo "window=@WIN_ID@ output=$OUT_SIZE"
 	}
 
 	private string lua_config_param_pattern(string param){
-		return """(^|[,[:space:]])""" + Regex.escape_string(param) + """[[:space:]]*=[[:space:]]*([^,]+)""";
+		return """(^|[,{[:space:]])""" + Regex.escape_string(param) + """[[:space:]]*=[[:space:]]*([^,}]+)""";
 	}
 
 	private bool lua_config_line_has_param(string line, string param){
