@@ -264,6 +264,11 @@ msgid "Enable"
 msgstr "启用"
 
 msgid ""
+"Legacy Conky syntax. Some visual configuration changes may not save or take "
+"effect."
+msgstr "旧式 Conky 语法。部分可视化配置更改可能无法保存或生效。"
+
+msgid ""
 "Use the keyboard arrow keys to browse.\n"
 "Press ENTER to start and stop."
 msgstr ""

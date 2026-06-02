@@ -470,6 +470,7 @@ public class Main : GLib.Object {
 				}
 				if (!found){
 					ConkyRC rc = new ConkyRC(file_path);
+					rc.read_file();
 					conkyrc_list.add(rc);
 				}
 			}

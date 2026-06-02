@@ -430,6 +430,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 		tv_widget = new TreeView();
 		tv_widget.get_selection().mode = SelectionMode.SINGLE;
 		tv_widget.headers_visible = false;
+		tv_widget.has_tooltip = true;
 		
 		sw_widget = new ScrolledWindow();
 		sw_widget.set_child(tv_widget);
@@ -468,13 +469,26 @@ public class MainWindow : Gtk.ApplicationWindow {
 			(cell as Gtk.CellRendererPixbuf).icon_name = "image-x-generic-symbolic";
 		});
 
+		CellRendererPixbuf cell_widget_legacy = new CellRendererPixbuf ();
+		cell_widget_legacy.set_fixed_size(18, 18);
+		cell_widget_legacy.set_padding(2, 0);
+		col_widget.pack_start (cell_widget_legacy, false);
+
+		col_widget.set_cell_data_func (cell_widget_legacy, (cell_layout, cell, model, iter)=>{
+			ConkyConfigItem item;
+			model.get (iter, 1, out item, -1);
+			bool legacy_config = item_is_legacy_conky_config(item);
+			(cell as Gtk.CellRendererPixbuf).visible = legacy_config;
+			(cell as Gtk.CellRendererPixbuf).icon_name = "dialog-warning-symbolic";
+		});
+
 		CellRendererText cell_widget_name = new CellRendererText ();
 		col_widget.pack_start (cell_widget_name, false);
 		
 		col_widget.set_cell_data_func (cell_widget_name, (cell_layout, cell, model, iter)=>{
 			ConkyConfigItem item;
 			model.get (iter, 1, out item, -1);
-			(cell as Gtk.CellRendererText).text = item.base_name;
+			(cell as Gtk.CellRendererText).text = item_display_name(item);
 		});
 		
 		TreeSelection sel = tv_widget.get_selection();
@@ -483,8 +497,41 @@ public class MainWindow : Gtk.ApplicationWindow {
 			show_preview(selected);
 			update_delete_config_button(selected);
 		});
+
+		tv_widget.query_tooltip.connect((x, y, keyboard_mode, tooltip) => {
+			TreeModel model;
+			TreePath path;
+			TreeIter iter;
+			if (!tv_widget.get_tooltip_context(x, y, keyboard_mode, out model, out path, out iter)){
+				return false;
+			}
+
+			ConkyConfigItem item;
+			model.get(iter, 1, out item, -1);
+			if (!item_is_legacy_conky_config(item)){
+				return false;
+			}
+
+			tooltip.set_text(_("Legacy Conky syntax. Some visual configuration changes may not save or take effect."));
+			tv_widget.set_tooltip_row(tooltip, path);
+			return true;
+		});
 	}
-	
+
+	private bool item_is_legacy_conky_config(ConkyConfigItem item){
+		ConkyRC rc = item as ConkyRC;
+		return (rc != null) && (!rc.one_ten_config);
+	}
+
+	private string item_display_name(ConkyConfigItem item){
+		string name = item.base_name;
+		if (name.down().has_suffix(".conf")){
+			return name[0:name.length - 5];
+		}
+
+		return name;
+	}
+		
 	private void init_preview_area(){
 		sw_preview = new ScrolledWindow();
 		sw_preview.hexpand = true;

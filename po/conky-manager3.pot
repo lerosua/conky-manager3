@@ -344,6 +344,12 @@ msgstr ""
 msgid "Enable"
 msgstr ""
 
+#: src/MainWindow.vala:515
+msgid ""
+"Legacy Conky syntax. Some visual configuration changes may not save or take "
+"effect."
+msgstr ""
+
 #: src/MainWindow.vala:453
 msgid ""
 "Use the keyboard arrow keys to browse.\n"
