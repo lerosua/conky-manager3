@@ -1,3 +1,9 @@
+conky-manager3 (3.0.1) unstable; urgency=medium
+
+  * Bump version metadata to 3.0.1.
+
+ -- lerosua <lerosua@gmail.com>  Tue, 02 Jun 2026 19:23:56 +0800
+
 conky-manager3 (3.0) unstable; urgency=medium
 
   * Modernize Debian packaging scripts for dpkg-buildpackage.

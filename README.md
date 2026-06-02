@@ -15,7 +15,7 @@ newer Conky configuration formats and modern GTK-based desktops.
 
 ## Project Status
 
-The current development line is version 3.0. The application now builds against
+The current development line is version 3.0.1. The application now builds against
 GTK 4 and libadwaita with Meson, and the Debian packaging path is the primary
 supported build and install workflow.
 

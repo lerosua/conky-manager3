@@ -1,4 +1,4 @@
-project('conky-manager3', ['c','vala'], version : '3.0', default_options : ['prefix=/usr'])
+project('conky-manager3', ['c','vala'], version : '3.0.1', default_options : ['prefix=/usr'])
 
 prefix = '/usr'
 bindir = prefix + '/bin'

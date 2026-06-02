@@ -38,7 +38,7 @@ public Main App;
 public const string AppName = "Conky Manager 3";
 public const string AppShortName = "conky-manager3";
 public const string AppId = "org.conkymanager3.ConkyManager";
-public const string AppVersion = "3.0";
+public const string AppVersion = "3.0.1";
 public const string AppAuthor = "Tony George";
 public const string AppAuthorEmail = "teejeetech@gmail.com";
 public const string AppAuthorEmail2 = "zcotcaudle@gmail.com";

@@ -5,7 +5,7 @@ i18n.gettext(meson.project_name(),
     args: [
         '--directory=' + meson.source_root(),
         '--package-name=' + meson.project_name(),
-        '--package-version=3.0',
+        '--package-version=3.0.1',
         '--output=' + meson.project_name() + '.pot',
         '--keyword=_',
         '--escape',
