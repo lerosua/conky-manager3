@@ -146,7 +146,7 @@ public class Main : GLib.Object {
 	public bool check_dependencies(out string msg){
 		msg = "";
 
-		string[] dependencies = { "conky", "rsync","killall","cp","rm","touch","7za","convert","identify","gdbus","xwininfo" };
+		string[] dependencies = { "conky", "rsync","killall","cp","rm","touch","7za","convert","identify" };
 
 		string path;
 		foreach(string cmd_tool in dependencies){
@@ -750,6 +750,12 @@ public abstract class ConkyConfigItem: GLib.Object{
 
 		string[] ext_list = {".png",".jpg",".jpeg"};
 
+		image_path = preview_image_file_path();
+		if (preview_image_is_usable(image_path)){
+			log_preview("image match generated preview name: item='%s' image='%s'".printf(name, image_path));
+			return;
+		}
+
 		//search using base name
 		foreach(string ext in ext_list){
 			image_path = dir + "/" + base_name + ext;
@@ -781,6 +787,53 @@ public abstract class ConkyConfigItem: GLib.Object{
 
 		image_path = ""; //clear if not found
 		log_preview("image not found: item='%s' dir='%s' base='%s'".printf(name, dir, base_name));
+	}
+
+	public string preview_image_file_path(){
+		return dir + "/" + base_name + "_preview.png";
+	}
+
+	public bool set_preview_image_from_file(string source_path, out string error_message){
+		error_message = "";
+		string temp_path = TEMP_DIR + "/" + base_name + "-dropped-preview.png";
+		string target_path = preview_image_file_path();
+		file_delete(temp_path);
+
+		string std_out = "";
+		string std_err = "";
+		int exit_code = execute_command_script_sync(
+			"set -e\nconvert " + preview_shell_quote(source_path) + " " + preview_shell_quote(temp_path) + "\n",
+			out std_out,
+			out std_err);
+
+		if (exit_code != 0){
+			file_delete(temp_path);
+			error_message = std_err.strip();
+			if (error_message.length == 0){
+				error_message = std_out.strip();
+			}
+			return false;
+		}
+
+		if (!preview_image_is_usable(temp_path)){
+			file_delete(temp_path);
+			error_message = _("Dropped file is not a usable preview image");
+			return false;
+		}
+
+		try {
+			File src = File.new_for_path(temp_path);
+			File dest = File.new_for_path(target_path);
+			src.move(dest, FileCopyFlags.OVERWRITE, null, null);
+			image_path = target_path;
+			log_msg(_("Saved") + ": " + image_path);
+			return true;
+		}
+		catch (Error e) {
+			file_delete(temp_path);
+			error_message = e.message;
+			return false;
+		}
 	}
 
 	protected bool preview_image_is_usable(string candidate_path){
@@ -1124,8 +1177,6 @@ public class ConkyRC : ConkyConfigItem {
 		string temp_config_path = path + "~temp~";
 		int preview_x = 40;
 		int preview_y = 40;
-		int preview_width = preview_capture_width();
-		int preview_height = preview_capture_height();
 
 		alignment = "top_left";
 		gap_x = preview_x.to_string();
@@ -1137,16 +1188,11 @@ public class ConkyRC : ConkyConfigItem {
 		save_file_temp();
 		text = original_text;
 
-		string screenshot_dir = Environment.get_home_dir() + "/Pictures";
-		string marker_path = TEMP_DIR + "/" + base_name + "-preview-marker";
 		string conky_log_path = TEMP_DIR + "/" + base_name + "-preview-conky.log";
-		string portal_out_path = TEMP_DIR + "/" + base_name + "-preview-portal.out";
-		string portal_err_path = TEMP_DIR + "/" + base_name + "-preview-portal.err";
+		string desktop_shot_path = TEMP_DIR + "/" + base_name + "-preview-desktop.png";
 
-		string script = """
+		string start_script = """
 set -e
-mkdir -p @SCREENSHOT_DIR@
-touch @MARKER_PATH@
 cd @CONKY_DIR@
 conky -c @TEMP_CONFIG@ >@CONKY_LOG@ 2>&1 &
 CONKY_PID=$!
@@ -1164,63 +1210,30 @@ if [ -z "$WIN_ID" ]; then
   exit 20
 fi
 sleep 2
-XWININFO=$(xwininfo -id "$WIN_ID")
-ROOTINFO=$(xwininfo -root)
-WIN_X=$(printf '%s\n' "$XWININFO" | sed -n 's/^  Absolute upper-left X:[[:space:]]*//p' | head -n1)
-WIN_Y=$(printf '%s\n' "$XWININFO" | sed -n 's/^  Absolute upper-left Y:[[:space:]]*//p' | head -n1)
-ROOT_W=$(printf '%s\n' "$ROOTINFO" | sed -n 's/^  Width:[[:space:]]*//p' | head -n1)
-ROOT_H=$(printf '%s\n' "$ROOTINFO" | sed -n 's/^  Height:[[:space:]]*//p' | head -n1)
-gdbus call --session --dest org.freedesktop.portal.Desktop --object-path /org/freedesktop/portal/desktop --method org.freedesktop.portal.Screenshot.Screenshot '' "{'interactive': <false>}" >@PORTAL_OUT@ 2>@PORTAL_ERR@ || true
-SHOT=""
-for i in $(seq 1 20); do
-  SHOT=$(find @SCREENSHOT_DIR@ -maxdepth 1 -type f -name 'Screenshot*.png' -newer @MARKER_PATH@ -printf '%T@ %p\n' 2>/dev/null | sort -n | tail -n1 | cut -d' ' -f2-)
-  [ -n "$SHOT" ] && break
-  sleep 0.5
-done
-kill "$CONKY_PID" 2>/dev/null || true
-wait "$CONKY_PID" 2>/dev/null || true
-if [ -z "$SHOT" ]; then
-  echo "portal-screenshot-missing"
-  cat @PORTAL_OUT@ || true
-  cat @PORTAL_ERR@ || true
-  tail -40 @CONKY_LOG@ || true
-  exit 21
-fi
-SHOT_W=$(identify -format '%w' "$SHOT")
-SHOT_H=$(identify -format '%h' "$SHOT")
-CROP=$(awk -v wx="$WIN_X" -v wy="$WIN_Y" -v lw="@PREVIEW_WIDTH@" -v lh="@PREVIEW_HEIGHT@" -v sw="$SHOT_W" -v sh="$SHOT_H" -v rw="$ROOT_W" -v rh="$ROOT_H" 'BEGIN { sx=sw/rw; sy=sh/rh; x=int(wx*sx); y=int(wy*sy); w=int(lw*sx); h=int(lh*sy); if (x < 0) x=0; if (y < 0) y=0; if (w < 64) w=64; if (h < 64) h=64; if (x + w > sw) w=sw-x; if (y + h > sh) h=sh-y; printf "%dx%d+%d+%d", w, h, x, y }')
-convert "$SHOT" -crop "$CROP" +repage @OUTPUT_IMAGE@
-rm -f "$SHOT"
-OUT_SIZE=$(identify -format '%w %h' @OUTPUT_IMAGE@)
-echo "window=$WIN_ID root=${ROOT_W}x${ROOT_H} shot=${SHOT_W}x${SHOT_H} crop=$CROP output=$OUT_SIZE"
+echo "conky_pid=$CONKY_PID"
+echo "window_id=$WIN_ID"
 tail -20 @CONKY_LOG@ || true
 """;
 
-		script = script
-			.replace("@SCREENSHOT_DIR@", shell_quote(screenshot_dir))
-			.replace("@MARKER_PATH@", shell_quote(marker_path))
+		start_script = start_script
 			.replace("@CONKY_DIR@", shell_quote(dir))
 			.replace("@TEMP_CONFIG@", shell_quote(temp_config_path))
-			.replace("@CONKY_LOG@", shell_quote(conky_log_path))
-			.replace("@PORTAL_OUT@", shell_quote(portal_out_path))
-			.replace("@PORTAL_ERR@", shell_quote(portal_err_path))
-			.replace("@PREVIEW_WIDTH@", preview_width.to_string())
-			.replace("@PREVIEW_HEIGHT@", preview_height.to_string())
-			.replace("@OUTPUT_IMAGE@", shell_quote(image_path));
+			.replace("@CONKY_LOG@", shell_quote(conky_log_path));
 
 		string std_out = "";
 		string std_err = "";
-		int exit_code = execute_command_script_sync(script, out std_out, out std_err);
-		delete_file_temp();
+		int exit_code = execute_command_script_sync(start_script, out std_out, out std_err);
 
-		log_preview_generation("live result item='%s' exit=%d stdout='%s' stderr='%s'".printf(
+		log_preview_generation("live prepare item='%s' exit=%d stdout='%s' stderr='%s'".printf(
 			name,
 			exit_code,
 			compact_command_output(std_out),
 			compact_command_output(std_err)));
 
-		if ((exit_code != 0) || !preview_image_is_usable(image_path)){
-			log_error("[PREVIEW-GENERATE] live capture failed item='%s' exit=%d stdout='%s' stderr='%s'".printf(
+		int conky_pid = int.parse(command_output_value(std_out, "conky_pid"));
+		if ((exit_code != 0) || (conky_pid <= 0)){
+			delete_file_temp();
+			log_error("[PREVIEW-GENERATE] live prepare failed item='%s' exit=%d stdout='%s' stderr='%s'".printf(
 				name,
 				exit_code,
 				compact_command_output(std_out),
@@ -1228,40 +1241,162 @@ tail -20 @CONKY_LOG@ || true
 			return false;
 		}
 
-		return true;
+		bool success = false;
+		string screenshot_error = "";
+
+		if (!capture_desktop_screenshot(desktop_shot_path, true, out screenshot_error)){
+			log_error("[PREVIEW-GENERATE] manual screenshot failed item='%s' error='%s'".printf(
+				name,
+				screenshot_error));
+		}
+		else{
+			string save_script = """
+set -e
+convert @SHOT_PATH@ @OUTPUT_IMAGE@
+OUT_SIZE=$(identify -format '%w %h' @OUTPUT_IMAGE@)
+echo "window=@WIN_ID@ output=$OUT_SIZE"
+""";
+
+			save_script = save_script
+				.replace("@SHOT_PATH@", shell_quote(desktop_shot_path))
+				.replace("@WIN_ID@", command_output_value(std_out, "window_id"))
+				.replace("@OUTPUT_IMAGE@", shell_quote(image_path));
+
+			string save_out = "";
+			string save_err = "";
+			int save_exit = execute_command_script_sync(save_script, out save_out, out save_err);
+
+			log_preview_generation("manual save item='%s' exit=%d stdout='%s' stderr='%s'".printf(
+				name,
+				save_exit,
+				compact_command_output(save_out),
+				compact_command_output(save_err)));
+
+			if ((save_exit != 0) || !preview_image_is_usable(image_path)){
+				log_error("[PREVIEW-GENERATE] manual save failed item='%s' exit=%d stdout='%s' stderr='%s'".printf(
+					name,
+					save_exit,
+					compact_command_output(save_out),
+					compact_command_output(save_err)));
+			}
+			else{
+				success = true;
+			}
+		}
+
+		Posix.kill((Pid) conky_pid, 15);
+		file_delete(desktop_shot_path);
+		delete_file_temp();
+
+		return success;
 	}
 
-	private int preview_capture_width(){
-		int width = int.parse(minimum_width);
-		string[] minimum_parts = minimum_size.split(" ");
-		if ((minimum_parts.length >= 2) && (int.parse(minimum_parts[0]) > width)){
-			width = int.parse(minimum_parts[0]);
-		}
+	private bool capture_desktop_screenshot(string output_path, bool interactive, out string error_message){
+		error_message = "";
 
-		int maximum_width = int.parse(get_value("maximum_width"));
-		if (maximum_width > width){
-			width = maximum_width;
-		}
+		try {
+			DBusConnection connection = Bus.get_sync(BusType.SESSION);
+			MainLoop loop = new MainLoop();
+			string request_path = "";
+			string screenshot_uri = "";
+			uint32 response_code = 999;
+			bool timed_out = false;
 
-		if (width < 240){
-			width = 640;
-		}
+			uint subscription_id = connection.signal_subscribe(
+				"org.freedesktop.portal.Desktop",
+				"org.freedesktop.portal.Request",
+				"Response",
+				null,
+				null,
+				DBusSignalFlags.NONE,
+				(conn, sender_name, object_path, interface_name, signal_name, parameters) => {
+					if ((request_path.length > 0) && (object_path != request_path)){
+						return;
+					}
 
-		return width + 48;
+					response_code = parameters.get_child_value(0).get_uint32();
+					Variant results = parameters.get_child_value(1);
+					Variant? uri_variant = results.lookup_value("uri", new VariantType("s"));
+					if (uri_variant != null){
+						screenshot_uri = uri_variant.get_string();
+					}
+					loop.quit();
+				});
+
+			VariantBuilder options = new VariantBuilder(new VariantType("a{sv}"));
+			options.add("{sv}", "interactive", new Variant.boolean(interactive));
+
+			Variant result = connection.call_sync(
+				"org.freedesktop.portal.Desktop",
+				"/org/freedesktop/portal/desktop",
+				"org.freedesktop.portal.Screenshot",
+				"Screenshot",
+				new Variant("(sa{sv})", "", options),
+				new VariantType("(o)"),
+				DBusCallFlags.NONE,
+				300000,
+				null);
+
+			result.get("(o)", out request_path);
+
+			uint timeout_id = Timeout.add_seconds(interactive ? 300 : 30, () => {
+				timed_out = true;
+				loop.quit();
+				return false;
+			});
+
+			loop.run();
+
+			if (!timed_out){
+				Source.remove(timeout_id);
+			}
+			connection.signal_unsubscribe(subscription_id);
+
+			if (timed_out){
+				error_message = "portal request timed out";
+				return false;
+			}
+
+			if (response_code != 0){
+				error_message = "portal response code %u".printf(response_code);
+				return false;
+			}
+
+			if (screenshot_uri.length == 0){
+				error_message = "portal response missing uri";
+				return false;
+			}
+
+			File src = File.new_for_uri(screenshot_uri);
+			File dest = File.new_for_path(output_path);
+			src.copy(dest, FileCopyFlags.OVERWRITE, null, null);
+			if (!src.equal(dest)){
+				try {
+					src.delete(null);
+				}
+				catch (Error cleanup_error) {
+					log_preview_generation("portal screenshot cleanup failed uri='%s' error='%s'".printf(
+						screenshot_uri,
+						cleanup_error.message));
+				}
+			}
+			return file_exists(output_path);
+		}
+		catch (Error e) {
+			error_message = e.message;
+			return false;
+		}
 	}
 
-	private int preview_capture_height(){
-		int height = int.parse(minimum_height);
-		string[] minimum_parts = minimum_size.split(" ");
-		if ((minimum_parts.length >= 2) && (int.parse(minimum_parts[1]) > height)){
-			height = int.parse(minimum_parts[1]);
+	private string command_output_value(string output, string key){
+		string prefix = key + "=";
+		foreach(string line in output.split("\n")){
+			if (line.has_prefix(prefix)){
+				return line[prefix.length:line.length].strip();
+			}
 		}
 
-		if (height < 180){
-			height = 480;
-		}
-
-		return height + 48;
+		return "";
 	}
 
 	private void set_preview_config_string(string param, string value){

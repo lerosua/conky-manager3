@@ -39,10 +39,10 @@ The current packaging and build scripts target Debian, Ubuntu, Linux Mint, and
 related distributions.
 
 Conky Manager 3 is a host-facing desktop utility. It launches Conky, reads and
-writes user Conky configuration files, inspects windows, and uses desktop
-tools such as ImageMagick and X11 utilities for preview generation. Because of
-that, a sandboxed Flatpak package would need careful permission review and is
-not the primary packaging path today.
+writes user Conky configuration files, and uses desktop tools such as
+ImageMagick and XDG Desktop Portal for preview generation. Because of that, a
+sandboxed Flatpak package would need careful permission review and is not the
+primary packaging path today.
 
 ## Runtime Dependencies
 
@@ -54,7 +54,6 @@ minimum, a working installation needs:
 - `rsync`
 - `imagemagick`
 - `libglib2.0-bin`
-- `x11-utils`
 
 ## Build Dependencies
 

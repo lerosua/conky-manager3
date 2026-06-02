@@ -149,10 +149,8 @@ UI 没有使用 GtkBuilder `.ui` 文件，也没有资源编译系统。窗口�
 - `7za`
 - `convert`
 - `identify`
-- `gdbus`
-- `xwininfo`
 
-其中 `convert` 与 `identify` 来自 ImageMagick。当前预览生成会启动临时 Conky 配置，通过 XWayland 窗口信息定位渲染位置，并使用 XDG Desktop Portal 截屏后裁剪出真实预览图；失败时会输出 `[PREVIEW-GENERATE]` 日志。
+其中 `convert` 与 `identify` 来自 ImageMagick。当前预览生成会启动临时 Conky 配置，并通过 XDG Desktop Portal 打开系统截图界面；用户手工截图后，应用会把返回图片转换并保存为对应预览图。失败时会输出 `[PREVIEW-GENERATE]` 日志。
 
 参考：
 

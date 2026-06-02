@@ -48,6 +48,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 	private Label lblSaveThemeSeparator;
 	private Label lblFilter;
 	private Entry txtFilter;
+	private Button btn_delete_config;
 	private TreeModelFilter filterThemes;
 	
 	//toolbar
@@ -175,12 +176,20 @@ public class MainWindow : Gtk.ApplicationWindow {
 		txtFilter.changed.connect(()=>{ 
 			filterThemes.refilter();
 			select_first_visible_item();
-			show_preview(selected_item()); 
+			var selected = selected_item();
+			show_preview(selected);
+			update_delete_config_button(selected);
 		});
 		
 		tt = _("Enter name or path to filter.\nEnter '0' to list running widgets");
 		lblFilter.set_tooltip_text(tt);
 		txtFilter.set_tooltip_text(tt);
+
+		btn_delete_config = new Button.with_label(_("Delete"));
+		btn_delete_config.visible = false;
+		btn_delete_config.set_tooltip_text(_("Delete selected configuration"));
+		btn_delete_config.clicked.connect(btn_delete_config_clicked);
+		hbox_widget.append(btn_delete_config);
 		
 		//lbl_expand
 		Label lbl_expand = new Label ("");
@@ -470,7 +479,9 @@ public class MainWindow : Gtk.ApplicationWindow {
 		
 		TreeSelection sel = tv_widget.get_selection();
 		sel.changed.connect(()=>{
-			show_preview(selected_item());
+			var selected = selected_item();
+			show_preview(selected);
+			update_delete_config_button(selected);
 		});
 	}
 	
@@ -490,6 +501,8 @@ public class MainWindow : Gtk.ApplicationWindow {
 		img_preview.can_shrink = true;
 		img_preview.content_fit = Gtk.ContentFit.CONTAIN;
 		sw_preview.set_child(img_preview);
+		setup_preview_drag_and_drop(sw_preview);
+		setup_preview_drag_and_drop(img_preview);
 	}
 
 	private void setup_drag_and_drop(){
@@ -513,6 +526,48 @@ public class MainWindow : Gtk.ApplicationWindow {
 			return true;
 		});
 		((Gtk.Widget) this).add_controller(drop_target);
+	}
+
+	private void setup_preview_drag_and_drop(Gtk.Widget widget){
+		var drop_target = new Gtk.DropTarget(typeof(Gdk.FileList), Gdk.DragAction.COPY);
+		drop_target.drop.connect((value, x, y) => {
+			var item = selected_item();
+			if (item == null){
+				return false;
+			}
+
+			var file_list = (Gdk.FileList) value.get_boxed();
+			if (file_list == null) { return false; }
+
+			foreach(File file in file_list.get_files()){
+				string path = file.get_path();
+				if (path == null) { continue; }
+
+				string error_message = "";
+				if (!item.set_preview_image_from_file(path, out error_message)){
+					if (error_message.length == 0){
+						error_message = _("Failed to save dropped preview image");
+					}
+					log_error("[PREVIEW] dropped image failed item='%s' file='%s' error='%s'".printf(
+						item.name,
+						path,
+						error_message));
+					gtk_messagebox(_("Error"), error_message, this, true);
+					return false;
+				}
+
+				log_preview("dropped image saved: item='%s' source='%s' image='%s'".printf(
+					item.name,
+					path,
+					item.image_path));
+				show_preview(item);
+				tv_widget.queue_draw();
+				return true;
+			}
+
+			return false;
+		});
+		widget.add_controller(drop_target);
 	}
 	
 	private void init_keyboard_shortcuts(){
@@ -574,6 +629,7 @@ public class MainWindow : Gtk.ApplicationWindow {
 		ConkyConfigItem? selected = selected_item();
 		log_preview("reload_themes selected: %s".printf((selected == null) ? "null" : selected.name));
 		show_preview(selected);
+		update_delete_config_button(selected);
 		
 		if (btn_preview.active){
 			ensure_preview_area_visible();
@@ -628,6 +684,78 @@ public class MainWindow : Gtk.ApplicationWindow {
 
 		App.show_list = true;
 		sw_widget.visible = true;
+	}
+
+	private void update_delete_config_button(ConkyConfigItem? item){
+		if (btn_delete_config == null){
+			return;
+		}
+
+		btn_delete_config.visible = (item != null);
+	}
+
+	private void btn_delete_config_clicked(){
+		ConkyConfigItem? item = selected_item();
+		if (item == null){
+			update_delete_config_button(null);
+			return;
+		}
+
+		var dialog = new Gtk.MessageDialog.with_markup(
+			this,
+			Gtk.DialogFlags.MODAL,
+			Gtk.MessageType.WARNING,
+			Gtk.ButtonsType.OK_CANCEL,
+			Markup.escape_text(_("Delete selected configuration?")) + "\n\n" + Markup.escape_text(item.name));
+		dialog.title = _("Delete");
+		dialog.present();
+		int response = gtk_dialog_run(dialog);
+		dialog.destroy();
+
+		if (response != Gtk.ResponseType.OK){
+			return;
+		}
+
+		if (!delete_config_item(item)){
+			return;
+		}
+
+		img_preview.set_paintable(null);
+		tv_widget_refresh();
+		ConkyConfigItem? selected = selected_item();
+		show_preview(selected);
+		update_delete_config_button(selected);
+	}
+
+	private bool delete_config_item(ConkyConfigItem item){
+		try {
+			if ((item is ConkyRC) && item.enabled){
+				((ConkyRC) item).stop();
+			}
+
+			File config_file = File.new_for_path(item.path);
+			if (config_file.query_exists()){
+				config_file.delete();
+			}
+
+			if (item is ConkyRC){
+				App.conkyrc_list.remove((ConkyRC) item);
+			}
+			else if (item is ConkyTheme){
+				App.conkytheme_list.remove((ConkyTheme) item);
+			}
+
+			log_msg(_("Deleted") + ": " + item.path);
+			return true;
+		}
+		catch (Error e) {
+			log_error("[DELETE] failed item='%s' path='%s' error='%s'".printf(
+				item.name,
+				item.path,
+				e.message));
+			gtk_messagebox(_("Error"), e.message, this, true);
+			return false;
+		}
 	}
 
 	private void btn_add_theme_clicked(){
